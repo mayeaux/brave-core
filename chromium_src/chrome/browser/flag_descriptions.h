@@ -11,6 +11,10 @@
 namespace flag_descriptions {
 extern const char kBraveAdblockCosmeticFilteringName[];
 extern const char kBraveAdblockCosmeticFilteringDescription[];
+extern const char kBraveNTPBrandedWallpaperName[];
+extern const char kBraveNTPBrandedWallpaperDescription[];
+extern const char kBraveNTPBrandedWallpaperDemoName[];
+extern const char kBraveNTPBrandedWallpaperDemoDescription[];
 }
 
 #endif  // BRAVE_CHROMIUM_SRC_CHROME_BROWSER_FLAG_DESCRIPTIONS_H_

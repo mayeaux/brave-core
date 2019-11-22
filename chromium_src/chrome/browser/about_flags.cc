@@ -7,7 +7,15 @@
     {"brave-adblock-cosmetic-filtering",                                   \
      flag_descriptions::kBraveAdblockCosmeticFilteringName,                \
      flag_descriptions::kBraveAdblockCosmeticFilteringDescription, kOsAll, \
-     FEATURE_VALUE_TYPE(features::kBraveAdblockCosmeticFiltering)},
+     FEATURE_VALUE_TYPE(features::kBraveAdblockCosmeticFiltering)},        \
+    {"brave-ntp-branded-wallpaper",                                        \
+     flag_descriptions::kBraveNTPBrandedWallpaperName,                     \
+     flag_descriptions::kBraveNTPBrandedWallpaperDescription, kOsAll,      \
+     FEATURE_VALUE_TYPE(features::kBraveNTPBrandedWallpaper)},             \
+    {"brave-ntp-branded-wallpaper-demo",                                   \
+     flag_descriptions::kBraveNTPBrandedWallpaperDemoName,                 \
+     flag_descriptions::kBraveNTPBrandedWallpaperDemoDescription, kOsAll,  \
+     FEATURE_VALUE_TYPE(features::kBraveNTPBrandedWallpaperDemo)},
 
 #define SetFeatureEntryEnabled SetFeatureEntryEnabled_ChromiumImpl
 #include "../../../../chrome/browser/about_flags.cc"       // NOLINT

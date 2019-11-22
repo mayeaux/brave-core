@@ -11,6 +11,10 @@
 namespace features {
 COMPONENT_EXPORT(CHROME_FEATURES)
 extern const base::Feature kBraveAdblockCosmeticFiltering;
+COMPONENT_EXPORT(CHROME_FEATURES)
+extern const base::Feature kBraveNTPBrandedWallpaper;
+COMPONENT_EXPORT(CHROME_FEATURES)
+extern const base::Feature kBraveNTPBrandedWallpaperDemo;
 }
 
 #endif  // BRAVE_CHROMIUM_SRC_CHROME_COMMON_CHROME_FEATURES_H_
