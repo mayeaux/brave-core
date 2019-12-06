@@ -74,6 +74,7 @@ const char kAlwaysShowBookmarkBarOnNTP[] =
     "brave.always_show_bookmark_bar_on_ntp";
 const char kRemoteDebuggingEnabled[] = "brave.remote_debugging_enabled";
 const char kAutocompleteEnabled[] = "brave.autocomplete_enabled";
+const char kBandwidthSavedBytes[] = "brave.stats.bandwidth_saved_bytes";
 
 #if defined(OS_ANDROID)
 const char kDesktopModeEnabled[] = "brave.desktop_mode_enabled";

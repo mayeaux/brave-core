@@ -63,6 +63,7 @@ extern const char kBraveWalletEnabled[];
 extern const char kAlwaysShowBookmarkBarOnNTP[];
 extern const char kRemoteDebuggingEnabled[];
 extern const char kAutocompleteEnabled[];
+extern const char kBandwidthSavedBytes[];
 
 #if defined(OS_ANDROID)
 extern const char kDesktopModeEnabled[];
