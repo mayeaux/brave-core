@@ -8,9 +8,9 @@
 #include "brave/browser/ui/bookmark/brave_bookmark_tab_helper.h"
 #include "brave/components/brave_ads/browser/ads_tab_helper.h"
 #include "brave/components/brave_rewards/browser/buildflags/buildflags.h"
+#include "brave/components/brave_savings/browser/buildflags/buildflags.h"
 #include "brave/components/brave_shields/browser/brave_shields_web_contents_observer.h"
 #include "brave/components/brave_shields/browser/buildflags/buildflags.h"  // For STP
-#include "brave/components/brave_savings/browser/perf_predictor_web_contents_observer.h"
 #include "brave/components/greaselion/browser/buildflags/buildflags.h"
 #include "content/public/browser/web_contents.h"
 #include "third_party/widevine/cdm/buildflags.h"
@@ -35,6 +35,10 @@
 
 #if BUILDFLAG(ENABLE_WIDEVINE)
 #include "brave/browser/brave_drm_tab_helper.h"
+#endif
+
+#if BUILDFLAG(ENABLE_BRAVE_PERF_PREDICTOR)
+#include "brave/components/brave_savings/browser/perf_predictor_web_contents_observer.h"
 #endif
 
 namespace brave {
@@ -68,7 +72,10 @@ void AttachTabHelpers(content::WebContents* web_contents) {
   BraveDrmTabHelper::CreateForWebContents(web_contents);
 #endif
 
+#if BUILDFLAG(ENABLE_BRAVE_PERF_PREDICTOR)
   brave_perf_predictor::PerfPredictorWebContentsObserver::CreateForWebContents(web_contents);
+#endif
+
   brave_ads::AdsTabHelper::CreateForWebContents(web_contents);
 }
 
