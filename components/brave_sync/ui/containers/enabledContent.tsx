@@ -70,6 +70,15 @@ export default class SyncEnabledContent extends React.PureComponent<Props, State
     }
   }
 
+  componentDidMount () {
+    const { syncData } = this.props
+    // if only one device is found, remind the user
+    // at every page refresh to add a new device
+    if (syncData.devices.length < 2) {
+      this.setState({ viewSyncCode: true })
+    }
+  }
+
   getDevicesRows = (devices?: any): Row[] | undefined => {
     if (!devices) {
       return
