@@ -69,6 +69,7 @@ class BraveRewardsBrowserTest;
 namespace brave_rewards {
 
 class PublisherInfoDatabase;
+class RewardsDatabase;
 class RewardsNotificationServiceImpl;
 class BraveRewardsBrowserTest;
 
@@ -846,6 +847,10 @@ class RewardsServiceImpl : public RewardsService,
       ledger::GetContributionReportCallback callback,
       ledger::ContributionReportInfoList list);
 
+  void OnRunDBTransaction(
+      ledger::RunDBTransactionCallback callback,
+      ledger::DBCommandResponsePtr response);
+
 #if defined(OS_ANDROID)
   ledger::Environment GetServerEnvironmentForAndroid();
   void CreateWalletAttestationResult(
@@ -871,9 +876,11 @@ class RewardsServiceImpl : public RewardsService,
   const base::FilePath ledger_state_path_;
   const base::FilePath publisher_state_path_;
   const base::FilePath publisher_info_db_path_;
+  const base::FilePath publisher_info_db_path2_;
   const base::FilePath publisher_list_path_;
   const base::FilePath rewards_base_path_;
   std::unique_ptr<PublisherInfoDatabase> publisher_info_backend_;
+  std::unique_ptr<RewardsDatabase> rewards_database_;
   std::unique_ptr<RewardsNotificationServiceImpl> notification_service_;
   base::ObserverList<RewardsServicePrivateObserver> private_observers_;
 #if BUILDFLAG(ENABLE_EXTENSIONS)
