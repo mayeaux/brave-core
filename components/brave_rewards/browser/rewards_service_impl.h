@@ -752,6 +752,10 @@ class RewardsServiceImpl : public RewardsService,
       const int year,
       ledger::GetContributionReportCallback callback) override;
 
+  void RunDBTransaction(
+      ledger::DBTransactionPtr transaction,
+      ledger::RunDBTransactionCallback callback) override;
+
   // end ledger::LedgerClient
 
   // Mojo Proxy methods

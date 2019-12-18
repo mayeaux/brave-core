@@ -609,6 +609,10 @@ class LedgerImpl : public ledger::Ledger,
       const int year,
       ledger::GetContributionReportCallback callback) override;
 
+  void RunDBTransaction(
+      ledger::DBTransactionPtr transaction,
+      ledger::RunDBTransactionCallback callback);
+
  private:
   void OnLoad(ledger::VisitDataPtr visit_data,
               const uint64_t& current_time) override;

@@ -4574,4 +4574,10 @@ void RewardsServiceImpl::OnGetContributionReport(
   callback(std::move(list));
 }
 
+void RewardsServiceImpl::RunDBTransaction(
+    ledger::DBTransactionPtr transaction,
+    ledger::RunDBTransactionCallback callback) {
+
+}
+
 }  // namespace brave_rewards

@@ -264,6 +264,10 @@ class LedgerClientMojoProxy : public mojom::BatLedgerClient,
       const int year,
       GetContributionReportCallback callback) override;
 
+  void RunDBTransaction(
+      ledger::DBTransactionPtr transaction,
+      RunDBTransactionCallback callback) override;
+
  private:
   // workaround to pass base::OnceCallback into std::bind
   // also serves as a wrapper for passing ledger::LedgerCallbackHandler*
@@ -483,6 +487,10 @@ class LedgerClientMojoProxy : public mojom::BatLedgerClient,
   static void OnGetContributionReport(
       CallbackHolder<GetContributionReportCallback>* holder,
       ledger::ContributionReportInfoList list);
+
+  static void OnRunDBTransaction(
+      CallbackHolder<RunDBTransactionCallback>* holder,
+      ledger::DBCommandResponsePtr response);
 
   ledger::LedgerClient* ledger_client_;
 

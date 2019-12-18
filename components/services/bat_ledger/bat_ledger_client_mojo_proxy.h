@@ -244,6 +244,10 @@ class BatLedgerClientMojoProxy : public ledger::LedgerClient,
       const int year,
       ledger::GetContributionReportCallback callback) override;
 
+  void RunDBTransaction(
+      ledger::DBTransactionPtr transaction,
+      ledger::RunDBTransactionCallback callback) override;
+
  private:
   bool Connected() const;
 

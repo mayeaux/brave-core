@@ -1573,4 +1573,10 @@ void LedgerImpl::GetContributionReport(
   ledger_client_->GetContributionReport(month, year, callback);
 }
 
+void LedgerImpl::RunDBTransaction(
+    ledger::DBTransactionPtr transaction,
+    ledger::RunDBTransactionCallback callback) {
+  ledger_client_->RunDBTransaction(std::move(transaction), callback);
+}
+
 }  // namespace bat_ledger
