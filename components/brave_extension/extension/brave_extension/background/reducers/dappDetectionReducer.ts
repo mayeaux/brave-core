@@ -11,6 +11,8 @@ export default function dappDetectionReducer (state = {}, action: Actions) {
       if (chrome.braveWallet && action.isMainFrame) {
         chrome.braveWallet.isEnabled((enabled) => {
           chrome.braveWallet.isInstalled((installed) => {
+            // When Crypto Wallets is installed, we don't want Dapp detection at
+            // all.  If the user explicitly turned it off, it shouldn't either.
             if (installed || !enabled) {
               return
             }

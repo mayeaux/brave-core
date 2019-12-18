@@ -56,6 +56,10 @@ Polymer({
     this.browserProxy_.isTorManaged().then(managed => {
       this.disableTorOption_ = managed
     })
+    this.browserProxy_.getWeb3ProviderList().then(list => {
+      this.braveWeb3Providers_ = JSON.parse(list);
+      console.log("found provider list JSON of: ", list)
+    });
   },
 
   onWebTorrentEnabledChange_: function() {

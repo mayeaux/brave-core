@@ -12,6 +12,7 @@
 #include "brave/browser/brave_browser_process_impl.h"
 #include "brave/browser/component_updater/brave_component_installer.h"
 #include "brave/common/brave_switches.h"
+#include "brave/common/brave_wallet_constants.h"
 #include "brave/common/extensions/extension_constants.h"
 #include "brave/common/pref_names.h"
 #include "brave/components/brave_extension/grit/brave_extension.h"
@@ -105,9 +106,12 @@ void BraveComponentLoader::AddDefaultComponentExtensions(
 #endif
 
 #if BUILDFLAG(BRAVE_WALLET_ENABLED)
-  // If brave://wallet has been loaded at least once, then load it again.
-  if (ExtensionPrefs::Get(profile_)->
-      HasPrefForExtension(ethereum_remote_client_extension_id)) {
+  // Only eagerly load Crypto Wallets if it is the Dapp provider
+  auto provider = static_cast<BraveWalletWeb3ProviderTypes>(
+      profile_prefs_->GetInteger(kBraveWalletWeb3Provider));
+  if (provider == BraveWalletWeb3ProviderTypes::CRYPTO_WALLETS &&
+      ExtensionPrefs::Get(profile_)->
+          HasPrefForExtension(ethereum_remote_client_extension_id)) {
     AddEthereumRemoteClientExtension();
   }
 #endif
@@ -137,11 +141,9 @@ void BraveComponentLoader::HandleRewardsEnabledStatus() {
 
 #if BUILDFLAG(BRAVE_WALLET_ENABLED)
 void BraveComponentLoader::AddEthereumRemoteClientExtension() {
-  if (profile_prefs_->GetBoolean(kBraveWalletEnabled)) {
-    AddExtension(ethereum_remote_client_extension_id,
-        ethereum_remote_client_extension_name,
-        ethereum_remote_client_extension_public_key);
-  }
+  AddExtension(ethereum_remote_client_extension_id,
+      ethereum_remote_client_extension_name,
+      ethereum_remote_client_extension_public_key);
 }
 #endif
 

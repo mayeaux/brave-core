@@ -34,22 +34,17 @@ void BraveAppMenuModel::InsertBraveMenuItems() {
   // Sync & Rewards pages are redirected to normal window when it is loaded in
   // private window. So, only hide them in guest(tor) window.
   if (!browser_->profile()->IsGuestSession()) {
-    bool walletEnabled = browser_->profile()->GetPrefs()->
-        GetBoolean(kBraveWalletEnabled);
     InsertItemWithStringIdAt(
         GetIndexOfCommandId(IDC_SHOW_DOWNLOADS),
         IDC_SHOW_BRAVE_REWARDS,
         IDS_SHOW_BRAVE_REWARDS);
-    if (walletEnabled) {
 #if BUILDFLAG(BRAVE_WALLET_ENABLED)
-      InsertItemWithStringIdAt(GetIndexOfCommandId(IDC_SHOW_BRAVE_REWARDS),
-                               IDC_SHOW_BRAVE_WALLET, IDS_SHOW_BRAVE_WALLET);
+    InsertItemWithStringIdAt(GetIndexOfCommandId(IDC_SHOW_BRAVE_REWARDS),
+                             IDC_SHOW_BRAVE_WALLET, IDS_SHOW_BRAVE_WALLET);
 #endif
-    }
     InsertItemWithStringIdAt(
 #if BUILDFLAG(BRAVE_WALLET_ENABLED)
-        GetIndexOfCommandId(walletEnabled ? IDC_SHOW_BRAVE_WALLET :
-            IDC_SHOW_BRAVE_REWARDS),
+        GetIndexOfCommandId(IDC_SHOW_BRAVE_WALLET),
 #else
         GetIndexOfCommandId(IDC_SHOW_BRAVE_REWARDS),
 #endif

@@ -4,6 +4,7 @@
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "brave/common/pref_names.h"
+#include "brave/common/brave_wallet_constants.h"
 #include "chrome/browser/net/prediction_options.h"
 #include "chrome/browser/profiles/profile.h"
 #include "chrome/browser/ui/browser.h"
@@ -52,7 +53,11 @@ IN_PROC_BROWSER_TEST_F(BraveProfilePrefsBrowserTest, MiscBravePrefs) {
   EXPECT_FALSE(
       browser()->profile()->GetPrefs()->GetBoolean(kIPFSCompanionEnabled));
   EXPECT_TRUE(
-      browser()->profile()->GetPrefs()->GetBoolean(kBraveWalletEnabled));
+      browser()->profile()->GetPrefs()->GetBoolean(
+          kBraveWalletEnabledDeprecated));
+  EXPECT_EQ(
+      browser()->profile()->GetPrefs()->GetInteger(kBraveWalletWeb3Provider),
+      static_cast<int>(BraveWalletWeb3ProviderTypes::ASK));
 
 #if !BUILDFLAG(USE_GCM_FROM_PLATFORM)
   EXPECT_FALSE(
