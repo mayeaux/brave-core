@@ -47,6 +47,8 @@ FORWARD_DECLARE_TEST(BraveSyncServiceTest, SetSyncDisabled);
 FORWARD_DECLARE_TEST(BraveSyncServiceTest, IsSyncReadyOnNewProfile);
 FORWARD_DECLARE_TEST(BraveSyncServiceTest, SetThisDeviceCreatedTime);
 FORWARD_DECLARE_TEST(BraveSyncServiceTest, InitialFetchesStartWithZero);
+FORWARD_DECLARE_TEST(BraveSyncServiceTest, LastFetchBookmarksTime);
+FORWARD_DECLARE_TEST(BraveSyncServiceTest, LastPreferencesFetchTime);
 
 class BraveSyncServiceTest;
 
@@ -162,6 +164,8 @@ class BraveProfileSyncServiceImpl
   FRIEND_TEST_ALL_PREFIXES(::BraveSyncServiceTest, IsSyncReadyOnNewProfile);
   FRIEND_TEST_ALL_PREFIXES(::BraveSyncServiceTest, SetThisDeviceCreatedTime);
   FRIEND_TEST_ALL_PREFIXES(::BraveSyncServiceTest, InitialFetchesStartWithZero);
+  FRIEND_TEST_ALL_PREFIXES(::BraveSyncServiceTest, LastFetchBookmarksTime);
+  FRIEND_TEST_ALL_PREFIXES(::BraveSyncServiceTest, LastPreferencesFetchTime);
 
   friend class ::BraveSyncServiceTest;
 

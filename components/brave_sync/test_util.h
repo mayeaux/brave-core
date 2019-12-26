@@ -39,9 +39,11 @@ class MockBraveSyncClient : public BraveSyncClient {
                void(const Uint8Array& seed,
                     const Uint8Array& device_id,
                     const client_data::Config& config));
-  MOCK_METHOD3(SendFetchSyncRecords, void(
-    const std::vector<std::string>& category_names, const base::Time& startAt,
-    const int max_records));
+  MOCK_METHOD4(SendFetchSyncRecords,
+               void(const std::vector<std::string>& category_names,
+                    const base::Time& startAt,
+                    const int max_records,
+                    const base::Time& last_fetch_time));
   MOCK_METHOD2(SendResolveSyncRecords, void(const std::string& category_name,
     std::unique_ptr<SyncRecordAndExistingList> list));
   MOCK_METHOD2(SendSyncRecords,
