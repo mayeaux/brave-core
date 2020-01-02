@@ -106,6 +106,14 @@ AdsImpl::~AdsImpl() {
   StopSustainingAdInteraction();
 }
 
+AdsClient* AdsImpl::get_ads_client() const {
+  return ads_client_;
+}
+
+Client* AdsImpl::get_client() const {
+  return client_.get();
+}
+
 void AdsImpl::Initialize(
     InitializeCallback callback) {
   BLOG(INFO) << "Initializing ads";
@@ -142,10 +150,10 @@ void AdsImpl::InitializeStep3(
     return;
   }
 
-  auto user_model_languages = ads_client_->GetUserModelLanguages();
+  auto user_model_languages = get_ads_client()->GetUserModelLanguages();
   client_->SetUserModelLanguages(user_model_languages);
 
-  auto locale = ads_client_->GetLocale();
+  auto locale = get_ads_client()->GetLocale();
   ChangeLocale(locale);
 }
 
@@ -160,9 +168,9 @@ void AdsImpl::InitializeStep4(
 
   BLOG(INFO) << "Successfully initialized ads";
 
-  is_foreground_ = ads_client_->IsForeground();
+  is_foreground_ = get_ads_client()->IsForeground();
 
-  ads_client_->SetIdleThreshold(kIdleThresholdInSeconds);
+  get_ads_client()->SetIdleThreshold(kIdleThresholdInSeconds);
 
   initialize_callback_(SUCCESS);
 
@@ -221,7 +229,7 @@ void AdsImpl::RemoveAllNotificationsAfterUpdate() {
 #endif
 
 bool AdsImpl::IsInitialized() {
-  if (!is_initialized_ || !ads_client_->IsEnabled()) {
+  if (!is_initialized_ || !get_ads_client()->IsEnabled()) {
     return false;
   }
 
@@ -250,7 +258,7 @@ void AdsImpl::LoadUserModel() {
   auto language = client_->GetUserModelLanguage();
 
   auto callback = std::bind(&AdsImpl::OnUserModelLoaded, this, _1, _2);
-  ads_client_->LoadUserModelForLanguage(language, callback);
+  get_ads_client()->LoadUserModelForLanguage(language, callback);
 }
 
 void AdsImpl::OnUserModelLoaded(
@@ -288,7 +296,7 @@ void AdsImpl::InitializeUserModel(
 
 bool AdsImpl::IsMobile() const {
   ClientInfo client_info;
-  ads_client_->GetClientInfo(&client_info);
+  get_ads_client()->GetClientInfo(&client_info);
 
   if (client_info.platform != ANDROID_OS && client_info.platform != IOS) {
     return false;
@@ -299,18 +307,18 @@ bool AdsImpl::IsMobile() const {
 
 bool AdsImpl::GetNotificationForId(
     const std::string& id,
-    ads::NotificationInfo* notification) {
+    NotificationInfo* notification) {
   return notifications_->Get(id, notification);
 }
 
 void AdsImpl::OnForeground() {
   is_foreground_ = true;
 
-  if (IsMobile() && !ads_client_->CanShowBackgroundNotifications()) {
   const Reports reports(this);
   const std::string report = reports.GenerateForegroundEventReport();
   get_ads_client()->EventLog(report);
 
+  if (IsMobile() && !get_ads_client()->CanShowBackgroundNotifications()) {
     StartDeliveringNotifications();
   }
 }
@@ -318,11 +326,11 @@ void AdsImpl::OnForeground() {
 void AdsImpl::OnBackground() {
   is_foreground_ = false;
 
-  if (IsMobile() && !ads_client_->CanShowBackgroundNotifications()) {
   const Reports reports(this);
   const std::string report = reports.GenerateBackgroundEventReport();
   get_ads_client()->EventLog(report);
 
+  if (IsMobile() && !get_ads_client()->CanShowBackgroundNotifications()) {
     StopDeliveringNotifications();
   }
 }
@@ -490,7 +498,7 @@ bool AdsImpl::ShouldNotDisturb() const {
 
 bool AdsImpl::IsAndroid() const {
   ClientInfo client_info;
-  ads_client_->GetClientInfo(&client_info);
+  get_ads_client()->GetClientInfo(&client_info);
 
   if (client_info.platform != ANDROID_OS) {
     return false;
@@ -748,7 +756,7 @@ void AdsImpl::MaybeClassifyPage(
 }
 
 bool AdsImpl::ShouldClassifyPagesIfTargeted() const {
-  const std::string locale = ads_client_->GetLocale();
+  const std::string locale = get_ads_client()->GetLocale();
   const std::string region = helper::Locale::GetRegionCode(locale);
 
   auto targeted = false;
@@ -908,7 +916,7 @@ void AdsImpl::ServeSampleAd() {
   }
 
   auto callback = std::bind(&AdsImpl::OnLoadSampleBundle, this, _1, _2);
-  ads_client_->LoadSampleBundle(callback);
+  get_ads_client()->LoadSampleBundle(callback);
 }
 
 void AdsImpl::OnLoadSampleBundle(
@@ -925,7 +933,7 @@ void AdsImpl::OnLoadSampleBundle(
   BundleState state;
   std::string error_description;
   std::string json_schema =
-      ads_client_->LoadJsonSchema(_bundle_schema_resource_name);
+      get_ads_client()->LoadJsonSchema(_bundle_schema_resource_name);
   auto json_result = state.FromJson(json, json_schema, &error_description);
   if (json_result != SUCCESS) {
     BLOG(ERROR) << "Failed to parse sample bundle (" << error_description
@@ -1063,7 +1071,7 @@ void AdsImpl::ServeAdFromCategories(
 
   auto callback =
       std::bind(&AdsImpl::OnServeAdFromCategories, this, _1, _2, _3);
-  ads_client_->GetAds(categories, callback);
+  get_ads_client()->GetAds(categories, callback);
 }
 
 void AdsImpl::OnServeAdFromCategories(
@@ -1115,7 +1123,7 @@ bool AdsImpl::ServeAdFromParentCategories(
 
   auto callback =
       std::bind(&AdsImpl::OnServeAdFromCategories, this, _1, _2, _3);
-  ads_client_->GetAds(parent_categories, callback);
+  get_ads_client()->GetAds(parent_categories, callback);
 
   return true;
 }
@@ -1128,7 +1136,7 @@ void AdsImpl::ServeUntargetedAd() {
   };
 
   auto callback = std::bind(&AdsImpl::OnServeUntargetedAd, this, _1, _2, _3);
-  ads_client_->GetAds(categories, callback);
+  get_ads_client()->GetAds(categories, callback);
 }
 
 void AdsImpl::OnServeUntargetedAd(
@@ -1157,7 +1165,7 @@ void AdsImpl::ServeAd(
 void AdsImpl::SuccessfullyServedAd() {
   if (IsMobile()) {
     StartDeliveringNotificationsAfterSeconds(
-        base::Time::kSecondsPerHour / ads_client_->GetAdsPerHour());
+        base::Time::kSecondsPerHour / get_ads_client()->GetAdsPerHour());
   }
 }
 
@@ -1382,7 +1390,7 @@ void AdsImpl::StartCollectingActivity(
     const uint64_t start_timer_in) {
   StopCollectingActivity();
 
-  collect_activity_timer_id_ = ads_client_->SetTimer(start_timer_in);
+  collect_activity_timer_id_ = get_ads_client()->SetTimer(start_timer_in);
   if (collect_activity_timer_id_ == 0) {
     BLOG(ERROR) <<
         "Failed to start collecting activity due to an invalid timer";
@@ -1411,7 +1419,7 @@ void AdsImpl::StopCollectingActivity() {
 
   BLOG(INFO) << "Stopped collecting activity";
 
-  ads_client_->KillTimer(collect_activity_timer_id_);
+  get_ads_client()->KillTimer(collect_activity_timer_id_);
   collect_activity_timer_id_ = 0;
 }
 
@@ -1438,7 +1446,8 @@ void AdsImpl::StartDeliveringNotifications() {
     start_timer_in = next_check_serve_ad_timestamp_in_seconds - now_in_seconds;
   }
 
-  delivering_notifications_timer_id_ = ads_client_->SetTimer(start_timer_in);
+  delivering_notifications_timer_id_ =
+      get_ads_client()->SetTimer(start_timer_in);
   if (delivering_notifications_timer_id_ == 0) {
     BLOG(ERROR) <<
         "Failed to start delivering notifications due to an invalid timer";
@@ -1469,7 +1478,7 @@ void AdsImpl::StopDeliveringNotifications() {
 
   BLOG(INFO) << "Stopped delivering notifications";
 
-  ads_client_->KillTimer(delivering_notifications_timer_id_);
+  get_ads_client()->KillTimer(delivering_notifications_timer_id_);
   delivering_notifications_timer_id_ = 0;
 }
 
@@ -1502,7 +1511,7 @@ void AdsImpl::BundleUpdated() {
 
 void AdsImpl::NotificationAllowedCheck(
     const bool serve) {
-  auto ok = ads_client_->ShouldShowNotifications();
+  auto ok = get_ads_client()->ShouldShowNotifications();
 
   // TODO(Terry Mancey): Implement Log (#44)
   // appConstants.APP_ON_NATIVE_NOTIFICATION_AVAILABLE_CHECK, {err, result}
@@ -1532,7 +1541,7 @@ void AdsImpl::NotificationAllowedCheck(
     return;
   }
 
-  if (!ads_client_->IsNetworkConnectionAvailable()) {
+  if (!get_ads_client()->IsNetworkConnectionAvailable()) {
     // TODO(Terry Mancey): Implement Log (#44)
     // 'Notification not made', { reason: 'network connection not available' }
 
@@ -1555,7 +1564,7 @@ void AdsImpl::StartSustainingAdInteraction(
     const uint64_t start_timer_in) {
   StopSustainingAdInteraction();
 
-  sustained_ad_interaction_timer_id_ = ads_client_->SetTimer(start_timer_in);
+  sustained_ad_interaction_timer_id_ = get_ads_client()->SetTimer(start_timer_in);
   if (sustained_ad_interaction_timer_id_ == 0) {
     BLOG(ERROR) <<
         "Failed to start sustaining ad interaction due to an invalid timer";
@@ -1587,7 +1596,7 @@ void AdsImpl::StopSustainingAdInteraction() {
 
   BLOG(INFO) << "Stopped sustaining ad interaction";
 
-  ads_client_->KillTimer(sustained_ad_interaction_timer_id_);
+  get_ads_client()->KillTimer(sustained_ad_interaction_timer_id_);
   sustained_ad_interaction_timer_id_ = 0;
 }
 
@@ -1621,7 +1630,7 @@ void AdsImpl::ConfirmAd(
       reports.GenerateConfirmationEventReport(info.uuid, type);
   get_ads_client()->EventLog(report);
 
-  ads_client_->ConfirmAd(std::move(notification_info));
+  get_ads_client()->ConfirmAd(std::move(notification_info));
 }
 
 void AdsImpl::ConfirmAction(
@@ -1639,7 +1648,7 @@ void AdsImpl::ConfirmAction(
       reports.GenerateConfirmationEventReport(uuid, type);
   get_ads_client()->EventLog(report);
 
-  ads_client_->ConfirmAction(uuid, creative_set_id, type);
+  get_ads_client()->ConfirmAction(uuid, creative_set_id, type);
 }
 
 void AdsImpl::OnTimer(

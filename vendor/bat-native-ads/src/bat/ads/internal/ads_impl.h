@@ -42,6 +42,8 @@ class AdsImpl : public Ads {
   explicit AdsImpl(AdsClient* ads_client);
   ~AdsImpl() override;
 
+  AdsClient* get_ads_client() const;
+  Client* get_client() const;
 
   InitializeCallback initialize_callback_;
   void Initialize(
