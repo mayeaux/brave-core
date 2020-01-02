@@ -186,7 +186,7 @@ class ADS_EXPORT Ads {
   // Should be called to get the notification specified by |id|. Returns |true|
   // and a |notification| if the notification exists; otherwise, should return
   // |false|
-  virtual bool GetNotificationForId(
+  virtual bool GetAdNotificationForId(
       const std::string& id,
       NotificationInfo* notification) = 0;
 

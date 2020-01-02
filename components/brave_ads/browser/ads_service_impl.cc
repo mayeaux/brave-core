@@ -855,7 +855,7 @@ void AdsServiceImpl::ViewAd(
 
   LOG(INFO) << "View ad with id " << id;
 
-  bat_ads_->GetNotificationForId(
+  bat_ads_->GetAdNotificationForId(
       id, base::BindOnce(&AdsServiceImpl::OnViewAd, AsWeakPtr()));
 }
 

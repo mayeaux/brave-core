@@ -85,7 +85,7 @@ class AdsImpl : public Ads {
       const int32_t tab_id) override;
   bool IsMediaPlaying() const;
 
-  bool GetNotificationForId(
+  bool GetAdNotificationForId(
       const std::string& id,
       ads::NotificationInfo* notification) override;
 

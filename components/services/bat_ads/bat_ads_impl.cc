@@ -131,11 +131,11 @@ void BatAdsImpl::OnTabClosed(
   ads_->OnTabClosed(tab_id);
 }
 
-void BatAdsImpl::GetNotificationForId(
+void BatAdsImpl::GetAdNotificationForId(
     const std::string& id,
-    GetNotificationForIdCallback callback) {
+    GetAdNotificationForIdCallback callback) {
   ads::NotificationInfo notification;
-  ads_->GetNotificationForId(id, &notification);
+  ads_->GetAdNotificationForId(id, &notification);
   std::move(callback).Run(notification.ToJson());
 }
 

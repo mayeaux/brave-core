@@ -305,7 +305,7 @@ bool AdsImpl::IsMobile() const {
   return true;
 }
 
-bool AdsImpl::GetNotificationForId(
+bool AdsImpl::GetAdNotificationForId(
     const std::string& id,
     NotificationInfo* notification) {
   return notifications_->Get(id, notification);

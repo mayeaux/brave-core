@@ -607,7 +607,7 @@ BATClassAdsBridge(BOOL, isTesting, setTesting, _is_testing)
 {
   if (![self isAdsServiceRunning]) { return nil; }
   ads::NotificationInfo info;
-  if (ads->GetNotificationForId(identifier.UTF8String, &info)) {
+  if (ads->GetAdNotificationForId(identifier.UTF8String, &info)) {
     return [[BATAdsNotification alloc] initWithNotificationInfo:info];
   }
   return nil;
