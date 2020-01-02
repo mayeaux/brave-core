@@ -24,7 +24,7 @@
 #include "bat/ads/internal/static_values.h"
 #include "bat/ads/internal/time.h"
 #include "bat/ads/internal/uri_helper.h"
-#include "bat/ads/internal/ad_events/ad_event_factory.h"
+#include "bat/ads/internal/ad_events/ad_notification_event_factory.h"
 #include "bat/ads/internal/event_type_blur_info.h"
 #include "bat/ads/internal/event_type_destroy_info.h"
 #include "bat/ads/internal/event_type_focus_info.h"
