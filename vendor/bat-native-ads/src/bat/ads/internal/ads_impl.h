@@ -91,19 +91,7 @@ class AdsImpl : public Ads {
 
   void OnNotificationEvent(
       const std::string& id,
-      const ads::NotificationEventType type) override;
-  void NotificationEventViewed(
-      const std::string& id,
-      const NotificationInfo& notification);
-  void NotificationEventClicked(
-      const std::string& id,
-      const NotificationInfo& notification);
-  void NotificationEventDismissed(
-      const std::string& id,
-      const NotificationInfo& notification);
-  void NotificationEventTimedOut(
-      const std::string& id,
-      const NotificationInfo& notification);
+      const AdEventType type) override;
 
   bool ShouldNotDisturb() const;
 

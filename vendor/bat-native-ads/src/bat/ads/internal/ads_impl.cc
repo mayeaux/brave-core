@@ -404,75 +404,42 @@ bool AdsImpl::IsMediaPlaying() const {
 
 void AdsImpl::OnNotificationEvent(
     const std::string& id,
-    const ads::NotificationEventType type) {
+    const AdEventType event_type) {
   NotificationInfo notification;
   if (!notifications_->Get(id, &notification)) {
+    NOTREACHED();
     return;
   }
 
-  switch (type) {
-    case ads::NotificationEventType::VIEWED: {
-      NotificationEventViewed(id, notification);
+  switch (event_type) {
+    case AdEventType::kViewed: {
+      last_shown_notification_info_ = NotificationInfo(notification);
       break;
     }
 
-    case ads::NotificationEventType::CLICKED: {
-      NotificationEventClicked(id, notification);
+    case AdEventType::kClicked: {
+      notifications_->Remove(id, true);
       break;
     }
 
-    case ads::NotificationEventType::DISMISSED: {
-      NotificationEventDismissed(id, notification);
+    case AdEventType::kDismissed: {
+      notifications_->Remove(id, false);
       break;
     }
 
-    case ads::NotificationEventType::TIMEOUT: {
-      NotificationEventTimedOut(id, notification);
+    case AdEventType::kTimedOut: {
+      notifications_->Remove(id, false);
       break;
     }
   }
-}
 
-void AdsImpl::NotificationEventViewed(
-    const std::string& id,
-    const NotificationInfo& notification) {
-  GenerateAdReportingNotificationShownEvent(notification);
+  const auto ad_event = AdEventFactory::Build(this, event_type);
+  DCHECK(ad_event);
+  if (!ad_event) {
+    return;
+  }
 
-  ConfirmAd(notification, ConfirmationType::VIEW);
-  GenerateAdsHistoryEntry(notification, ConfirmationType::VIEW);
-}
-
-void AdsImpl::NotificationEventClicked(
-    const std::string& id,
-    const NotificationInfo& notification) {
-  notifications_->Remove(id, true);
-
-  GenerateAdReportingNotificationResultEvent(notification,
-      NotificationResultInfoResultType::CLICKED);
-
-  ConfirmAd(notification, ConfirmationType::CLICK);
-  GenerateAdsHistoryEntry(notification, ConfirmationType::CLICK);
-}
-
-void AdsImpl::NotificationEventDismissed(
-    const std::string& id,
-    const NotificationInfo& notification) {
-  notifications_->Remove(id, false);
-
-  GenerateAdReportingNotificationResultEvent(notification,
-      NotificationResultInfoResultType::DISMISSED);
-
-  ConfirmAd(notification, ConfirmationType::DISMISS);
-  GenerateAdsHistoryEntry(notification, ConfirmationType::DISMISS);
-}
-
-void AdsImpl::NotificationEventTimedOut(
-    const std::string& id,
-    const NotificationInfo& notification) {
-  notifications_->Remove(id, false);
-
-  GenerateAdReportingNotificationResultEvent(notification,
-      NotificationResultInfoResultType::TIMEOUT);
+  ad_event->Trigger(notification);
 }
 
 bool AdsImpl::ShouldNotDisturb() const {
