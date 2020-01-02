@@ -189,6 +189,8 @@ source_set("ads") {
     "src/bat/ads/internal/notification_result_type.h",
     "src/bat/ads/internal/notifications.cc",
     "src/bat/ads/internal/notifications.h",
+    "src/bat/ads/internal/reports.cc",
+    "src/bat/ads/internal/reports.h",
     "src/bat/ads/internal/saved_ad.cc",
     "src/bat/ads/internal/saved_ad.h",
     "src/bat/ads/internal/search_provider_info.cc",

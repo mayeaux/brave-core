@@ -22,10 +22,6 @@
 #include "bat/ads/internal/ads_serve.h"
 #include "bat/ads/internal/bundle.h"
 #include "bat/ads/internal/client.h"
-#include "bat/ads/internal/event_type_blur_info.h"
-#include "bat/ads/internal/event_type_destroy_info.h"
-#include "bat/ads/internal/event_type_focus_info.h"
-#include "bat/ads/internal/event_type_load_info.h"
 #include "bat/ads/internal/notification_result_type.h"
 #include "bat/ads/internal/notifications.h"
 
@@ -46,7 +42,6 @@ class AdsImpl : public Ads {
   explicit AdsImpl(AdsClient* ads_client);
   ~AdsImpl() override;
 
-  bool is_first_run_;
 
   InitializeCallback initialize_callback_;
   void Initialize(
@@ -275,31 +270,6 @@ class AdsImpl : public Ads {
       const uint32_t timer_id) override;
 
   uint64_t next_easter_egg_timestamp_in_seconds_;
-  void GenerateAdReportingConfirmationEvent(
-      const NotificationInfo& info);
-  void GenerateAdReportingConfirmationEvent(
-      const std::string& uuid,
-      const ConfirmationType& type);
-  void MaybeGenerateAdReportingLoadEvent(
-      const std::string& url,
-      const std::string& classification);
-  void GenerateAdReportingLoadEvent(
-      const LoadInfo& info);
-  void GenerateAdReportingBackgroundEvent();
-  void GenerateAdReportingForegroundEvent();
-  void GenerateAdReportingBlurEvent(
-      const BlurInfo& info);
-  void GenerateAdReportingDestroyEvent(
-      const DestroyInfo& info);
-  void GenerateAdReportingFocusEvent(
-      const FocusInfo& info);
-  void GenerateAdReportingRestartEvent();
-  void GenerateAdReportingSettingsEvent();
-  void GenerateAdReportingNotificationShownEvent(
-      const NotificationInfo& info);
-  void GenerateAdReportingNotificationResultEvent(
-      const NotificationInfo& info,
-      const NotificationResultInfoResultType type);
 
   void GenerateAdsHistoryEntry(
       const NotificationInfo& notification_info,
