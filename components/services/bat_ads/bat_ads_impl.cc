@@ -26,9 +26,9 @@ ads::Result ToMojomResult(int32_t result) {
   return (ads::Result)result;
 }
 
-ads::NotificationEventType ToMojomNotificationEventType(
+ads::AdEventType ToMojomAdEventType(
     const int32_t event_type) {
-  return (ads::NotificationEventType)event_type;
+  return (ads::AdEventType)event_type;
 }
 
 ads::AdContent::LikeAction ToAdsLikeAction(
@@ -142,7 +142,7 @@ void BatAdsImpl::GetNotificationForId(
 void BatAdsImpl::OnNotificationEvent(
     const std::string& id,
     const int32_t type) {
-  ads_->OnNotificationEvent(id, ToMojomNotificationEventType(type));
+  ads_->OnNotificationEvent(id, ToMojomAdEventType(type));
 }
 
 void BatAdsImpl::RemoveAllHistory(

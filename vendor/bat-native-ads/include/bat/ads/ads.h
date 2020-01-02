@@ -15,7 +15,7 @@
 #include "bat/ads/ads_client.h"
 #include "bat/ads/category_content.h"
 #include "bat/ads/export.h"
-#include "bat/ads/notification_event_type.h"
+#include "bat/ads/ad_event_type.h"
 #include "bat/ads/notification_info.h"
 #include "bat/ads/public/interfaces/ads.mojom.h"
 #include "bat/ads/ads_history.h"
@@ -194,7 +194,7 @@ class ADS_EXPORT Ads {
   // notification; or a notification times out
   virtual void OnNotificationEvent(
       const std::string& id,
-      const NotificationEventType type) = 0;
+      const AdEventType type) = 0;
 
   // Should be called to remove all cached history. The callback takes one
   // argument — |Result| should be set to |SUCCESS| if successful; otherwise,

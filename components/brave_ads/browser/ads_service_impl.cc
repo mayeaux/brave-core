@@ -23,7 +23,7 @@
 #include "bat/ads/ads.h"
 #include "bat/ads/ads_history.h"
 #include "bat/ads/notification_info.h"
-#include "bat/ads/notification_event_type.h"
+#include "bat/ads/ad_event_type.h"
 #include "bat/ads/resources/grit/bat_ads_resources.h"
 #include "brave/components/brave_ads/browser/ad_notification.h"
 #include "brave/components/brave_ads/browser/ads_notification_handler.h"
@@ -130,8 +130,8 @@ class LogStreamImpl : public ads::LogStream {
 
 namespace {
 
-int32_t ToMojomNotificationEventType(
-    const ads::NotificationEventType type) {
+int32_t ToMojomAdEventType(
+    const ads::AdEventType type) {
   return (int32_t)type;
 }
 
@@ -800,7 +800,7 @@ void AdsServiceImpl::OnShow(
     return;
   }
 
-  auto type = ToMojomNotificationEventType(ads::NotificationEventType::VIEWED);
+  auto type = ToMojomAdEventType(ads::AdEventType::kViewed);
 
   bat_ads_->OnNotificationEvent(id, type);
 
@@ -820,10 +820,10 @@ void AdsServiceImpl::OnClose(
     const bool by_user,
     base::OnceClosure completed_closure) {
   if (connected()) {
-    auto type = by_user ? ads::NotificationEventType::DISMISSED
-        : ads::NotificationEventType::TIMEOUT;
+    auto type = by_user ? ads::AdEventType::kDismissed
+        : ads::AdEventType::kTimedOut;
 
-    bat_ads_->OnNotificationEvent(id, ToMojomNotificationEventType(type));
+    bat_ads_->OnNotificationEvent(id, ToMojomAdEventType(type));
   }
 
   if (completed_closure) {
@@ -865,7 +865,7 @@ void AdsServiceImpl::OnViewAd(
   notification.FromJson(json);
 
   bat_ads_->OnNotificationEvent(notification.id,
-      ToMojomNotificationEventType(ads::NotificationEventType::CLICKED));
+      ToMojomAdEventType(ads::AdEventType::kClicked));
 
   OpenNewTabWithUrl(notification.url);
 }

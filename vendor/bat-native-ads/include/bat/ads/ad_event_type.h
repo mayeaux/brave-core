@@ -3,18 +3,18 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef BAT_ADS_NOTIFICATION_EVENT_TYPE_H_
-#define BAT_ADS_NOTIFICATION_EVENT_TYPE_H_
+#ifndef BAT_ADS_AD_EVENT_TYPE_H_
+#define BAT_ADS_AD_EVENT_TYPE_H_
 
 namespace ads {
 
-enum class NotificationEventType {
-  VIEWED,
-  CLICKED,
-  DISMISSED,
-  TIMEOUT
+enum class AdEventType {
+  kViewed,
+  kClicked,
+  kDismissed,
+  kTimedOut
 };
 
 }  // namespace ads
 
-#endif  // BAT_ADS_NOTIFICATION_EVENT_TYPE_H_
+#endif  // BAT_ADS_AD_EVENT_TYPE_H_

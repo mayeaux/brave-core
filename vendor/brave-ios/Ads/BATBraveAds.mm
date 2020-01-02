@@ -341,11 +341,11 @@ BATClassAdsBridge(BOOL, isTesting, setTesting, _is_testing)
   ads->OnTabClosed((int32_t)tabId);
 }
 
-- (void)reportNotificationEvent:(NSString *)notificationId eventType:(BATAdsNotificationEventType)eventType
+- (void)reportNotificationEvent:(NSString *)notificationId eventType:(BATAdsAdEventType)eventType
 {
   if (![self isAdsServiceRunning]) { return; }
   ads->OnNotificationEvent(notificationId.UTF8String,
-                           static_cast<ads::NotificationEventType>(eventType));
+                           static_cast<ads::AdEventType>(eventType));
 }
 
 - (void)toggleThumbsUpForAd:(NSString *)identifier creativeSetID:(NSString *)creativeSetID
