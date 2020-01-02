@@ -12,76 +12,63 @@ const parseDomain = require('parse-domain')
 
 const queriedIds = new Set()
 const queriedClasses = new Set()
-const regexWhitespace = /\s/
 
-let cosmeticObserver: MutationObserver | undefined = undefined
+let notYetQueriedClasses: string[] = []
+let notYetQueriedIds: string[] = []
 
 let randomizedClassName: string | undefined = undefined
 
-const getClassesAndIds = function (addedNodes: Element[]) {
-  const ids = []
-  const classes = []
-
-  for (const node of addedNodes) {
-    let nodeId = node.id
-    if (nodeId && nodeId.length !== 0) {
-      nodeId = nodeId.trim()
-      if (!queriedIds.has(nodeId) && nodeId.length !== 0) {
-        ids.push(nodeId)
-        queriedIds.add(nodeId)
-      }
+const handleMutations = function (mutations: any[]) {
+  for (const aMutation of mutations) {
+    if (aMutation.type !== 'attributes') {
+      continue
     }
-    let nodeClass = node.className
-    if (nodeClass && nodeClass.length !== 0 && !regexWhitespace.test(nodeClass)) {
-      if (!queriedClasses.has(nodeClass)) {
-        classes.push(nodeClass)
-        queriedClasses.add(nodeClass)
-      }
-    } else {
-      let nodeClasses = node.classList
-      if (nodeClasses) {
-        let j = nodeClasses.length
-        while (j--) {
-          const nodeClassJ = nodeClasses[j]
-          if (queriedClasses.has(nodeClassJ) === false) {
-            classes.push(nodeClassJ)
-            queriedClasses.add(nodeClassJ)
+
+    // Since we're filtering for attribute modifications, we can be certain
+    // that the targets are always HTMLElements, and never TextNode.
+    const changedElm = aMutation.target
+    switch (aMutation.attributeName) {
+      case 'class':
+        for (const aClassName of changedElm.classList.values()) {
+          if (queriedClasses.has(aClassName) === false) {
+            notYetQueriedClasses.push(aClassName)
+            queriedClasses.add(aClassName)
           }
         }
-      }
+        break
+
+      case 'id':
+        const mutatedId = changedElm.id
+        if (queriedIds.has(mutatedId) === false) {
+          notYetQueriedIds.push(mutatedId)
+          queriedIds.add(mutatedId)
+        }
+        break
     }
   }
-  return { classes, ids }
-}
 
-const handleNewNodes = (newNodes: Element[]) => {
-  const { classes, ids } = getClassesAndIds(newNodes)
-  if (classes.length !== 0 || ids.length !== 0) {
+  // Only let the backend know that we've found new classes and id attributes
+  // if (1) the back end has told us its ready to go
+  // (e.g. randomizedClassName has been set) and we have at least one
+  // new class or id to query for.
+  if (randomizedClassName !== undefined &&
+      (notYetQueriedClasses.length !== 0 || notYetQueriedIds.length !== 0)) {
     chrome.runtime.sendMessage({
       type: 'classIdStylesheet',
-      classes,
-      ids
+      classes: notYetQueriedClasses,
+      ids: notYetQueriedIds
     })
+    notYetQueriedClasses = []
+    notYetQueriedIds = []
   }
 }
 
-const applyCosmeticFilterMutationObserver = () => {
-  let targetNode = document.documentElement
-  cosmeticObserver = new MutationObserver(mutations => {
-    const nodeList: Element[] = []
-    for (const mutation of mutations) {
-      for (let nodeIndex = 0; nodeIndex < mutation.addedNodes.length; nodeIndex++) {
-        nodeList.push(mutation.addedNodes[nodeIndex] as Element)
-      }
-    }
-    handleNewNodes(nodeList)
-  })
-  let observerConfig = {
-    childList: true,
-    subtree: true
-  }
-  cosmeticObserver.observe(targetNode, observerConfig)
+const cosmeticObserver = new MutationObserver(handleMutations)
+let observerConfig = {
+  subtree: true,
+  attributeFilter: ['id', 'class'],
 }
+cosmeticObserver.observe(document.documentElement, observerConfig)
 
 const _parseDomainCache = Object.create(null)
 const getParsedDomain = (aDomain: any) => {
@@ -103,7 +90,7 @@ const isFirstPartyUrl = (url: string): boolean => {
 
   const parsedTargetDomain = getParsedDomain(url)
   if (!parsedTargetDomain) {
-    // If we cannot determine the partiness of the resource,
+    // If we cannot determine the party-ness of the resource,
     // consider it first-party.
     console.debug(`Unable to determine party-ness of "${url}"`)
     return false
@@ -129,7 +116,7 @@ interface IsFirstPartyQueryResult {
  *   - If the subtree contains no remote resources, the subtree is first party.
  *   - Otherwise, its 3rd party.
  *
- * Note that any instances of "url(" or escape charaters in style attributes are
+ * Note that any instances of "url(" or escape characters in style attributes are
  * automatically treated as third-party URLs.  These patterns and special cases
  * were generated from looking at patterns in ads with resources in the style
  * attribute.
@@ -235,20 +222,18 @@ const hideSubtree = (elm: HTMLElement) => {
   }
 }
 
-// const customStyleRules = new Map()
-
-const alreadyHiddenThirdPartySubtrees = new WeakSet()
+const alreadyHiddenThirdPartySubTrees = new WeakSet()
 const allSelectorsSet = new Set()
 const firstRunQueue = new Set()
 const secondRunQueue = new Set()
 const finalRunQueue = new Set()
 const allQueues = [firstRunQueue, secondRunQueue, finalRunQueue]
-const numQueues = 3
+const numQueues = allQueues.length
 const pumpIntervalMs = 50
 const maxWorkSize = 50
 let queueIsSleeping = false
 
-const pumpQueues = () => {
+const pumpCosmeticFilterQueues = () => {
   if (queueIsSleeping) {
     return
   }
@@ -263,15 +248,15 @@ const pumpQueues = () => {
 
     const currentWorkLoad = Array.from(currentQueue.values()).slice(0, maxWorkSize)
     const comboSelector = currentWorkLoad.join(',')
-    const matchingElms = Array.from(document.querySelectorAll(comboSelector))
-    for (const aMatchingElm of matchingElms) {
-      if (alreadyHiddenThirdPartySubtrees.has(aMatchingElm)) {
+    const matchingElms = document.querySelectorAll(comboSelector)
+    for (const aMatchingElm of Array.from(matchingElms)) {
+      if (alreadyHiddenThirdPartySubTrees.has(aMatchingElm)) {
         continue
       }
       const elmSubtreeIsFirstParty = isSubTreeFirstParty(aMatchingElm)
       if (elmSubtreeIsFirstParty === false) {
         hideSubtree(aMatchingElm as HTMLElement)
-        alreadyHiddenThirdPartySubtrees.add(aMatchingElm)
+        alreadyHiddenThirdPartySubTrees.add(aMatchingElm)
       }
     }
 
@@ -290,7 +275,7 @@ const pumpQueues = () => {
     queueIsSleeping = true
     setTimeout(() => {
       queueIsSleeping = false
-      pumpQueues()
+      pumpCosmeticFilterQueues()
     }, pumpIntervalMs)
   }
 }
@@ -299,12 +284,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   const action = typeof msg === 'string' ? msg : msg.type
   switch (action) {
     case 'cosmeticFilterGenericExceptions': {
-      if (!cosmeticObserver) {
-        const allNodes = Array.from(document.querySelectorAll('[id],[class]'))
-        handleNewNodes(allNodes)
-        applyCosmeticFilterMutationObserver()
-        randomizedClassName = msg.randomizedClassName
-      }
+      randomizedClassName = msg.randomizedClassName
       sendResponse(null)
       break
     }
@@ -318,14 +298,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         allSelectorsSet.add(aHideRule)
         firstRunQueue.add(aHideRule)
       }
-      // for (const [aCustomStyleRule, aCustomStyle] of Object.entries(customStyleRules)) {
-      //   if (allSelectorsSet.has(aCustomStyleRule)) {
-      //     continue
-      //   }
-      //   allSelectorsSet.set(aCustomStyleRule, aCustomStyle)
-      //   firstRunQueue.add(aCustomStyleRule)
-      // }
-      pumpQueues()
+      pumpCosmeticFilterQueues()
     }
   }
 })
