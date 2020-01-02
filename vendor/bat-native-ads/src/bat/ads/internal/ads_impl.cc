@@ -577,7 +577,7 @@ AdContent::LikeAction AdsImpl::ToggleAdThumbUp(
     const AdContent::LikeAction& action) {
   auto like_action = client_->ToggleAdThumbUp(id, creative_set_id, action);
   if (like_action == AdContent::LIKE_ACTION_THUMBS_UP) {
-    ConfirmAction(id, creative_set_id, ConfirmationType::UPVOTE);
+    ConfirmAction(id, creative_set_id, ConfirmationType::kUpvoted);
   }
 
   return like_action;
@@ -589,7 +589,7 @@ AdContent::LikeAction AdsImpl::ToggleAdThumbDown(
     const AdContent::LikeAction& action) {
   auto like_action = client_->ToggleAdThumbDown(id, creative_set_id, action);
   if (like_action == AdContent::LIKE_ACTION_THUMBS_DOWN) {
-    ConfirmAction(id, creative_set_id, ConfirmationType::DOWNVOTE);
+    ConfirmAction(id, creative_set_id, ConfirmationType::kDownvoted);
   }
 
   return like_action;
@@ -620,7 +620,7 @@ bool AdsImpl::ToggleFlagAd(
     const bool flagged) {
   auto flag_ad = client_->ToggleFlagAd(id, creative_set_id, flagged);
   if (flag_ad) {
-    ConfirmAction(id, creative_set_id, ConfirmationType::FLAG);
+    ConfirmAction(id, creative_set_id, ConfirmationType::kFlagged);
   }
 
   return flag_ad;
@@ -1557,7 +1557,7 @@ void AdsImpl::SustainAdInteractionIfNeeded() {
 
   BLOG(INFO) << "Sustained ad interaction";
 
-  ConfirmAd(last_shown_notification_info_, ConfirmationType::LANDED);
+  ConfirmAd(last_shown_notification_info_, ConfirmationType::kLanded);
 }
 
 void AdsImpl::StopSustainingAdInteraction() {

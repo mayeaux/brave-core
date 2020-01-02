@@ -641,7 +641,7 @@ bool ConfirmationsImpl::GetTransactionHistoryFromDictionary(
       info.confirmation_type = confirmation_type_value->GetString();
     } else {
       // confirmation type missing, fallback to default
-      ConfirmationType type(ConfirmationType::VIEW);
+      ConfirmationType type(ConfirmationType::kViewed);
       info.confirmation_type = std::string(type);
     }
 

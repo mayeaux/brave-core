@@ -12,7 +12,8 @@ ConfirmationInfo::ConfirmationInfo()
       payment_token(nullptr),
       blinded_payment_token(nullptr),
       timestamp_in_seconds(0),
-      created(false) {}
+      created(false) {
+}
 
 ConfirmationInfo::ConfirmationInfo(
     const ConfirmationInfo& info) = default;

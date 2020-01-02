@@ -1160,43 +1160,43 @@ void LedgerImpl::ConfirmAd(const std::string& info) {
   notification_info->uuid = notification_info_ads.uuid;
 
   switch (notification_info_ads.type.value()) {
-    case ads::ConfirmationType::UNKNOWN: {
-      notification_info->type = confirmations::ConfirmationType::UNKNOWN;
+    case ads::ConfirmationType::kUnknown: {
+      notification_info->type = confirmations::ConfirmationType::kUnknown;
       break;
     }
 
-    case ads::ConfirmationType::CLICK: {
-      notification_info->type = confirmations::ConfirmationType::CLICK;
+    case ads::ConfirmationType::kClicked: {
+      notification_info->type = confirmations::ConfirmationType::kClicked;
       break;
     }
 
-    case ads::ConfirmationType::DISMISS: {
-      notification_info->type = confirmations::ConfirmationType::DISMISS;
+    case ads::ConfirmationType::kDismissed: {
+      notification_info->type = confirmations::ConfirmationType::kDismissed;
       break;
     }
 
-    case ads::ConfirmationType::VIEW: {
-      notification_info->type = confirmations::ConfirmationType::VIEW;
+    case ads::ConfirmationType::kViewed: {
+      notification_info->type = confirmations::ConfirmationType::kViewed;
       break;
     }
 
-    case ads::ConfirmationType::LANDED: {
-      notification_info->type = confirmations::ConfirmationType::LANDED;
+    case ads::ConfirmationType::kLanded: {
+      notification_info->type = confirmations::ConfirmationType::kLanded;
       break;
     }
 
-    case ads::ConfirmationType::FLAG: {
-      notification_info->type = confirmations::ConfirmationType::FLAG;
+    case ads::ConfirmationType::kFlagged: {
+      notification_info->type = confirmations::ConfirmationType::kFlagged;
       break;
     }
 
-    case ads::ConfirmationType::UPVOTE: {
-      notification_info->type = confirmations::ConfirmationType::UPVOTE;
+    case ads::ConfirmationType::kUpvoted: {
+      notification_info->type = confirmations::ConfirmationType::kUpvoted;
       break;
     }
 
-    case ads::ConfirmationType::DOWNVOTE: {
-      notification_info->type = confirmations::ConfirmationType::DOWNVOTE;
+    case ads::ConfirmationType::kDownvoted: {
+      notification_info->type = confirmations::ConfirmationType::kDownvoted;
       break;
     }
   }

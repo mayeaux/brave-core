@@ -14,7 +14,7 @@ namespace ads {
 
 AdContent::AdContent() :
     like_action(AdContent::LIKE_ACTION_NONE),
-    ad_action(ConfirmationType::UNKNOWN),
+    ad_action(ConfirmationType::kUnknown),
     saved_ad(false),
     flagged_ad(false) {}
 
