@@ -262,8 +262,8 @@ class AdsImpl : public Ads {
 
   uint64_t next_easter_egg_timestamp_in_seconds_;
 
-  void GenerateAdsHistoryEntry(
-      const NotificationInfo& notification_info,
+  void AppendAdNotificationToAdsHistory(
+      const NotificationInfo& info,
       const ConfirmationType& type);
 
   bool IsNotificationFromSampleCatalog(

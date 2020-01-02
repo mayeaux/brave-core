@@ -1643,21 +1643,20 @@ void AdsImpl::OnTimer(
   }
 }
 
-void AdsImpl::GenerateAdsHistoryEntry(
-    const NotificationInfo& notification_info,
+void AdsImpl::AppendAdNotificationToAdsHistory(
+    const NotificationInfo& info,
     const ConfirmationType& confirmation_type) {
   auto ad_history = std::make_unique<AdHistory>();
   ad_history->timestamp_in_seconds = Time::NowInSeconds();
   ad_history->uuid = base::GenerateGUID();
-  ad_history->ad_content.uuid = notification_info.uuid;
-  ad_history->ad_content.creative_set_id = notification_info.creative_set_id;
-  ad_history->ad_content.brand = notification_info.advertiser;
-  ad_history->ad_content.brand_info = notification_info.text;
-  ad_history->ad_content.brand_display_url =
-      GetDisplayUrl(notification_info.url);
-  ad_history->ad_content.brand_url = notification_info.url;
+  ad_history->ad_content.uuid = info.uuid;
+  ad_history->ad_content.creative_set_id = info.creative_set_id;
+  ad_history->ad_content.brand = info.advertiser;
+  ad_history->ad_content.brand_info = info.text;
+  ad_history->ad_content.brand_display_url = GetDisplayUrl(info.url);
+  ad_history->ad_content.brand_url = info.url;
   ad_history->ad_content.ad_action = confirmation_type;
-  ad_history->category_content.category = notification_info.category;
+  ad_history->category_content.category = info.category;
 
   client_->AppendAdHistoryToAdsShownHistory(*ad_history);
 }
