@@ -266,8 +266,6 @@ class AdsImpl : public Ads {
       const NotificationInfo& info,
       const ConfirmationType& type);
 
-  bool IsNotificationFromSampleCatalog(
-      const NotificationInfo& info) const;
   bool IsCreativeSetFromSampleCatalog(
       const std::string& creative_set_id) const;
 

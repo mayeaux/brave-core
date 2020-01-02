@@ -1586,7 +1586,7 @@ bool AdsImpl::IsStillViewingAd() const {
 void AdsImpl::ConfirmAd(
     const NotificationInfo& info,
     const ConfirmationType& type) {
-  if (IsNotificationFromSampleCatalog(info)) {
+  if (IsCreativeSetFromSampleCatalog(info.creative_set_id)) {
     BLOG(INFO) << "Confirmation not made: Sample Ad";
 
     return;
@@ -1659,11 +1659,6 @@ void AdsImpl::AppendAdNotificationToAdsHistory(
   ad_history->category_content.category = info.category;
 
   client_->AppendAdHistoryToAdsShownHistory(*ad_history);
-}
-
-bool AdsImpl::IsNotificationFromSampleCatalog(
-    const NotificationInfo& info) const {
-  return info.creative_set_id.empty();
 }
 
 bool AdsImpl::IsCreativeSetFromSampleCatalog(
