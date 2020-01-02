@@ -11,6 +11,7 @@ namespace brave_ads {
 namespace prefs {
 
 extern const char kEnabled[];
+extern const char kPublisherAdsEnabled[];
 
 extern const char kAdsPerHour[];
 extern const char kAdsPerDay[];

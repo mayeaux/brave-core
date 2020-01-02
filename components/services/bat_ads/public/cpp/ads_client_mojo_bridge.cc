@@ -56,6 +56,16 @@ void AdsClientMojoBridge::IsEnabled(IsEnabledCallback callback) {
   std::move(callback).Run(ads_client_->IsEnabled());
 }
 
+bool AdsClientMojoBridge::IsPublisherAdsEnabled(bool* is_enabled) {
+  *is_enabled = ads_client_->IsPublisherAdsEnabled();
+  return true;
+}
+
+void AdsClientMojoBridge::IsPublisherAdsEnabled(
+    IsPublisherAdsEnabledCallback callback) {
+  std::move(callback).Run(ads_client_->IsPublisherAdsEnabled());
+}
+
 bool AdsClientMojoBridge::IsForeground(bool* is_foreground) {
   *is_foreground = ads_client_->IsForeground();
   return true;

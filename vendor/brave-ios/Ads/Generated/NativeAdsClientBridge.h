@@ -20,6 +20,7 @@
 - (void)getClientInfo:(ads::ClientInfo *)info;
 - (const std::vector<std::string>)getUserModelLanguages;
 - (bool)isAdsEnabled;
+- (bool)isPublisherAdsEnabled;
 - (bool)isForeground;
 - (bool)canShowBackgroundNotifications;
 - (bool)isNetworkConnectionAvailable;

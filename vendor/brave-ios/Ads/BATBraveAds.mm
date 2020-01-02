@@ -29,6 +29,7 @@ static const NSInteger kDefaultNumberOfAdsPerDay = 20;
 static const NSInteger kDefaultNumberOfAdsPerHour = 2;
 
 static NSString * const kAdsEnabledPrefKey = @"BATAdsEnabled";
+static NSString * const kPublisherAdsEnabledPrefKey = @"BATPublisherAdsEnabled";
 static NSString * const kNumberOfAdsPerDayKey = @"BATNumberOfAdsPerDay";
 static NSString * const kNumberOfAdsPerHourKey = @"BATNumberOfAdsPerHour";
 
@@ -169,6 +170,17 @@ BATClassAdsBridge(BOOL, isTesting, setTesting, _is_testing)
   } else {
     [self shutdown];
   }
+}
+
+- (BOOL)isPublisherAdsEnabled
+{
+  return [(NSNumber *)self.prefs[kPublisherAdsEnabledPrefKey] boolValue];
+}
+
+- (void)setPublisherAdsEnabled:(BOOL)enabled
+{
+  self.prefs[kPublisherAdsEnabledPrefKey] = @(enabled);
+  [self savePrefs];
 }
 
 - (NSInteger)numberOfAllowableAdsPerDay
@@ -419,6 +431,11 @@ BATClassAdsBridge(BOOL, isTesting, setTesting, _is_testing)
 - (bool)isAdsEnabled
 {
   return self.enabled;
+}
+
+- (bool)isPublisherAdsEnabled
+{
+  return self.publisherAdsEnabled;
 }
 
 - (bool)isForeground

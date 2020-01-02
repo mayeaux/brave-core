@@ -76,6 +76,9 @@ NS_SWIFT_NAME(BraveAds)
 /// Whether or not Brave Ads is enabled
 @property (nonatomic, assign, getter=isEnabled) BOOL enabled;
 
+/// Whether or not Brave Publisher Ads is enabled
+@property (nonatomic, assign, getter=isPublisherAdsEnabled) BOOL publisherAdsEnabled;
+
 /// The max number of ads the user can see in an hour
 @property (nonatomic, assign) NSInteger numberOfAllowableAdsPerHour NS_SWIFT_NAME(adsPerHour);
 

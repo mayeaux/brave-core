@@ -24,6 +24,7 @@ class BatAdsClientMojoBridge : public ads::AdsClient {
 
   // AdsClient implementation
   bool IsEnabled() const override;
+  bool IsPublisherAdsEnabled() const override;
 
   bool CanShowBackgroundNotifications() const override;
   uint64_t GetAdsPerHour() const override;

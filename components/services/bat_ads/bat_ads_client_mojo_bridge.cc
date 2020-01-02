@@ -96,6 +96,16 @@ bool BatAdsClientMojoBridge::IsEnabled() const {
   return is_enabled;
 }
 
+bool BatAdsClientMojoBridge::IsPublisherAdsEnabled() const {
+  if (!connected()) {
+    return false;
+  }
+
+  bool is_enabled;
+  bat_ads_client_->IsPublisherAdsEnabled(&is_enabled);
+  return is_enabled;
+}
+
 bool BatAdsClientMojoBridge::CanShowBackgroundNotifications() const {
   if (!connected())
     return false;
