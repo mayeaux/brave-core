@@ -79,6 +79,10 @@ class BatAdsImpl :
       const std::string& id,
       const int32_t event_type) override;
 
+  void OnPublisherAdEvent(
+      const std::string& json,
+      const int32_t event_type) override;
+
   void RemoveAllHistory(
       RemoveAllHistoryCallback callback) override;
 

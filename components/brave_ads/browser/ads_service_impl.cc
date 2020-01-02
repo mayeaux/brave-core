@@ -443,6 +443,47 @@ void AdsServiceImpl::OnTabClosed(
   bat_ads_->OnTabClosed(tab_id.id());
 }
 
+void AdsServiceImpl::OnPublisherAdEvent(
+    const std::string& json,
+    const int32_t event_type) {
+  if (!connected()) {
+    return;
+  }
+
+  switch ((ads::AdEventType)event_type) {
+    case ads::AdEventType::kViewed: {
+      bat_ads_->OnPublisherAdEvent(json, event_type);
+      break;
+    }
+
+    case ads::AdEventType::kClicked: {
+      ads::PublisherAdInfo info;
+      if (info.FromJson(json) != ads::Result::SUCCESS) {
+        NOTREACHED();
+        return;
+      }
+
+      OpenNewTabWithUrl(info.url);
+
+      bat_ads_->OnPublisherAdEvent(json, event_type);
+
+      break;
+    }
+
+    case ads::AdEventType::kDismissed: {
+      // Intentionally do nothing as unused for publisher ads
+      NOTREACHED();
+      break;
+    }
+
+    case ads::AdEventType::kTimedOut: {
+      // Intentionally do nothing as unused for publisher ads
+      NOTREACHED();
+      break;
+    }
+  }
+}
+
 void AdsServiceImpl::GetAdsHistory(
     const uint64_t from_timestamp,
     const uint64_t to_timestamp,

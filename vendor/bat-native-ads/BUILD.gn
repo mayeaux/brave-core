@@ -78,6 +78,7 @@ source_set("headers") {
     "include/bat/ads/issuers_info.h",
     "include/bat/ads/ad_event_type.h",
     "include/bat/ads/notification_info.h",
+    "include/bat/ads/publisher_ad_info.h",
     "include/bat/ads/result.h",
   ]
 
@@ -118,6 +119,12 @@ source_set("ads") {
     "src/bat/ads/internal/ad_events/ad_notification_event_timed_out.h",
     "src/bat/ads/internal/ad_events/ad_notification_event_viewed.cc",
     "src/bat/ads/internal/ad_events/ad_notification_event_viewed.h",
+    "src/bat/ads/internal/ad_events/publisher_ad_event_clicked.cc",
+    "src/bat/ads/internal/ad_events/publisher_ad_event_clicked.h",
+    "src/bat/ads/internal/ad_events/publisher_ad_event_factory.cc",
+    "src/bat/ads/internal/ad_events/publisher_ad_event_factory.h",
+    "src/bat/ads/internal/ad_events/publisher_ad_event_viewed.cc",
+    "src/bat/ads/internal/ad_events/publisher_ad_event_viewed.h",
     "src/bat/ads/internal/ads_impl.cc",
     "src/bat/ads/internal/ads_impl.h",
     "src/bat/ads/internal/ads_serve.cc",

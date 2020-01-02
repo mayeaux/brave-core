@@ -18,7 +18,7 @@
 #include "bat/ads/ad_info.h"
 #include "bat/ads/ad_event_type.h"
 #include "bat/ads/notification_info.h"
-
+#include "bat/ads/publisher_ad_info.h"
 #include "bat/ads/internal/ads_serve.h"
 #include "bat/ads/internal/bundle.h"
 #include "bat/ads/internal/client.h"
@@ -90,6 +90,10 @@ class AdsImpl : public Ads {
       ads::NotificationInfo* notification) override;
   void OnAdNotificationEvent(
       const std::string& id,
+      const AdEventType event_type) override;
+
+  void OnPublisherAdEvent(
+      const PublisherAdInfo& info,
       const AdEventType event_type) override;
 
   bool ShouldNotDisturb() const;

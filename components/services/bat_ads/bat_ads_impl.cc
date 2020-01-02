@@ -145,6 +145,18 @@ void BatAdsImpl::OnAdNotificationEvent(
   ads_->OnAdNotificationEvent(id, ToMojomAdEventType(event_type));
 }
 
+void BatAdsImpl::OnPublisherAdEvent(
+    const std::string& json,
+    const int32_t event_type) {
+  ads::PublisherAdInfo info;
+  if (info.FromJson(json) != ads::Result::SUCCESS) {
+    NOTREACHED();
+    return;
+  }
+
+  ads_->OnPublisherAdEvent(info, ToMojomAdEventType(event_type));
+}
+
 void BatAdsImpl::RemoveAllHistory(
     RemoveAllHistoryCallback callback) {
   auto* holder = new CallbackHolder<RemoveAllHistoryCallback>(AsWeakPtr(),

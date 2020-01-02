@@ -17,6 +17,7 @@
 #include "bat/ads/export.h"
 #include "bat/ads/ad_event_type.h"
 #include "bat/ads/notification_info.h"
+#include "bat/ads/publisher_ad_info.h"
 #include "bat/ads/public/interfaces/ads.mojom.h"
 #include "bat/ads/ads_history.h"
 
@@ -194,6 +195,11 @@ class ADS_EXPORT Ads {
   // notification; or a notification times out
   virtual void OnAdNotificationEvent(
       const std::string& id,
+      const AdEventType event_type) = 0;
+
+  // Should be called when a user implicitly views or clicks a publisher ad
+  virtual void OnPublisherAdEvent(
+      const PublisherAdInfo& info,
       const AdEventType event_type) = 0;
 
   // Should be called to remove all cached history. The callback takes one

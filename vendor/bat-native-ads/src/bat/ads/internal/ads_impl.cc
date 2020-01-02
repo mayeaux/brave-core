@@ -25,6 +25,7 @@
 #include "bat/ads/internal/time.h"
 #include "bat/ads/internal/uri_helper.h"
 #include "bat/ads/internal/ad_events/ad_notification_event_factory.h"
+#include "bat/ads/internal/ad_events/publisher_ad_event_factory.h"
 #include "bat/ads/internal/event_type_blur_info.h"
 #include "bat/ads/internal/event_type_destroy_info.h"
 #include "bat/ads/internal/event_type_focus_info.h"
@@ -434,6 +435,18 @@ void AdsImpl::OnAdNotificationEvent(
   }
 
   const auto ad_event = AdEventFactory::Build(this, event_type);
+  DCHECK(ad_event);
+  if (!ad_event) {
+    return;
+  }
+
+  ad_event->Trigger(info);
+}
+
+void AdsImpl::OnPublisherAdEvent(
+    const PublisherAdInfo& info,
+    const AdEventType event_type) {
+  const auto ad_event = PublisherAdEventFactory::Build(this, event_type);
   DCHECK(ad_event);
   if (!ad_event) {
     return;

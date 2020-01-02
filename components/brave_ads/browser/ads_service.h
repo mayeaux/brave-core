@@ -83,6 +83,10 @@ class AdsService : public KeyedService {
   virtual void OnTabClosed(
       const SessionID& tab_id) = 0;
 
+  virtual void OnPublisherAdEvent(
+      const std::string& json,
+      const int32_t event_type) = 0;
+
   virtual void GetAdsHistory(
       const uint64_t from_timestamp,
       const uint64_t to_timestamp,

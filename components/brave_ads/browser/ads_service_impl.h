@@ -18,6 +18,7 @@
 #include "base/files/file_path.h"
 #include "base/memory/weak_ptr.h"
 #include "base/timer/timer.h"
+#include "bat/ads/ads.h"
 #include "bat/ads/ads_client.h"
 #include "brave/components/brave_ads/browser/ads_service.h"
 #include "brave/components/brave_ads/browser/background_helper.h"
@@ -94,6 +95,10 @@ class AdsServiceImpl : public AdsService,
       const bool is_active) override;
   void OnTabClosed(
       const SessionID& tab_id) override;
+
+  void OnPublisherAdEvent(
+      const std::string& json,
+      const int32_t event_type) override;
 
   void GetAdsHistory(
       const uint64_t from_timestamp,
