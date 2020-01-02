@@ -845,6 +845,10 @@ void AdsImpl::CachePageScore(
   }
 }
 
+std::map<std::string, std::vector<double>> AdsImpl::GetPageScoreCache() const {
+  return page_score_cache_;
+}
+
 void AdsImpl::TestShoppingData(
     const std::string& url) {
   if (!IsInitialized()) {

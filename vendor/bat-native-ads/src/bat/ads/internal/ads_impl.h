@@ -164,6 +164,7 @@ class AdsImpl : public Ads {
   void CachePageScore(
       const std::string& url,
       const std::vector<double>& page_score);
+  std::map<std::string, std::vector<double>> GetPageScoreCache() const;
 
   void TestShoppingData(
       const std::string& url);
