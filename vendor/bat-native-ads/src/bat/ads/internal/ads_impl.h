@@ -213,7 +213,6 @@ class AdsImpl : public Ads {
 
   bool IsAdValid(
       const AdInfo& ad_info);
-  AdNotificationInfo last_shown_notification_info_;
   bool ShowAd(
       const AdInfo& ad_info);
   bool IsAllowedToServeAds();
@@ -243,6 +242,7 @@ class AdsImpl : public Ads {
 
   void BundleUpdated();
 
+  AdNotificationInfo last_shown_ad_notification_info_;
   uint32_t sustained_ad_interaction_timer_id_;
   std::string last_sustained_ad_domain_;
   void StartSustainingAdInteraction(
@@ -255,9 +255,21 @@ class AdsImpl : public Ads {
   void ConfirmAdNotification(
       const AdNotificationInfo& info,
       const ConfirmationType& type);
+
+  PublisherAdInfo last_shown_publisher_ad_info_;
+  uint32_t sustained_publisher_ad_interaction_timer_id_;
+  std::string last_sustained_publisher_ad_domain_;
+  void StartSustainingPublisherAdInteraction(
+      const uint64_t start_timer_in);
+  void SustainPublisherAdInteractionIfNeeded();
+  void SustainPublisherAdInteraction();
+  void StopSustainingPublisherAdInteraction();
+  bool IsSustainingPublisherAdInteraction() const;
+  bool IsStillViewingPublisherAd() const;
   void ConfirmPublisherAd(
       const PublisherAdInfo& info,
       const ConfirmationType& type);
+
   void ConfirmAction(
       const std::string& uuid,
       const std::string& creative_set_id,

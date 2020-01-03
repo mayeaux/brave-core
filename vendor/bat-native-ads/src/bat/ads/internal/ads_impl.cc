@@ -84,11 +84,14 @@ AdsImpl::AdsImpl(AdsClient* ads_client) :
     active_tab_url_(""),
     previous_tab_url_(""),
     page_score_cache_({}),
-    last_shown_notification_info_(AdNotificationInfo()),
     collect_activity_timer_id_(0),
     delivering_notifications_timer_id_(0),
+    last_shown_ad_notification_info_(AdNotificationInfo()),
     sustained_ad_interaction_timer_id_(0),
     last_sustained_ad_domain_(""),
+    last_shown_publisher_ad_info_(PublisherAdInfo()),
+    sustained_publisher_ad_interaction_timer_id_(0),
+    last_sustained_publisher_ad_domain_(""),
     next_easter_egg_timestamp_in_seconds_(0),
     client_(std::make_unique<Client>(this, ads_client)),
     bundle_(std::make_unique<Bundle>(this, ads_client)),
@@ -105,6 +108,7 @@ AdsImpl::~AdsImpl() {
   StopCollectingActivity();
   StopDeliveringNotifications();
   StopSustainingAdInteraction();
+  StopSustainingPublisherAdInteraction();
 }
 
 AdsClient* AdsImpl::get_ads_client() const {
@@ -414,7 +418,7 @@ void AdsImpl::OnAdNotificationEvent(
 
   switch (event_type) {
     case AdEventType::kViewed: {
-      last_shown_notification_info_ = info;
+      last_shown_ad_notification_info_ = info;
       break;
     }
 
@@ -446,6 +450,27 @@ void AdsImpl::OnAdNotificationEvent(
 void AdsImpl::OnPublisherAdEvent(
     const PublisherAdInfo& info,
     const AdEventType event_type) {
+  switch (event_type) {
+    case AdEventType::kViewed: {
+      last_shown_publisher_ad_info_ = info;
+      break;
+    }
+
+    case AdEventType::kClicked: {
+      break;
+    }
+
+    case AdEventType::kDismissed: {
+      // Do nothing as unused by publisher ads
+      break;
+    }
+
+    case AdEventType::kTimedOut: {
+      // Do nothing as unused by publisher ads
+      break;
+    }
+  }
+
   const auto ad_event = PublisherAdEventFactory::Build(this, event_type);
   DCHECK(ad_event);
   if (!ad_event) {
@@ -674,16 +699,16 @@ void AdsImpl::OnPageLoaded(
     return;
   }
 
-  if (DomainsMatch(url, last_shown_notification_info_.url)) {
+  if (DomainsMatch(url, last_shown_ad_notification_info_.url)) {
     BLOG(INFO) << "Site visited " << url
         << ", domain matches the last shown ad notification for "
-            << last_shown_notification_info_.url;
+            << last_shown_ad_notification_info_.url;
 
     const std::string domain = GetDomain(url);
     if (last_sustained_ad_domain_ != domain) {
       last_sustained_ad_domain_ = domain;
 
-      StartSustainingAdInteraction(kSustainAdInteractionAfterSeconds);
+      StartSustainingAdInteraction(kSustainPublisherAdInteractionAfterSeconds);
     } else {
       BLOG(INFO) << "Already sustaining ad interaction for " << url;
     }
@@ -691,10 +716,33 @@ void AdsImpl::OnPageLoaded(
     return;
   }
 
-  if (!last_shown_notification_info_.url.empty()) {
+  if (!last_shown_ad_notification_info_.url.empty()) {
     BLOG(INFO) << "Site visited " << url
       << ", domain does not match the last shown ad notification for "
-          << last_shown_notification_info_.url;
+          << last_shown_ad_notification_info_.url;
+  }
+
+  if (DomainsMatch(url, last_shown_publisher_ad_info_.target_url)) {
+    BLOG(INFO) << "Site visited " << url
+        << ", domain matches the last shown publisher ad for "
+            << last_shown_publisher_ad_info_.target_url;
+
+    const std::string domain = GetDomain(url);
+    if (last_sustained_publisher_ad_domain_ != domain) {
+      last_sustained_publisher_ad_domain_ = domain;
+
+      StartSustainingPublisherAdInteraction(kSustainAdInteractionAfterSeconds);
+    } else {
+      BLOG(INFO) << "Already sustaining publisher ad interaction for " << url;
+    }
+
+    return;
+  }
+
+  if (!last_shown_publisher_ad_info_.target_url.empty()) {
+    BLOG(INFO) << "Site visited " << url
+      << ", domain does not match the last shown publisher ad for "
+          << last_shown_publisher_ad_info_.target_url;
   }
 
   if (!IsSupportedUrl(url)) {
@@ -1548,7 +1596,8 @@ void AdsImpl::StartSustainingAdInteraction(
     const uint64_t start_timer_in) {
   StopSustainingAdInteraction();
 
-  sustained_ad_interaction_timer_id_ = get_ads_client()->SetTimer(start_timer_in);
+  sustained_ad_interaction_timer_id_ =
+      get_ads_client()->SetTimer(start_timer_in);
   if (sustained_ad_interaction_timer_id_ == 0) {
     BLOG(ERROR) <<
         "Failed to start sustaining ad interaction due to an invalid timer";
@@ -1564,13 +1613,14 @@ void AdsImpl::SustainAdInteractionIfNeeded() {
   if (!IsStillViewingAd()) {
     BLOG(INFO) << "Failed to sustain ad interaction, domain for the focused "
         << "tab does not match the last shown ad notification for "
-            << last_shown_notification_info_.url;
+            << last_shown_ad_notification_info_.url;
     return;
   }
 
   BLOG(INFO) << "Sustained ad interaction";
 
-  ConfirmAdNotification(last_shown_ad_notification_info_, ConfirmationType::kLanded);
+  ConfirmAdNotification(last_shown_ad_notification_info_,
+      ConfirmationType::kLanded);
 }
 
 void AdsImpl::StopSustainingAdInteraction() {
@@ -1593,7 +1643,7 @@ bool AdsImpl::IsSustainingAdInteraction() const {
 }
 
 bool AdsImpl::IsStillViewingAd() const {
-  return DomainsMatch(active_tab_url_, last_shown_notification_info_.url);
+  return DomainsMatch(active_tab_url_, last_shown_ad_notification_info_.url);
 }
 
 void AdsImpl::ConfirmAdNotification(
@@ -1615,6 +1665,60 @@ void AdsImpl::ConfirmAdNotification(
   get_ads_client()->EventLog(report);
 
   get_ads_client()->ConfirmAdNotification(std::move(notification_info));
+}
+
+void AdsImpl::StartSustainingPublisherAdInteraction(
+    const uint64_t start_timer_in) {
+  StopSustainingPublisherAdInteraction();
+
+  sustained_publisher_ad_interaction_timer_id_ =
+      get_ads_client()->SetTimer(start_timer_in);
+  if (sustained_publisher_ad_interaction_timer_id_ == 0) {
+    BLOG(ERROR) << "Failed to start sustaining publisher ad interaction due"
+        " to an invalid timer";
+
+    return;
+  }
+
+  BLOG(INFO) << "Start sustaining publisher ad interaction in "
+      << start_timer_in << " seconds";
+}
+
+void AdsImpl::SustainPublisherAdInteractionIfNeeded() {
+  if (!IsStillViewingPublisherAd()) {
+    BLOG(INFO) << "Failed to sustain publisher ad interaction, domain for the"
+        " focused tab does not match the last shown publisher ad for "
+            << last_shown_publisher_ad_info_.target_url;
+    return;
+  }
+
+  BLOG(INFO) << "Sustained publisher ad interaction";
+
+  ConfirmPublisherAd(last_shown_publisher_ad_info_, ConfirmationType::kLanded);
+}
+
+void AdsImpl::StopSustainingPublisherAdInteraction() {
+  if (!IsSustainingPublisherAdInteraction()) {
+    return;
+  }
+
+  BLOG(INFO) << "Stopped sustaining publisher ad interaction";
+
+  get_ads_client()->KillTimer(sustained_publisher_ad_interaction_timer_id_);
+  sustained_publisher_ad_interaction_timer_id_ = 0;
+}
+
+bool AdsImpl::IsSustainingPublisherAdInteraction() const {
+  if (sustained_publisher_ad_interaction_timer_id_ == 0) {
+    return false;
+  }
+
+  return true;
+}
+
+bool AdsImpl::IsStillViewingPublisherAd() const {
+  return DomainsMatch(active_tab_url_,
+      last_shown_publisher_ad_info_.target_url);
 }
 
 void AdsImpl::ConfirmPublisherAd(
