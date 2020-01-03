@@ -1776,6 +1776,15 @@ void RewardsServiceImpl::ConfirmAd(const std::string& json) {
   bat_ledger_->ConfirmAd(json);
 }
 
+void RewardsServiceImpl::ConfirmPublisherAd(
+    const std::string& json) {
+  if (!Connected()) {
+    return;
+  }
+
+  bat_ledger_->ConfirmPublisherAd(json);
+}
+
 void RewardsServiceImpl::ConfirmAction(const std::string& uuid,
     const std::string& creative_set_id,
     const std::string& type) {

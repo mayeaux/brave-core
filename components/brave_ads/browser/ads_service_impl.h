@@ -383,6 +383,8 @@ class AdsServiceImpl : public AdsService,
 
   void ConfirmAd(
       std::unique_ptr<ads::AdNotificationInfo> info) override;
+  void ConfirmPublisherAd(
+      const ads::PublisherAdInfo& info) override;
   void ConfirmAction(
       const std::string& uuid,
       const std::string& creative_set_id,

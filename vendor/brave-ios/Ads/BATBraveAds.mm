@@ -370,6 +370,11 @@ BATClassAdsBridge(BOOL, isTesting, setTesting, _is_testing)
   [self.ledger confirmAd:[NSString stringWithUTF8String:info->ToJson().c_str()]];
 }
 
+- (void)confirmPublisherAd:(const ads::PublisherAdInfo &)info
+{
+  [self.ledger confirmPublisherAd:[NSString stringWithUTF8String:info.ToJson().c_str()]];
+}
+
 - (void)confirmAction:(const std::string &)uuid creativeSetId:(const std::string &)creative_set_id confirmationType:(const ads::ConfirmationType &)type
 {
   [self.ledger confirmAction:[NSString stringWithUTF8String:uuid.c_str()]

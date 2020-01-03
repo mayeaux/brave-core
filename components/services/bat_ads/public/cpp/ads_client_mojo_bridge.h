@@ -118,6 +118,8 @@ class AdsClientMojoBridge : public mojom::BatAdsClient,
       const std::string& issuers_info) override;
   void ConfirmAd(
       const std::string& notification_info) override;
+  void ConfirmPublisherAd(
+      const std::string& json) override;
   void ConfirmAction(
       const std::string& uuid,
       const std::string& creative_set_id,

@@ -1093,6 +1093,11 @@ BATLedgerBridge(BOOL,
   ledger->ConfirmAd(info.UTF8String);
 }
 
+- (void)confirmPublisherAd:(NSString *)json
+{
+  ledger->ConfirmPublisherAd(json.UTF8String);
+}
+
 - (void)confirmAction:(NSString *)uuid creativeSetID:(NSString *)creativeSetID type:(NSString *)type
 {
   ledger->ConfirmAction(uuid.UTF8String, creativeSetID.UTF8String, type.UTF8String);

@@ -340,6 +340,16 @@ void AdsClientMojoBridge::ConfirmAd(const std::string& notification_info) {
     ads_client_->ConfirmAd(std::move(info));
 }
 
+void AdsClientMojoBridge::ConfirmPublisherAd(
+    const std::string& json) {
+  ads::PublisherAdInfo info;
+  if (info.FromJson(json) != ads::Result::SUCCESS) {
+    return;
+  }
+
+  ads_client_->ConfirmPublisherAd(info);
+}
+
 void AdsClientMojoBridge::ConfirmAction(const std::string& uuid,
     const std::string& creative_set_id,
     const std::string& type) {

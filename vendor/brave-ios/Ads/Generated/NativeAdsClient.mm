@@ -83,6 +83,10 @@ void NativeAdsClient::ConfirmAd(std::unique_ptr<ads::AdNotificationInfo> info) {
   [bridge_ confirmAd:std::move(info)];
 }
 
+void NativeAdsClient::ConfirmPublisherAd(const ads::PublisherAdInfo & info) {
+  [bridge_ confirmPublisherAd:info];
+}
+
 void NativeAdsClient::ConfirmAction(const std::string & uuid, const std::string & creative_set_id, const ads::ConfirmationType & type) {
   [bridge_ confirmAction:uuid creativeSetId:creative_set_id confirmationType:type];
 }

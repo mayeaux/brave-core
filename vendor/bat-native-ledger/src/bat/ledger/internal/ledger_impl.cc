@@ -17,6 +17,7 @@
 #include "base/task/thread_pool/thread_pool_instance.h"
 #include "bat/ads/issuers_info.h"
 #include "bat/ads/ad_notification_info.h"
+#include "bat/ads/publisher_ad_info.h"
 #include "bat/confirmations/confirmations.h"
 #include "bat/ledger/internal/media/media.h"
 #include "bat/ledger/internal/publisher/publisher.h"
@@ -1202,6 +1203,67 @@ void LedgerImpl::ConfirmAd(const std::string& info) {
   }
 
   bat_confirmations_->ConfirmAd(std::move(notification_info));
+}
+
+void LedgerImpl::ConfirmPublisherAd(
+    const std::string& json) {
+  ads::PublisherAdInfo publisher_ad_info;
+  if (publisher_ad_info.FromJson(json) != ads::Result::SUCCESS) {
+    return;
+  }
+
+  confirmations::PublisherAdInfo info;
+  info.id = publisher_ad_info.id;
+  info.creative_set_id = publisher_ad_info.creative_set_id;
+  info.category = publisher_ad_info.category;
+  info.size = publisher_ad_info.size;
+  info.creative_url = publisher_ad_info.creative_url;
+  info.target_url = publisher_ad_info.target_url;
+  info.uuid = publisher_ad_info.uuid;
+
+  switch (publisher_ad_info.type.value()) {
+    case ads::ConfirmationType::kUnknown: {
+      info.type = confirmations::ConfirmationType::kUnknown;
+      break;
+    }
+
+    case ads::ConfirmationType::kClicked: {
+      info.type = confirmations::ConfirmationType::kClicked;
+      break;
+    }
+
+    case ads::ConfirmationType::kDismissed: {
+      info.type = confirmations::ConfirmationType::kDismissed;
+      break;
+    }
+
+    case ads::ConfirmationType::kViewed: {
+      info.type = confirmations::ConfirmationType::kViewed;
+      break;
+    }
+
+    case ads::ConfirmationType::kLanded: {
+      info.type = confirmations::ConfirmationType::kLanded;
+      break;
+    }
+
+    case ads::ConfirmationType::kFlagged: {
+      info.type = confirmations::ConfirmationType::kFlagged;
+      break;
+    }
+
+    case ads::ConfirmationType::kUpvoted: {
+      info.type = confirmations::ConfirmationType::kUpvoted;
+      break;
+    }
+
+    case ads::ConfirmationType::kDownvoted: {
+      info.type = confirmations::ConfirmationType::kDownvoted;
+      break;
+    }
+  }
+
+  bat_confirmations_->ConfirmPublisherAd(info);
 }
 
 void LedgerImpl::ConfirmAction(

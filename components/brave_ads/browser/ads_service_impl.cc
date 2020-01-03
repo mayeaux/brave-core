@@ -458,7 +458,7 @@ void AdsServiceImpl::OnPublisherAdEvent(
         return;
       }
 
-      OpenNewTabWithUrl(info.url);
+      OpenNewTabWithUrl(info.target_url);
 
       bat_ads_->OnPublisherAdEvent(json, normalized_event_type);
 
@@ -1927,6 +1927,11 @@ void AdsServiceImpl::SetCatalogIssuers(
 void AdsServiceImpl::ConfirmAd(
     const std::unique_ptr<ads::AdNotificationInfo> info) {
   rewards_service_->ConfirmAd(info->ToJson());
+}
+
+void AdsServiceImpl::ConfirmPublisherAd(
+    const ads::PublisherAdInfo& info) {
+  rewards_service_->ConfirmPublisherAd(info.ToJson());
 }
 
 void AdsServiceImpl::ConfirmAction(

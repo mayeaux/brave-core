@@ -255,6 +255,9 @@ class AdsImpl : public Ads {
   void ConfirmAd(
       const AdNotificationInfo& info,
       const ConfirmationType& type);
+  void ConfirmPublisherAd(
+      const PublisherAdInfo& info,
+      const ConfirmationType& type);
   void ConfirmAction(
       const std::string& uuid,
       const std::string& creative_set_id,

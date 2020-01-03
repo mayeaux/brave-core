@@ -80,6 +80,9 @@ class MockAdsClient : public AdsClient {
   MOCK_METHOD1(ConfirmAd, void(
       std::unique_ptr<AdNotificationInfo> info));
 
+  MOCK_METHOD1(ConfirmPublisherAd, void(
+      const PublisherAdInfo& info));
+
   MOCK_METHOD3(ConfirmAction, void(
       const std::string& uuid,
       const std::string& creative_set_id,

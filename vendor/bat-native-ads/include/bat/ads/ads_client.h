@@ -21,6 +21,7 @@
 #include "bat/ads/client_info.h"
 #include "bat/ads/export.h"
 #include "bat/ads/ad_notification_info.h"
+#include "bat/ads/publisher_ad_info.h"
 #include "bat/ads/result.h"
 
 namespace ads {
@@ -146,6 +147,11 @@ class ADS_EXPORT AdsClient {
   // dismissed or landed
   virtual void ConfirmAd(
       const std::unique_ptr<AdNotificationInfo> info) = 0;
+
+  // Should pass-through to Confirmations that a publisher ad was viewed,
+  // clicked or landed
+  virtual void ConfirmPublisherAd(
+      const PublisherAdInfo& info) = 0;
 
   // Should pass-through to Confirmations that an ad was flagged, upvoted or
   // downvoted

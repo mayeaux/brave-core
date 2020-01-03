@@ -261,6 +261,15 @@ void BatAdsClientMojoBridge::ConfirmAd(
   bat_ads_client_->ConfirmAd(info->ToJson());
 }
 
+void BatAdsClientMojoBridge::ConfirmPublisherAd(
+    const ads::PublisherAdInfo& info) {
+  if (!connected()) {
+    return;
+  }
+
+  bat_ads_client_->ConfirmPublisherAd(info.ToJson());
+}
+
 void BatAdsClientMojoBridge::ConfirmAction(
     const std::string& uuid,
     const std::string& creative_set_id,

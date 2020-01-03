@@ -10,7 +10,8 @@
 @protocol NativeAdsClientBridge
 @required
 
-- (void)confirmAd:(std::unique_ptr<ads::AdNotificationInfo>)info;
+- (void)confirmAdNotification:(const ads::AdNotificationInfo &)info;
+- (void)confirmPublisherAd:(const ads::PublisherAdInfo &)info;
 - (void)confirmAction:(const std::string &)uuid creativeSetId:(const std::string &)creative_set_id confirmationType:(const ads::ConfirmationType &)type;
 - (void)eventLog:(const std::string &)json;
 - (void)getAds:(const std::vector<std::string> &)categories callback:(ads::OnGetAdsCallback)callback;

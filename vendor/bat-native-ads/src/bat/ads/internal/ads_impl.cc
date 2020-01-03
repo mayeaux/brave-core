@@ -1617,6 +1617,26 @@ void AdsImpl::ConfirmAd(
   get_ads_client()->ConfirmAd(std::move(notification_info));
 }
 
+void AdsImpl::ConfirmPublisherAd(
+    const PublisherAdInfo& info,
+    const ConfirmationType& type) {
+  if (IsCreativeSetFromSampleCatalog(info.creative_set_id)) {
+    BLOG(INFO) << "Confirmation not made: Sample Ad";
+
+    return;
+  }
+
+  ads::PublisherAdInfo publisher_ad_info = info;
+  publisher_ad_info.type = type;
+
+  const Reports reports(this);
+  const std::string report =
+      reports.GenerateConfirmationEventReport(info.uuid, type);
+  get_ads_client()->EventLog(report);
+
+  get_ads_client()->ConfirmPublisherAd(publisher_ad_info);
+}
+
 void AdsImpl::ConfirmAction(
     const std::string& uuid,
     const std::string& creative_set_id,

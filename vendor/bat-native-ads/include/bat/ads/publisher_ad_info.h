@@ -28,9 +28,9 @@ struct ADS_EXPORT PublisherAdInfo {
   std::string id;
   std::string creative_set_id;
   std::string category;
-  std::string advertiser;
-  std::string text;
-  std::string url;
+  std::string size;
+  std::string creative_url;
+  std::string target_url;
   std::string uuid;
   ConfirmationType type;
 };

@@ -1048,6 +1048,21 @@ void ConfirmationsImpl::ConfirmAd(std::unique_ptr<AdNotificationInfo> info) {
   redeem_token_->Redeem(info->uuid, info->type);
 }
 
+void ConfirmationsImpl::ConfirmPublisherAd(
+    const PublisherAdInfo& info) {
+  BLOG(INFO) << "Confirm publisher ad:"
+      << std::endl << "  id: " << info.id
+      << std::endl << "  creative_set_id: " << info.creative_set_id
+      << std::endl << "  category: " << info.category
+      << std::endl << "  size: " << info.size
+      << std::endl << "  creative_url: " << info.creative_url
+      << std::endl << "  target_url: " << info.target_url
+      << std::endl << "  uuid: " << info.uuid
+      << std::endl << "  type: " << std::string(info.type);
+
+  redeem_token_->Redeem(info.uuid, info.type);
+}
+
 void ConfirmationsImpl::ConfirmAction(
     const std::string& uuid,
     const std::string& creative_set_id,
