@@ -252,7 +252,7 @@ class AdsImpl : public Ads {
   void StopSustainingAdInteraction();
   bool IsSustainingAdInteraction() const;
   bool IsStillViewingAd() const;
-  void ConfirmAd(
+  void ConfirmAdNotification(
       const AdNotificationInfo& info,
       const ConfirmationType& type);
   void ConfirmPublisherAd(

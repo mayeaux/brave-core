@@ -252,13 +252,13 @@ void BatAdsClientMojoBridge::SetCatalogIssuers(
   bat_ads_client_->SetCatalogIssuers(info->ToJson());
 }
 
-void BatAdsClientMojoBridge::ConfirmAd(
+void BatAdsClientMojoBridge::ConfirmAdNotification(
     std::unique_ptr<ads::AdNotificationInfo> info) {
   if (!connected()) {
     return;
   }
 
-  bat_ads_client_->ConfirmAd(info->ToJson());
+  bat_ads_client_->ConfirmAdNotification(info->ToJson());
 }
 
 void BatAdsClientMojoBridge::ConfirmPublisherAd(

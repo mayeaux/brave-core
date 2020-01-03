@@ -1768,12 +1768,13 @@ void RewardsServiceImpl::SetCatalogIssuers(const std::string& json) {
   bat_ledger_->SetCatalogIssuers(json);
 }
 
-void RewardsServiceImpl::ConfirmAd(const std::string& json) {
+void RewardsServiceImpl::ConfirmAdNotification(
+    const std::string& json) {
   if (!Connected()) {
     return;
   }
 
-  bat_ledger_->ConfirmAd(json);
+  bat_ledger_->ConfirmAdNotification(json);
 }
 
 void RewardsServiceImpl::ConfirmPublisherAd(

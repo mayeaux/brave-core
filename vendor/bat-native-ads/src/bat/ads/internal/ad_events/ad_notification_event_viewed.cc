@@ -31,7 +31,7 @@ void AdNotificationEventViewed::Trigger(
       reports.GenerateAdNotificationEventReport(info, AdEventType::kViewed);
   ads_->get_ads_client()->EventLog(report);
 
-  ads_->ConfirmAd(info, ConfirmationType::kViewed);
+  ads_->ConfirmAdNotification(info, ConfirmationType::kViewed);
 
   ads_->AppendAdNotificationToAdsHistory(info, ConfirmationType::kViewed);
 }

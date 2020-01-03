@@ -82,7 +82,8 @@ class ConfirmationsImpl : public Confirmations {
   void RefillTokensIfNecessary() const;
 
   // Redeem unblinded tokens
-  void ConfirmAd(std::unique_ptr<AdNotificationInfo> info) override;
+  void ConfirmAdNotification(
+      std::unique_ptr<AdNotificationInfo> info) override;
   void ConfirmPublisherAd(
       const PublisherAdInfo& info) override;
   void ConfirmAction(const std::string& uuid,

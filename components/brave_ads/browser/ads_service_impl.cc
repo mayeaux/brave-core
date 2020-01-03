@@ -1924,9 +1924,9 @@ void AdsServiceImpl::SetCatalogIssuers(
   rewards_service_->SetCatalogIssuers(info->ToJson());
 }
 
-void AdsServiceImpl::ConfirmAd(
+void AdsServiceImpl::ConfirmAdNotification(
     const std::unique_ptr<ads::AdNotificationInfo> info) {
-  rewards_service_->ConfirmAd(info->ToJson());
+  rewards_service_->ConfirmAdNotification(info->ToJson());
 }
 
 void AdsServiceImpl::ConfirmPublisherAd(

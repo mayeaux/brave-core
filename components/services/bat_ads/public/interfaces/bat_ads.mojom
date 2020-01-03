@@ -49,7 +49,7 @@ interface BatAdsClient {
   ShowNotification(string notification_info);
   CloseNotification(string id);
   SetCatalogIssuers(string issuers_info);
-  ConfirmAd(string notification_info);
+  ConfirmAdNotification(string json);
   ConfirmPublisherAd(string json);
   ConfirmAction(string uuid, string creative_set_id, string type);
   KillTimer(uint32 timer_id);

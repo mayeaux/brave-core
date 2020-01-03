@@ -33,7 +33,7 @@ class NativeAdsClient : public ads::AdsClient {
   bool ShouldShowNotifications() override;
   void CloseNotification(const std::string& id) override;
   void SetCatalogIssuers(std::unique_ptr<ads::IssuersInfo> info) override;
-  void ConfirmAd(std::unique_ptr<ads::AdNotificationInfo> info) override;
+  void ConfirmAdNotification(std::unique_ptr<ads::AdNotificationInfo> info) override;
   void ConfirmPublisherAd(const ads::PublisherAdInfo& info) override;
   void ConfirmAction(const std::string& uuid, const std::string& creative_set_id, const ads::ConfirmationType& type) override;
   uint32_t SetTimer(const uint64_t time_offset) override;

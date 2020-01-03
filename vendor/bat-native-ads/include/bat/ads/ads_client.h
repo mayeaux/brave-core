@@ -143,9 +143,9 @@ class ADS_EXPORT AdsClient {
   virtual void SetCatalogIssuers(
       const std::unique_ptr<IssuersInfo> info) = 0;
 
-  // Should pass-through to Confirmations that an ad was viewed, clicked,
-  // dismissed or landed
-  virtual void ConfirmAd(
+  // Should pass-through to Confirmations that an ad notification was viewed,
+  // clicked, dismissed or landed
+  virtual void ConfirmAdNotification(
       const std::unique_ptr<AdNotificationInfo> info) = 0;
 
   // Should pass-through to Confirmations that a publisher ad was viewed,

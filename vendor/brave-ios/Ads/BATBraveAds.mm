@@ -365,9 +365,9 @@ BATClassAdsBridge(BOOL, isTesting, setTesting, _is_testing)
                          ads::AdContent::LikeAction::LIKE_ACTION_THUMBS_DOWN);
 }
 
-- (void)confirmAd:(std::unique_ptr<ads::AdNotificationInfo>)info
+- (void)confirmAdNotification:(const ads::AdNotificationInfo &)info
 {
-  [self.ledger confirmAd:[NSString stringWithUTF8String:info->ToJson().c_str()]];
+  [self.ledger confirmAdNotification:[NSString stringWithUTF8String:info.ToJson().c_str()]];
 }
 
 - (void)confirmPublisherAd:(const ads::PublisherAdInfo &)info

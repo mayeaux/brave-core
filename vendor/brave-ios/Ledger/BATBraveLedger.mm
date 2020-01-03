@@ -1088,9 +1088,9 @@ BATLedgerBridge(BOOL,
 
 #pragma mark - Ads & Confirmations
 
-- (void)confirmAd:(NSString *)info
+- (void)confirmAdNotification:(NSString *)json
 {
-  ledger->ConfirmAd(info.UTF8String);
+  ledger->ConfirmAdNotification(json.UTF8String);
 }
 
 - (void)confirmPublisherAd:(NSString *)json

@@ -1570,7 +1570,7 @@ void AdsImpl::SustainAdInteractionIfNeeded() {
 
   BLOG(INFO) << "Sustained ad interaction";
 
-  ConfirmAd(last_shown_notification_info_, ConfirmationType::kLanded);
+  ConfirmAdNotification(last_shown_ad_notification_info_, ConfirmationType::kLanded);
 }
 
 void AdsImpl::StopSustainingAdInteraction() {
@@ -1596,7 +1596,7 @@ bool AdsImpl::IsStillViewingAd() const {
   return DomainsMatch(active_tab_url_, last_shown_notification_info_.url);
 }
 
-void AdsImpl::ConfirmAd(
+void AdsImpl::ConfirmAdNotification(
     const AdNotificationInfo& info,
     const ConfirmationType& type) {
   if (IsCreativeSetFromSampleCatalog(info.creative_set_id)) {
@@ -1614,7 +1614,7 @@ void AdsImpl::ConfirmAd(
       reports.GenerateConfirmationEventReport(info.uuid, type);
   get_ads_client()->EventLog(report);
 
-  get_ads_client()->ConfirmAd(std::move(notification_info));
+  get_ads_client()->ConfirmAdNotification(std::move(notification_info));
 }
 
 void AdsImpl::ConfirmPublisherAd(

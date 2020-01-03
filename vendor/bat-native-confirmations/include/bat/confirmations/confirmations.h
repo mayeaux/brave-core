@@ -66,8 +66,9 @@ class CONFIRMATIONS_EXPORT Confirmations {
   virtual void GetTransactionHistory(
       OnGetTransactionHistory callback) = 0;
 
-  // Should be called to confirm an ad was viewed, clicked, dismissed or landed
-  virtual void ConfirmAd(
+  // Should be called to confirm an ad notification was viewed, clicked,
+  // dismissed or landed
+  virtual void ConfirmAdNotification(
       std::unique_ptr<AdNotificationInfo> info) = 0;
 
   // Should be called to confirm a publisher ad was viewed, clicked or landed

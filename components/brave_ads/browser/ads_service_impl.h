@@ -381,7 +381,7 @@ class AdsServiceImpl : public AdsService,
   void SetCatalogIssuers(
       std::unique_ptr<ads::IssuersInfo> info) override;
 
-  void ConfirmAd(
+  void ConfirmAdNotification(
       std::unique_ptr<ads::AdNotificationInfo> info) override;
   void ConfirmPublisherAd(
       const ads::PublisherAdInfo& info) override;

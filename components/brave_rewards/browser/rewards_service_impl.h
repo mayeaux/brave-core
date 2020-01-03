@@ -570,7 +570,8 @@ class RewardsServiceImpl : public RewardsService,
   void SetUserChangedContribution() const override;
   void UpdateAdsRewards() const override;
   void SetCatalogIssuers(const std::string& json) override;
-  void ConfirmAd(const std::string& json) override;
+  void ConfirmAdNotification(
+      const std::string& json) override;
   void ConfirmPublisherAd(
       const std::string& json) override;
   void ConfirmAction(const std::string& uuid,

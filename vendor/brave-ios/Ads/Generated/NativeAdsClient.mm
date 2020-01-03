@@ -79,8 +79,8 @@ void NativeAdsClient::SetCatalogIssuers(std::unique_ptr<ads::IssuersInfo> info) 
   [bridge_ setCatalogIssuers:std::move(info)];
 }
 
-void NativeAdsClient::ConfirmAd(std::unique_ptr<ads::AdNotificationInfo> info) {
-  [bridge_ confirmAd:std::move(info)];
+void NativeAdsClient::ConfirmAdNotification(const ads::AdNotificationInfo & info) {
+  [bridge_ confirmAdNotification:info];
 }
 
 void NativeAdsClient::ConfirmPublisherAd(const ads::PublisherAdInfo & info) {
