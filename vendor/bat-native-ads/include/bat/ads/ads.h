@@ -15,10 +15,9 @@
 #include "bat/ads/ads_client.h"
 #include "bat/ads/category_content.h"
 #include "bat/ads/export.h"
-#include "bat/ads/ad_event_type.h"
+#include "bat/ads/mojom.h"
 #include "bat/ads/notification_info.h"
 #include "bat/ads/publisher_ad_info.h"
-#include "bat/ads/public/interfaces/ads.mojom.h"
 #include "bat/ads/ads_history.h"
 
 namespace ads {

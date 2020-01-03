@@ -13,6 +13,7 @@
 #include "bat/ads/ads_history.h"
 #include "bat/ads/category_content.h"
 #include "bat/ads/confirmation_type.h"
+#include "bat/ads/mojom.h"
 #include "brave/components/services/bat_ads/bat_ads_client_mojo_bridge.h"
 #include "mojo/public/cpp/bindings/map.h"
 
@@ -24,11 +25,6 @@ namespace {
 
 ads::Result ToMojomResult(int32_t result) {
   return (ads::Result)result;
-}
-
-ads::AdEventType ToMojomAdEventType(
-    const int32_t event_type) {
-  return (ads::AdEventType)event_type;
 }
 
 ads::AdContent::LikeAction ToAdsLikeAction(
@@ -141,20 +137,20 @@ void BatAdsImpl::GetAdNotificationForId(
 
 void BatAdsImpl::OnAdNotificationEvent(
     const std::string& id,
-    const int32_t event_type) {
-  ads_->OnAdNotificationEvent(id, ToMojomAdEventType(event_type));
+    const ads::AdEventType event_type) {
+  ads_->OnAdNotificationEvent(id, event_type);
 }
 
 void BatAdsImpl::OnPublisherAdEvent(
     const std::string& json,
-    const int32_t event_type) {
+    const ads::AdEventType event_type) {
   ads::PublisherAdInfo info;
   if (info.FromJson(json) != ads::Result::SUCCESS) {
     NOTREACHED();
     return;
   }
 
-  ads_->OnPublisherAdEvent(info, ToMojomAdEventType(event_type));
+  ads_->OnPublisherAdEvent(info, event_type);
 }
 
 void BatAdsImpl::RemoveAllHistory(

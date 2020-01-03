@@ -8,8 +8,8 @@
 
 #include <string>
 
-#include "bat/ads/ad_event_type.h"
 #include "bat/ads/confirmation_type.h"
+#include "bat/ads/mojom.h"
 #include "bat/ads/internal/classification_helper.h"
 #include "bat/ads/internal/event_type_blur_info.h"
 #include "bat/ads/internal/event_type_destroy_info.h"

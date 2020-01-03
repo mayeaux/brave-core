@@ -16,7 +16,7 @@
 #include "bat/ads/ads.h"
 #include "bat/ads/ads_history.h"
 #include "bat/ads/ad_info.h"
-#include "bat/ads/ad_event_type.h"
+#include "bat/ads/mojom.h"
 #include "bat/ads/notification_info.h"
 #include "bat/ads/publisher_ad_info.h"
 #include "bat/ads/internal/ads_serve.h"

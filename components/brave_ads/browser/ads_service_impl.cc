@@ -23,7 +23,6 @@
 #include "bat/ads/ads.h"
 #include "bat/ads/ads_history.h"
 #include "bat/ads/notification_info.h"
-#include "bat/ads/ad_event_type.h"
 #include "bat/ads/resources/grit/bat_ads_resources.h"
 #include "brave/components/brave_ads/browser/ad_notification.h"
 #include "brave/components/brave_ads/browser/ads_notification_handler.h"
@@ -129,11 +128,6 @@ class LogStreamImpl : public ads::LogStream {
 };
 
 namespace {
-
-int32_t ToMojomAdEventType(
-    const ads::AdEventType type) {
-  return (int32_t)type;
-}
 
 static std::map<std::string, int> g_schema_resource_ids = {
   {ads::_catalog_schema_resource_name, IDR_ADS_CATALOG_SCHEMA},
@@ -450,9 +444,10 @@ void AdsServiceImpl::OnPublisherAdEvent(
     return;
   }
 
-  switch ((ads::AdEventType)event_type) {
+  const ads::AdEventType normalized_event_type = (ads::AdEventType)event_type;
+  switch (normalized_event_type) {
     case ads::AdEventType::kViewed: {
-      bat_ads_->OnPublisherAdEvent(json, event_type);
+      bat_ads_->OnPublisherAdEvent(json, normalized_event_type);
       break;
     }
 
@@ -465,7 +460,7 @@ void AdsServiceImpl::OnPublisherAdEvent(
 
       OpenNewTabWithUrl(info.url);
 
-      bat_ads_->OnPublisherAdEvent(json, event_type);
+      bat_ads_->OnPublisherAdEvent(json, normalized_event_type);
 
       break;
     }
@@ -841,8 +836,7 @@ void AdsServiceImpl::OnShow(
     return;
   }
 
-  auto event_type = ToMojomAdEventType(ads::AdEventType::kViewed);
-  bat_ads_->OnAdNotificationEvent(id, event_type);
+  bat_ads_->OnAdNotificationEvent(id, ads::AdEventType::kViewed);
 
   // If we've surpassed the maximum number of visible notifications,
   // then close the oldest one
@@ -860,10 +854,10 @@ void AdsServiceImpl::OnClose(
     const bool by_user,
     base::OnceClosure completed_closure) {
   if (connected()) {
-    auto event_type = by_user ? ads::AdEventType::kDismissed
-        : ads::AdEventType::kTimedOut;
+    const ads::AdEventType event_type =
+        by_user ? ads::AdEventType::kDismissed : ads::AdEventType::kTimedOut;
 
-    bat_ads_->OnAdNotificationEvent(id, ToMojomAdEventType(event_type));
+    bat_ads_->OnAdNotificationEvent(id, event_type);
   }
 
   if (completed_closure) {
@@ -904,8 +898,7 @@ void AdsServiceImpl::OnViewAd(
   ads::NotificationInfo notification;
   notification.FromJson(json);
 
-  const int32_t event_type = (int32_t)ads::AdEventType::kClicked;
-  bat_ads_->OnAdNotificationEvent(notification.id, event_type);
+  bat_ads_->OnAdNotificationEvent(notification.id, ads::AdEventType::kClicked);
 
   OpenNewTabWithUrl(notification.url);
 }
