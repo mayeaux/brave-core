@@ -341,10 +341,10 @@ BATClassAdsBridge(BOOL, isTesting, setTesting, _is_testing)
   ads->OnTabClosed((int32_t)tabId);
 }
 
-- (void)reportNotificationEvent:(NSString *)notificationId eventType:(BATAdsAdEventType)eventType
+- (void)reportAdNotificationEvent:(NSString *)notificationId eventType:(BATAdsAdEventType)eventType
 {
   if (![self isAdsServiceRunning]) { return; }
-  ads->OnNotificationEvent(notificationId.UTF8String,
+  ads->OnAdNotificationEvent(notificationId.UTF8String,
                            static_cast<ads::AdEventType>(eventType));
 }
 

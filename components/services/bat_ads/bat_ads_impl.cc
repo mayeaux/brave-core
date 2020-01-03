@@ -139,10 +139,10 @@ void BatAdsImpl::GetAdNotificationForId(
   std::move(callback).Run(notification.ToJson());
 }
 
-void BatAdsImpl::OnNotificationEvent(
+void BatAdsImpl::OnAdNotificationEvent(
     const std::string& id,
-    const int32_t type) {
-  ads_->OnNotificationEvent(id, ToMojomAdEventType(type));
+    const int32_t event_type) {
+  ads_->OnAdNotificationEvent(id, ToMojomAdEventType(event_type));
 }
 
 void BatAdsImpl::RemoveAllHistory(

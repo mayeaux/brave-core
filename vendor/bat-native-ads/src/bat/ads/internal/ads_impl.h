@@ -88,10 +88,9 @@ class AdsImpl : public Ads {
   bool GetAdNotificationForId(
       const std::string& id,
       ads::NotificationInfo* notification) override;
-
-  void OnNotificationEvent(
+  void OnAdNotificationEvent(
       const std::string& id,
-      const AdEventType type) override;
+      const AdEventType event_type) override;
 
   bool ShouldNotDisturb() const;
 

@@ -130,8 +130,8 @@ NS_SWIFT_NAME(BraveAds)
 /// Report that a tab with a given id was closed by the user
 - (void)reportTabClosedWithTabId:(NSInteger)tabId NS_SWIFT_NAME(reportTabClosed(tabId:));
 
-/// Report that a notification event type was triggered for a given id
-- (void)reportNotificationEvent:(NSString *)notificationId
+/// Report that an ad notification event type was triggered for a given id
+- (void)reportAdNotificationEvent:(NSString *)notificationId
                       eventType:(BATAdsAdEventType)eventType;
 
 /// Toggle that the user liked the given ad and more like it should be shown

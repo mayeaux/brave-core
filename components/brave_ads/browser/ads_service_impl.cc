@@ -800,9 +800,8 @@ void AdsServiceImpl::OnShow(
     return;
   }
 
-  auto type = ToMojomAdEventType(ads::AdEventType::kViewed);
-
-  bat_ads_->OnNotificationEvent(id, type);
+  auto event_type = ToMojomAdEventType(ads::AdEventType::kViewed);
+  bat_ads_->OnAdNotificationEvent(id, event_type);
 
   // If we've surpassed the maximum number of visible notifications,
   // then close the oldest one
@@ -820,10 +819,10 @@ void AdsServiceImpl::OnClose(
     const bool by_user,
     base::OnceClosure completed_closure) {
   if (connected()) {
-    auto type = by_user ? ads::AdEventType::kDismissed
+    auto event_type = by_user ? ads::AdEventType::kDismissed
         : ads::AdEventType::kTimedOut;
 
-    bat_ads_->OnNotificationEvent(id, ToMojomAdEventType(type));
+    bat_ads_->OnAdNotificationEvent(id, ToMojomAdEventType(event_type));
   }
 
   if (completed_closure) {
@@ -864,8 +863,8 @@ void AdsServiceImpl::OnViewAd(
   ads::NotificationInfo notification;
   notification.FromJson(json);
 
-  bat_ads_->OnNotificationEvent(notification.id,
-      ToMojomAdEventType(ads::AdEventType::kClicked));
+  const int32_t event_type = (int32_t)ads::AdEventType::kClicked;
+  bat_ads_->OnAdNotificationEvent(notification.id, event_type);
 
   OpenNewTabWithUrl(notification.url);
 }

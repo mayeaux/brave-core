@@ -78,8 +78,8 @@ interface BatAds {
   OnMediaStopped(int32 tab_id);
   OnTabUpdated(int32 tab_id, string url, bool is_active, bool is_incognito);
   OnTabClosed(int32 tab_id);
-  OnNotificationEvent(string id, int32 type);
   GetAdNotificationForId(string id) => (string notification_info);
+  OnAdNotificationEvent(string id, int32 event_type);
   RemoveAllHistory() => (int32 result);
   GetAdsHistory(uint64 from_timestamp, uint64 to_timestamp) => (string history);
   ToggleAdThumbUp(string id, string creative_set_id, int32 action) => (string id, int32 action);

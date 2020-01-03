@@ -402,18 +402,18 @@ bool AdsImpl::IsMediaPlaying() const {
   return true;
 }
 
-void AdsImpl::OnNotificationEvent(
+void AdsImpl::OnAdNotificationEvent(
     const std::string& id,
     const AdEventType event_type) {
-  NotificationInfo notification;
-  if (!notifications_->Get(id, &notification)) {
+  NotificationInfo info;
+  if (!notifications_->Get(id, &info)) {
     NOTREACHED();
     return;
   }
 
   switch (event_type) {
     case AdEventType::kViewed: {
-      last_shown_notification_info_ = NotificationInfo(notification);
+      last_shown_notification_info_ = info;
       break;
     }
 
@@ -439,7 +439,7 @@ void AdsImpl::OnNotificationEvent(
     return;
   }
 
-  ad_event->Trigger(notification);
+  ad_event->Trigger(info);
 }
 
 bool AdsImpl::ShouldNotDisturb() const {
