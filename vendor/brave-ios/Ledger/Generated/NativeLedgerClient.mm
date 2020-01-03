@@ -264,3 +264,6 @@ void NativeLedgerClient::GetTransactionReport(const ledger::ActivityMonth month,
 void NativeLedgerClient::GetContributionReport(const ledger::ActivityMonth month, const int year, ledger::GetContributionReportCallback callback) {
   [bridge_ getContributionReport:month year:year callback:callback];
 }
+void NativeLedgerClient::RunDBTransaction(ledger::DBTransactionPtr transaction, ledger::RunDBTransactionCallback callback) {
+  [bridge_ runDBTransaction:std::move(transaction) callback:callback];
+}

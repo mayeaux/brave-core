@@ -99,4 +99,5 @@ private:
   void UnblindedTokensReady() override;
   void GetTransactionReport(const ledger::ActivityMonth month, const int year, ledger::GetTransactionReportCallback callback) override;
   void GetContributionReport(const ledger::ActivityMonth month, const int year, ledger::GetContributionReportCallback callback) override;
+  void RunDBTransaction(ledger::DBTransactionPtr transaction, ledger::RunDBTransactionCallback callback) override;
 };
