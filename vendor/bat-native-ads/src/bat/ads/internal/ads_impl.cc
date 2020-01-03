@@ -13,7 +13,7 @@
 #include "bat/ads/ads_client.h"
 #include "bat/ads/ads_history.h"
 #include "bat/ads/confirmation_type.h"
-#include "bat/ads/notification_info.h"
+#include "bat/ads/ad_notification_info.h"
 
 #include "bat/ads/internal/ads_impl.h"
 #include "bat/ads/internal/classification_helper.h"
@@ -84,7 +84,7 @@ AdsImpl::AdsImpl(AdsClient* ads_client) :
     active_tab_url_(""),
     previous_tab_url_(""),
     page_score_cache_({}),
-    last_shown_notification_info_(NotificationInfo()),
+    last_shown_notification_info_(AdNotificationInfo()),
     collect_activity_timer_id_(0),
     delivering_notifications_timer_id_(0),
     sustained_ad_interaction_timer_id_(0),
@@ -308,7 +308,7 @@ bool AdsImpl::IsMobile() const {
 
 bool AdsImpl::GetAdNotificationForId(
     const std::string& id,
-    NotificationInfo* notification) {
+    AdNotificationInfo* notification) {
   return notifications_->Get(id, notification);
 }
 
@@ -406,7 +406,7 @@ bool AdsImpl::IsMediaPlaying() const {
 void AdsImpl::OnAdNotificationEvent(
     const std::string& id,
     const AdEventType event_type) {
-  NotificationInfo info;
+  AdNotificationInfo info;
   if (!notifications_->Get(id, &info)) {
     NOTREACHED();
     return;
@@ -1299,7 +1299,7 @@ bool AdsImpl::ShowAd(
 
   client_->UpdateAdsUUIDSeen(ad.uuid, 1);
 
-  auto notification_info = std::make_unique<NotificationInfo>();
+  auto notification_info = std::make_unique<AdNotificationInfo>();
   notification_info->id = base::GenerateGUID();
   notification_info->advertiser = ad.advertiser;
   notification_info->category = ad.category;
@@ -1597,7 +1597,7 @@ bool AdsImpl::IsStillViewingAd() const {
 }
 
 void AdsImpl::ConfirmAd(
-    const NotificationInfo& info,
+    const AdNotificationInfo& info,
     const ConfirmationType& type) {
   if (IsCreativeSetFromSampleCatalog(info.creative_set_id)) {
     BLOG(INFO) << "Confirmation not made: Sample Ad";
@@ -1605,7 +1605,7 @@ void AdsImpl::ConfirmAd(
     return;
   }
 
-  auto notification_info = std::make_unique<NotificationInfo>(info);
+  auto notification_info = std::make_unique<AdNotificationInfo>(info);
 
   notification_info->type = type;
 
@@ -1657,7 +1657,7 @@ void AdsImpl::OnTimer(
 }
 
 void AdsImpl::AppendAdNotificationToAdsHistory(
-    const NotificationInfo& info,
+    const AdNotificationInfo& info,
     const ConfirmationType& confirmation_type) {
   auto ad_history = std::make_unique<AdHistory>();
   ad_history->timestamp_in_seconds = Time::NowInSeconds();

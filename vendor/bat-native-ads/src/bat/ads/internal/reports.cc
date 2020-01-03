@@ -6,7 +6,7 @@
 #include "bat/ads/internal/reports.h"
 #include "bat/ads/internal/time.h"
 #include "bat/ads/internal/ads_impl.h"
-#include "bat/ads/notification_info.h"
+#include "bat/ads/ad_notification_info.h"
 #include "bat/ads/publisher_ad_info.h"
 
 #include "rapidjson/document.h"
@@ -25,7 +25,7 @@ Reports::Reports(
 Reports::~Reports() = default;
 
 std::string Reports::GenerateAdNotificationEventReport(
-    const NotificationInfo& info,
+    const AdNotificationInfo& info,
     const AdEventType event_type) {
   rapidjson::StringBuffer buffer;
   rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);

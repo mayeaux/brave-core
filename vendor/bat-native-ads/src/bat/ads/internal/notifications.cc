@@ -47,7 +47,7 @@ void Notifications::Initialize(InitializeCallback callback) {
   LoadState();
 }
 
-bool Notifications::Get(const std::string& id, NotificationInfo* info) const {
+bool Notifications::Get(const std::string& id, AdNotificationInfo* info) const {
   DCHECK(is_initialized_);
 
   auto iter = std::find_if(notifications_.begin(), notifications_.end(),
@@ -61,11 +61,11 @@ bool Notifications::Get(const std::string& id, NotificationInfo* info) const {
   return true;
 }
 
-void Notifications::PushBack(const NotificationInfo& info) {
+void Notifications::PushBack(const AdNotificationInfo& info) {
   DCHECK(is_initialized_);
 
   notifications_.push_back(info);
-  ads_client_->ShowNotification(std::make_unique<NotificationInfo>(info));
+  ads_client_->ShowNotification(std::make_unique<AdNotificationInfo>(info));
 
   SaveState();
 }
@@ -130,11 +130,11 @@ uint64_t Notifications::Count() const {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-std::deque<NotificationInfo> Notifications::GetNotificationsFromList(
+std::deque<AdNotificationInfo> Notifications::GetNotificationsFromList(
     base::ListValue* list) const {
   DCHECK(list);
 
-  std::deque<NotificationInfo> notifications;
+  std::deque<AdNotificationInfo> notifications;
 
   for (auto& item : *list) {
     base::DictionaryValue* dictionary;
@@ -142,7 +142,7 @@ std::deque<NotificationInfo> Notifications::GetNotificationsFromList(
       continue;
     }
 
-    NotificationInfo notification_info;
+    AdNotificationInfo notification_info;
     if (!GetNotificationFromDictionary(dictionary, &notification_info)) {
       continue;
     }
@@ -155,8 +155,8 @@ std::deque<NotificationInfo> Notifications::GetNotificationsFromList(
 
 bool Notifications::GetNotificationFromDictionary(
     base::DictionaryValue* dictionary,
-    NotificationInfo* info) const {
-  NotificationInfo notification_info;
+    AdNotificationInfo* info) const {
+  AdNotificationInfo notification_info;
 
   if (!GetIdFromDictionary(dictionary, &notification_info.id)) {
     return false;

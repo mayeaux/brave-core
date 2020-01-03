@@ -11,7 +11,7 @@
 
 namespace ads {
 
-std::unique_ptr<AdEvent<NotificationInfo>> AdEventFactory::Build(
+std::unique_ptr<AdEvent<AdNotificationInfo>> AdEventFactory::Build(
     AdsImpl* ads,
     const AdEventType event_type) {
   DCHECK(ads);

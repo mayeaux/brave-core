@@ -14,11 +14,11 @@
 namespace ads {
 
 class AdsImpl;
-struct NotificationInfo;
+struct AdNotificationInfo;
 
 class AdEventFactory {
  public:
-  static std::unique_ptr<AdEvent<NotificationInfo>> Build(
+  static std::unique_ptr<AdEvent<AdNotificationInfo>> Build(
       AdsImpl* ads,
       const AdEventType event_type);
 };

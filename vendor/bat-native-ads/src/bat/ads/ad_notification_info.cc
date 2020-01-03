@@ -3,7 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "bat/ads/notification_info.h"
+#include "bat/ads/ad_notification_info.h"
 #include "bat/ads/confirmation_type.h"
 
 #include "bat/ads/internal/json_helper.h"
@@ -12,17 +12,11 @@
 
 namespace ads {
 
-NotificationInfo::NotificationInfo() :
-    id(""),
-    creative_set_id(""),
-    category(""),
-    advertiser(""),
-    text(""),
-    url(""),
-    uuid(""),
-    type(ConfirmationType::UNKNOWN) {}
+AdNotificationInfo::AdNotificationInfo()
+    : type(ConfirmationType::kUnknown) {
+}
 
-NotificationInfo::NotificationInfo(const NotificationInfo& info) :
+AdNotificationInfo::AdNotificationInfo(const AdNotificationInfo& info) :
     id(info.id),
     creative_set_id(info.creative_set_id),
     category(info.category),
@@ -32,15 +26,15 @@ NotificationInfo::NotificationInfo(const NotificationInfo& info) :
     uuid(info.uuid),
     type(info.type) {}
 
-NotificationInfo::~NotificationInfo() = default;
+AdNotificationInfo::~AdNotificationInfo() = default;
 
-const std::string NotificationInfo::ToJson() const {
+const std::string AdNotificationInfo::ToJson() const {
   std::string json;
   SaveToJson(*this, &json);
   return json;
 }
 
-Result NotificationInfo::FromJson(
+Result AdNotificationInfo::FromJson(
     const std::string& json,
     std::string* error_description) {
   rapidjson::Document document;
@@ -90,7 +84,7 @@ Result NotificationInfo::FromJson(
   return SUCCESS;
 }
 
-void SaveToJson(JsonWriter* writer, const NotificationInfo& info) {
+void SaveToJson(JsonWriter* writer, const AdNotificationInfo& info) {
   writer->StartObject();
 
   writer->String("id");

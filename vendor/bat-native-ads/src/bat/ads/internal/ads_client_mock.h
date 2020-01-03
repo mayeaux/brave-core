@@ -69,7 +69,7 @@ class MockAdsClient : public AdsClient {
   MOCK_METHOD0(ShouldShowNotifications, bool());
 
   MOCK_METHOD1(ShowNotification, void(
-      std::unique_ptr<NotificationInfo> info));
+      std::unique_ptr<AdNotificationInfo> info));
 
   MOCK_METHOD1(CloseNotification, void(
       const std::string& id));
@@ -78,7 +78,7 @@ class MockAdsClient : public AdsClient {
       std::unique_ptr<IssuersInfo> info));
 
   MOCK_METHOD1(ConfirmAd, void(
-      std::unique_ptr<NotificationInfo> info));
+      std::unique_ptr<AdNotificationInfo> info));
 
   MOCK_METHOD3(ConfirmAction, void(
       const std::string& uuid,

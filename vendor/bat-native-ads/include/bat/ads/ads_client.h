@@ -20,7 +20,7 @@
 #include "bat/ads/bundle_state.h"
 #include "bat/ads/client_info.h"
 #include "bat/ads/export.h"
-#include "bat/ads/notification_info.h"
+#include "bat/ads/ad_notification_info.h"
 #include "bat/ads/result.h"
 
 namespace ads {
@@ -128,7 +128,7 @@ class ADS_EXPORT AdsClient {
 
   // Should show a notification
   virtual void ShowNotification(
-      const std::unique_ptr<NotificationInfo> info) = 0;
+      const std::unique_ptr<AdNotificationInfo> info) = 0;
 
   // Should return |true| if notifications can be displayed; otherwise should
   // return |false|
@@ -145,7 +145,7 @@ class ADS_EXPORT AdsClient {
   // Should pass-through to Confirmations that an ad was viewed, clicked,
   // dismissed or landed
   virtual void ConfirmAd(
-      const std::unique_ptr<NotificationInfo> info) = 0;
+      const std::unique_ptr<AdNotificationInfo> info) = 0;
 
   // Should pass-through to Confirmations that an ad was flagged, upvoted or
   // downvoted

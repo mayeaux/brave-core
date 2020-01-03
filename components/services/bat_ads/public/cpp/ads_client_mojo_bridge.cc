@@ -317,7 +317,7 @@ void AdsClientMojoBridge::LoadSampleBundle(
 
 void AdsClientMojoBridge::ShowNotification(
     const std::string& notification_info) {
-  auto info = std::make_unique<ads::NotificationInfo>();
+  auto info = std::make_unique<ads::AdNotificationInfo>();
   if (info->FromJson(notification_info) == ads::Result::SUCCESS)
     ads_client_->ShowNotification(std::move(info));
 }
@@ -335,7 +335,7 @@ void AdsClientMojoBridge::SetCatalogIssuers(
 }
 
 void AdsClientMojoBridge::ConfirmAd(const std::string& notification_info) {
-  auto info = std::make_unique<ads::NotificationInfo>();
+  auto info = std::make_unique<ads::AdNotificationInfo>();
   if (info->FromJson(notification_info) == ads::Result::SUCCESS)
     ads_client_->ConfirmAd(std::move(info));
 }

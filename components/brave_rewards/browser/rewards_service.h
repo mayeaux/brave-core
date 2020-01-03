@@ -33,7 +33,7 @@ class Profile;
 
 namespace ads {
 struct IssuersInfo;
-struct NotificationInfo;
+struct AdNotificationInfo;
 }
 
 namespace content {

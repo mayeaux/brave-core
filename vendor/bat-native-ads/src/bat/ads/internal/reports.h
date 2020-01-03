@@ -19,7 +19,7 @@
 namespace ads {
 
 class AdsImpl;
-struct NotificationInfo;
+struct AdNotificationInfo;
 struct PublisherAdInfo;
 
 class Reports {
@@ -29,7 +29,7 @@ class Reports {
   ~Reports();
 
   std::string GenerateAdNotificationEventReport(
-      const NotificationInfo& info,
+      const AdNotificationInfo& info,
       const AdEventType type);
 
   std::string GeneratePublisherAdEventReport(

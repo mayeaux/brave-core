@@ -373,7 +373,7 @@ class AdsServiceImpl : public AdsService,
       ads::OnLoadCallback callback) const override;
 
   void ShowNotification(
-      std::unique_ptr<ads::NotificationInfo> info) override;
+      std::unique_ptr<ads::AdNotificationInfo> info) override;
   bool ShouldShowNotifications() override;
   void CloseNotification(
       const std::string& id) override;
@@ -382,7 +382,7 @@ class AdsServiceImpl : public AdsService,
       std::unique_ptr<ads::IssuersInfo> info) override;
 
   void ConfirmAd(
-      std::unique_ptr<ads::NotificationInfo> info) override;
+      std::unique_ptr<ads::AdNotificationInfo> info) override;
   void ConfirmAction(
       const std::string& uuid,
       const std::string& creative_set_id,

@@ -1034,7 +1034,7 @@ void ConfirmationsImpl::AppendTransactionToHistory(
   confirmations_client_->ConfirmationsTransactionHistoryDidChange();
 }
 
-void ConfirmationsImpl::ConfirmAd(std::unique_ptr<NotificationInfo> info) {
+void ConfirmationsImpl::ConfirmAd(std::unique_ptr<AdNotificationInfo> info) {
   BLOG(INFO) << "Confirm ad:"
       << std::endl << "  id: " << info->id
       << std::endl << "  creative_set_id: " << info->creative_set_id

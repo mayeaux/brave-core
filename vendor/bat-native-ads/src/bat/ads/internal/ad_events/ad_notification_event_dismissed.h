@@ -8,11 +8,11 @@
 
 #include "bat/ads/internal/ad_events/ad_event.h"
 #include "bat/ads/internal/ads_impl.h"
-#include "bat/ads/notification_info.h"
+#include "bat/ads/ad_notification_info.h"
 
 namespace ads {
 
-class AdNotificationEventDismissed : public AdEvent<NotificationInfo> {
+class AdNotificationEventDismissed : public AdEvent<AdNotificationInfo> {
  public:
   AdNotificationEventDismissed(
       AdsImpl* ads);
@@ -20,7 +20,7 @@ class AdNotificationEventDismissed : public AdEvent<NotificationInfo> {
   ~AdNotificationEventDismissed() override;
 
   void Trigger(
-      const NotificationInfo& info) override;
+      const AdNotificationInfo& info) override;
 
  private:
   AdsImpl* ads_;  // NOT OWNED

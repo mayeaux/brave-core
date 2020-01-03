@@ -16,7 +16,7 @@
 #include "base/task/post_task.h"
 #include "base/task/thread_pool/thread_pool_instance.h"
 #include "bat/ads/issuers_info.h"
-#include "bat/ads/notification_info.h"
+#include "bat/ads/ad_notification_info.h"
 #include "bat/confirmations/confirmations.h"
 #include "bat/ledger/internal/media/media.h"
 #include "bat/ledger/internal/publisher/publisher.h"
@@ -1146,11 +1146,11 @@ void LedgerImpl::SetCatalogIssuers(const std::string& info) {
 }
 
 void LedgerImpl::ConfirmAd(const std::string& info) {
-  ads::NotificationInfo notification_info_ads;
+  ads::AdNotificationInfo notification_info_ads;
   if (notification_info_ads.FromJson(info) != ads::Result::SUCCESS)
     return;
 
-  auto notification_info = std::make_unique<confirmations::NotificationInfo>();
+  auto notification_info = std::make_unique<confirmations::AdNotificationInfo>();
   notification_info->id = notification_info_ads.id;
   notification_info->creative_set_id = notification_info_ads.creative_set_id;
   notification_info->category = notification_info_ads.category;

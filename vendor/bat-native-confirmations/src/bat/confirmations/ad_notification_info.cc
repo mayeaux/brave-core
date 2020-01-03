@@ -3,16 +3,16 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "bat/confirmations/notification_info.h"
+#include "bat/confirmations/ad_notification_info.h"
 
 namespace confirmations {
 
-NotificationInfo::NotificationInfo() :
+AdNotificationInfo::AdNotificationInfo() :
     type(ConfirmationType::kUnknown) {
 }
 
-NotificationInfo::NotificationInfo(
-    const NotificationInfo& info)
+AdNotificationInfo::AdNotificationInfo(
+    const AdNotificationInfo& info)
     : creative_set_id(info.creative_set_id),
       category(info.category),
       advertiser(info.advertiser),
@@ -22,6 +22,6 @@ NotificationInfo::NotificationInfo(
       type(info.type) {
 }
 
-NotificationInfo::~NotificationInfo() = default;
+AdNotificationInfo::~AdNotificationInfo() = default;
 
 }  // namespace confirmations

@@ -20,7 +20,7 @@ AdNotificationEventViewed::AdNotificationEventViewed(
 AdNotificationEventViewed::~AdNotificationEventViewed() = default;
 
 void AdNotificationEventViewed::Trigger(
-    const NotificationInfo& info) {
+    const AdNotificationInfo& info) {
   DCHECK(ads_);
   if (!ads_) {
     return;

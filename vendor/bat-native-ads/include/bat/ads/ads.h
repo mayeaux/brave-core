@@ -16,7 +16,7 @@
 #include "bat/ads/category_content.h"
 #include "bat/ads/export.h"
 #include "bat/ads/mojom.h"
-#include "bat/ads/notification_info.h"
+#include "bat/ads/ad_notification_info.h"
 #include "bat/ads/publisher_ad_info.h"
 #include "bat/ads/ads_history.h"
 
@@ -188,7 +188,7 @@ class ADS_EXPORT Ads {
   // |false|
   virtual bool GetAdNotificationForId(
       const std::string& id,
-      NotificationInfo* notification) = 0;
+      AdNotificationInfo* notification) = 0;
 
   // Should be called when a user implicitly views, clicks or dismisses a
   // notification; or a notification times out

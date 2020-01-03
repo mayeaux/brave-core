@@ -17,7 +17,7 @@
 #include "bat/ads/ads_history.h"
 #include "bat/ads/ad_info.h"
 #include "bat/ads/mojom.h"
-#include "bat/ads/notification_info.h"
+#include "bat/ads/ad_notification_info.h"
 #include "bat/ads/publisher_ad_info.h"
 #include "bat/ads/internal/ads_serve.h"
 #include "bat/ads/internal/bundle.h"
@@ -87,7 +87,7 @@ class AdsImpl : public Ads {
 
   bool GetAdNotificationForId(
       const std::string& id,
-      ads::NotificationInfo* notification) override;
+      ads::AdNotificationInfo* notification) override;
   void OnAdNotificationEvent(
       const std::string& id,
       const AdEventType event_type) override;
@@ -213,7 +213,7 @@ class AdsImpl : public Ads {
 
   bool IsAdValid(
       const AdInfo& ad_info);
-  NotificationInfo last_shown_notification_info_;
+  AdNotificationInfo last_shown_notification_info_;
   bool ShowAd(
       const AdInfo& ad_info);
   bool IsAllowedToServeAds();
@@ -253,7 +253,7 @@ class AdsImpl : public Ads {
   bool IsSustainingAdInteraction() const;
   bool IsStillViewingAd() const;
   void ConfirmAd(
-      const NotificationInfo& info,
+      const AdNotificationInfo& info,
       const ConfirmationType& type);
   void ConfirmAction(
       const std::string& uuid,
@@ -266,7 +266,7 @@ class AdsImpl : public Ads {
   uint64_t next_easter_egg_timestamp_in_seconds_;
 
   void AppendAdNotificationToAdsHistory(
-      const NotificationInfo& info,
+      const AdNotificationInfo& info,
       const ConfirmationType& type);
 
   bool IsCreativeSetFromSampleCatalog(

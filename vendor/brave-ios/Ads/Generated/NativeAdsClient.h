@@ -29,11 +29,11 @@ class NativeAdsClient : public ads::AdsClient {
   bool CanShowBackgroundNotifications() const override;
   const std::vector<std::string> GetUserModelLanguages() const override;
   void LoadUserModelForLanguage(const std::string & language, ads::OnLoadCallback callback) const override;
-  void ShowNotification(std::unique_ptr<ads::NotificationInfo> info) override;
+  void ShowNotification(std::unique_ptr<ads::AdNotificationInfo> info) override;
   bool ShouldShowNotifications() override;
   void CloseNotification(const std::string& id) override;
   void SetCatalogIssuers(std::unique_ptr<ads::IssuersInfo> info) override;
-  void ConfirmAd(std::unique_ptr<ads::NotificationInfo> info) override;
+  void ConfirmAd(std::unique_ptr<ads::AdNotificationInfo> info) override;
   void ConfirmAction(const std::string& uuid, const std::string& creative_set_id, const ads::ConfirmationType& type) override;
   uint32_t SetTimer(const uint64_t time_offset) override;
   void KillTimer(const uint32_t timer_id) override;

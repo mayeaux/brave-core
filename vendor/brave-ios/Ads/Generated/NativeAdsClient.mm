@@ -63,7 +63,7 @@ void NativeAdsClient::LoadUserModelForLanguage(const std::string & language, ads
   [bridge_ loadUserModelForLanguage:language callback:callback];
 }
 
-void NativeAdsClient::ShowNotification(std::unique_ptr<ads::NotificationInfo> info) {
+void NativeAdsClient::ShowNotification(std::unique_ptr<ads::AdNotificationInfo> info) {
   [bridge_ showNotification:std::move(info)];
 }
 
@@ -79,7 +79,7 @@ void NativeAdsClient::SetCatalogIssuers(std::unique_ptr<ads::IssuersInfo> info) 
   [bridge_ setCatalogIssuers:std::move(info)];
 }
 
-void NativeAdsClient::ConfirmAd(std::unique_ptr<ads::NotificationInfo> info) {
+void NativeAdsClient::ConfirmAd(std::unique_ptr<ads::AdNotificationInfo> info) {
   [bridge_ confirmAd:std::move(info)];
 }
 

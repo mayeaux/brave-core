@@ -216,7 +216,7 @@ bool BatAdsClientMojoBridge::IsForeground() const {
 }
 
 void BatAdsClientMojoBridge::ShowNotification(
-    std::unique_ptr<ads::NotificationInfo> info) {
+    std::unique_ptr<ads::AdNotificationInfo> info) {
   if (!connected()) {
     return;
   }
@@ -253,7 +253,7 @@ void BatAdsClientMojoBridge::SetCatalogIssuers(
 }
 
 void BatAdsClientMojoBridge::ConfirmAd(
-    std::unique_ptr<ads::NotificationInfo> info) {
+    std::unique_ptr<ads::AdNotificationInfo> info) {
   if (!connected()) {
     return;
   }

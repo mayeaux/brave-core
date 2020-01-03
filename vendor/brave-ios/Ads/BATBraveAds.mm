@@ -34,7 +34,7 @@ static NSString * const kNumberOfAdsPerDayKey = @"BATNumberOfAdsPerDay";
 static NSString * const kNumberOfAdsPerHourKey = @"BATNumberOfAdsPerHour";
 
 @interface BATAdsNotification ()
-- (instancetype)initWithNotificationInfo:(const ads::NotificationInfo&)info;
+- (instancetype)initWithNotificationInfo:(const ads::AdNotificationInfo&)info;
 @end
 
 @interface BATBraveAds () <NativeAdsClientBridge> {
@@ -365,7 +365,7 @@ BATClassAdsBridge(BOOL, isTesting, setTesting, _is_testing)
                          ads::AdContent::LikeAction::LIKE_ACTION_THUMBS_DOWN);
 }
 
-- (void)confirmAd:(std::unique_ptr<ads::NotificationInfo>)info
+- (void)confirmAd:(std::unique_ptr<ads::AdNotificationInfo>)info
 {
   [self.ledger confirmAd:[NSString stringWithUTF8String:info->ToJson().c_str()]];
 }
@@ -606,7 +606,7 @@ BATClassAdsBridge(BOOL, isTesting, setTesting, _is_testing)
 - (nullable BATAdsNotification *)adsNotificationForIdentifier:(NSString *)identifier
 {
   if (![self isAdsServiceRunning]) { return nil; }
-  ads::NotificationInfo info;
+  ads::AdNotificationInfo info;
   if (ads->GetAdNotificationForId(identifier.UTF8String, &info)) {
     return [[BATAdsNotification alloc] initWithNotificationInfo:info];
   }
@@ -618,7 +618,7 @@ BATClassAdsBridge(BOOL, isTesting, setTesting, _is_testing)
   return [self.notificationsHandler shouldShowNotifications];
 }
 
-- (void)showNotification:(std::unique_ptr<ads::NotificationInfo>)info
+- (void)showNotification:(std::unique_ptr<ads::AdNotificationInfo>)info
 {
   if (info.get() == nullptr) {
     return;

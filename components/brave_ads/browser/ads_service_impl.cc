@@ -22,7 +22,7 @@
 #include "bat/ads/ad_history.h"
 #include "bat/ads/ads.h"
 #include "bat/ads/ads_history.h"
-#include "bat/ads/notification_info.h"
+#include "bat/ads/ad_notification_info.h"
 #include "bat/ads/resources/grit/bat_ads_resources.h"
 #include "brave/components/brave_ads/browser/ad_notification.h"
 #include "brave/components/brave_ads/browser/ads_notification_handler.h"
@@ -895,7 +895,7 @@ void AdsServiceImpl::ViewAd(
 
 void AdsServiceImpl::OnViewAd(
     const std::string& json) {
-  ads::NotificationInfo notification;
+  ads::AdNotificationInfo notification;
   notification.FromJson(json);
 
   bat_ads_->OnAdNotificationEvent(notification.id, ads::AdEventType::kClicked);
@@ -1893,7 +1893,7 @@ void AdsServiceImpl::LoadUserModelForLanguage(
 }
 
 void AdsServiceImpl::ShowNotification(
-    const std::unique_ptr<ads::NotificationInfo> info) {
+    const std::unique_ptr<ads::AdNotificationInfo> info) {
   auto notification = CreateAdNotification(*info);
 
   display_service_->Display(NotificationHandler::Type::BRAVE_ADS,
@@ -1925,7 +1925,7 @@ void AdsServiceImpl::SetCatalogIssuers(
 }
 
 void AdsServiceImpl::ConfirmAd(
-    const std::unique_ptr<ads::NotificationInfo> info) {
+    const std::unique_ptr<ads::AdNotificationInfo> info) {
   rewards_service_->ConfirmAd(info->ToJson());
 }
 

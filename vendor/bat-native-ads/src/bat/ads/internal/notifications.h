@@ -11,7 +11,7 @@
 
 #include "bat/ads/ads_client.h"
 #include "bat/ads/internal/ads_impl.h"
-#include "bat/ads/notification_info.h"
+#include "bat/ads/ad_notification_info.h"
 
 #include "base/values.h"
 
@@ -26,9 +26,9 @@ class Notifications {
 
   void Initialize(InitializeCallback callback);
 
-  bool Get(const std::string& id, NotificationInfo* info) const;
+  bool Get(const std::string& id, AdNotificationInfo* info) const;
 
-  void PushBack(const NotificationInfo& info);
+  void PushBack(const AdNotificationInfo& info);
   void PopFront(bool should_dismiss);
 
   bool Remove(const std::string& id, bool should_dismiss);
@@ -43,14 +43,14 @@ class Notifications {
 
   InitializeCallback callback_;
 
-  std::deque<NotificationInfo> notifications_;
+  std::deque<AdNotificationInfo> notifications_;
 
-  std::deque<NotificationInfo> GetNotificationsFromList(
+  std::deque<AdNotificationInfo> GetNotificationsFromList(
       base::ListValue* list) const;
 
   bool GetNotificationFromDictionary(
       base::DictionaryValue* dictionary,
-      NotificationInfo* info) const;
+      AdNotificationInfo* info) const;
 
   bool GetIdFromDictionary(
       base::DictionaryValue* dictionary,

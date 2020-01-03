@@ -3,8 +3,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef BAT_CONFIRMATIONS_NOTIFICATION_INFO_H_
-#define BAT_CONFIRMATIONS_NOTIFICATION_INFO_H_
+#ifndef BAT_CONFIRMATIONS_AD_NOTIFICATION_INFO_H_
+#define BAT_CONFIRMATIONS_AD_NOTIFICATION_INFO_H_
 
 #include <string>
 
@@ -13,10 +13,11 @@
 
 namespace confirmations {
 
-struct CONFIRMATIONS_EXPORT NotificationInfo {
-  NotificationInfo();
-  explicit NotificationInfo(const NotificationInfo& info);
-  ~NotificationInfo();
+struct CONFIRMATIONS_EXPORT AdNotificationInfo {
+  AdNotificationInfo();
+  AdNotificationInfo(
+      const AdNotificationInfo& info);
+  ~AdNotificationInfo();
 
   std::string id;
   std::string creative_set_id;
@@ -30,4 +31,4 @@ struct CONFIRMATIONS_EXPORT NotificationInfo {
 
 }  // namespace confirmations
 
-#endif  // BAT_CONFIRMATIONS_NOTIFICATION_INFO_H_
+#endif  // BAT_CONFIRMATIONS_AD_NOTIFICATION_INFO_H_

@@ -4,7 +4,7 @@
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "brave/components/brave_ads/browser/ad_notification.h"
-#include "bat/ads/notification_info.h"
+#include "bat/ads/ad_notification_info.h"
 
 #include "base/strings/utf_string_conversions.h"
 #include "ui/message_center/public/cpp/notification.h"
@@ -21,7 +21,7 @@ const char kNotifierId[] = "service.ads_service";
 
 // static
 std::unique_ptr<message_center::Notification> CreateAdNotification(
-    const ads::NotificationInfo& notification_info) {
+    const ads::AdNotificationInfo& notification_info) {
   message_center::RichNotificationData notification_data;
 
   base::string16 advertiser;
