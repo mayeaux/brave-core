@@ -13,7 +13,8 @@ AdNotificationInfo::AdNotificationInfo() :
 
 AdNotificationInfo::AdNotificationInfo(
     const AdNotificationInfo& info)
-    : creative_set_id(info.creative_set_id),
+    : id(info.id),
+      creative_set_id(info.creative_set_id),
       category(info.category),
       advertiser(info.advertiser),
       text(info.text),
