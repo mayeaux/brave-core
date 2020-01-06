@@ -127,9 +127,9 @@ class AdsClientMojoBridge : public mojom::BatAdsClient,
   void SaveBundleState(
       const std::string& bundle_state,
       SaveBundleStateCallback callback) override;
-  void GetAds(
+  void GetCreativeAdNotifications(
       const std::vector<std::string>& categories,
-      GetAdsCallback callback) override;
+      GetCreativeAdNotificationsCallback callback) override;
 
  private:
   // workaround to pass base::OnceCallback into std::bind
@@ -174,11 +174,11 @@ class AdsClientMojoBridge : public mojom::BatAdsClient,
   static void OnSaveBundleState(
       CallbackHolder<SaveBundleStateCallback>* holder,
       ads::Result result);
-  static void OnGetAds(
-      CallbackHolder<GetAdsCallback>* holder,
+  static void OnGetCreativeAdNotifications(
+      CallbackHolder<GetCreativeAdNotificationsCallback>* holder,
       ads::Result result,
       const std::vector<std::string>& categories,
-      const std::vector<ads::AdInfo>& ad_info);
+      const std::vector<ads::CreativeAdNotificationInfo>& ads);
 
   ads::AdsClient* ads_client_;
 

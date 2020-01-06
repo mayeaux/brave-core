@@ -64,7 +64,7 @@ source_set("headers") {
   sources = [
     "include/bat/ads/ad_content.h",
     "include/bat/ads/ad_history.h",
-    "include/bat/ads/ad_info.h",
+    "include/bat/ads/creative_ad_notification_info.h",
     "include/bat/ads/ad_notification_info.h",
     "include/bat/ads/ads_client.h",
     "include/bat/ads/ads.h",
@@ -94,7 +94,6 @@ source_set("ads") {
   sources = [
     "src/bat/ads/ad_content.cc",
     "src/bat/ads/ad_history.cc",
-    "src/bat/ads/ad_info.cc",
     "src/bat/ads/ads.cc",
     "src/bat/ads/ad_notification_info.cc",
     "src/bat/ads/ads_history.cc",
@@ -102,6 +101,7 @@ source_set("ads") {
     "src/bat/ads/category_content.cc",
     "src/bat/ads/client_info.cc",
     "src/bat/ads/confirmation_type.cc",
+    "src/bat/ads/creative_ad_notification_info.cc",
     "src/bat/ads/issuer_info.cc",
     "src/bat/ads/issuers_info.cc",
     "src/bat/ads/publisher_ad_info.cc",

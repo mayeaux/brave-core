@@ -15,7 +15,7 @@
 
 #include "bat/ads/ads.h"
 #include "bat/ads/ads_history.h"
-#include "bat/ads/ad_info.h"
+#include "bat/ads/creative_ad_notification_info.h"
 #include "bat/ads/mojom.h"
 #include "bat/ads/ad_notification_info.h"
 #include "bat/ads/publisher_ad_info.h"
@@ -182,40 +182,41 @@ class AdsImpl : public Ads {
   void CheckEasterEgg(
       const std::string& url);
 
-  void CheckReadyAdServe(
-      const bool forced);
-  void ServeAdFromCategories(
+  void MaybeServeAdNotification(
+      const bool should_serve);
+  void ServeAdNotificationIfReady(
+      const bool should_force);
+  void ServeAdNotificationFromCategories(
       const std::vector<std::string>& categories);
-  void OnServeAdFromCategories(
+  void OnServeAdNotificationFromCategories(
       const Result result,
       const std::vector<std::string>& categories,
-      const std::vector<AdInfo>& ads);
-  bool ServeAdFromParentCategories(
+      const std::vector<CreativeAdNotificationInfo>& ads);
+  bool ServeAdNotificationFromParentCategories(
       const std::vector<std::string>& categories);
-  void ServeUntargetedAd();
-  void OnServeUntargetedAd(
+  void ServeUntargetedAdNotification();
+  void OnServeUntargetedAdNotification(
       const Result result,
       const std::vector<std::string>& categories,
-      const std::vector<AdInfo>& ads);
-  void ServeAd(
-      const std::vector<AdInfo>& ads);
-
-  void SuccessfullyServedAd();
-  void FailedToServeAd(
+      const std::vector<CreativeAdNotificationInfo>& ads);
+  void ServeAdNotification(
+      const std::vector<CreativeAdNotificationInfo>& ads);
+  void SuccessfullyServedAdNotification();
+  void FailedToServeAdNotification(
       const std::string& reason);
 
-  std::vector<AdInfo> GetEligibleAds(
-      const std::vector<AdInfo>& ads);
-  std::vector<AdInfo> GetUnseenAdsAndRoundRobinIfNeeded(
-      const std::vector<AdInfo>& ads) const;
-  std::vector<AdInfo> GetUnseenAds(
-      const std::vector<AdInfo>& ads) const;
+  std::vector<CreativeAdNotificationInfo> GetEligibleAds(
+      const std::vector<CreativeAdNotificationInfo>& ads);
+  std::vector<CreativeAdNotificationInfo> GetUnseenAdsAndRoundRobinIfNeeded(
+      const std::vector<CreativeAdNotificationInfo>& ads) const;
+  std::vector<CreativeAdNotificationInfo> GetUnseenAds(
+      const std::vector<CreativeAdNotificationInfo>& ads) const;
 
-  bool IsAdValid(
-      const AdInfo& ad_info);
-  bool ShowAd(
-      const AdInfo& ad_info);
-  bool IsAllowedToServeAds();
+  bool IsAdNotificationValid(
+      const CreativeAdNotificationInfo& info);
+  bool ShowAdNotification(
+      const CreativeAdNotificationInfo& info);
+  bool IsAllowedToServeAdNotifications();
 
   uint32_t collect_activity_timer_id_;
   void StartCollectingActivity(
@@ -224,16 +225,14 @@ class AdsImpl : public Ads {
   void StopCollectingActivity();
   bool IsCollectingActivity() const;
 
-  uint32_t delivering_notifications_timer_id_;
-  void StartDeliveringNotifications();
-  void StartDeliveringNotificationsAfterSeconds(
+  uint32_t delivering_ad_notifications_timer_id_;
+  void StartDeliveringAdNotifications();
+  void StartDeliveringAdNotificationsAfterSeconds(
       const uint64_t seconds);
-  void DeliverNotification();
-  void StopDeliveringNotifications();
-  bool IsDeliveringNotifications() const;
+  void DeliverAdNotification();
+  void StopDeliveringAdNotifications();
+  bool IsDeliveringAdNotifications() const;
   bool IsCatalogOlderThanOneDay();
-  void NotificationAllowedCheck(
-      const bool serve);
 
   #if defined(OS_ANDROID)
   void RemoveAllNotificationsAfterReboot();
@@ -243,15 +242,15 @@ class AdsImpl : public Ads {
   void BundleUpdated();
 
   AdNotificationInfo last_shown_ad_notification_info_;
-  uint32_t sustained_ad_interaction_timer_id_;
-  std::string last_sustained_ad_domain_;
-  void StartSustainingAdInteraction(
+  uint32_t sustained_ad_notification_interaction_timer_id_;
+  std::string last_sustained_ad_notification_domain_;
+  void StartSustainingAdNotificationInteraction(
       const uint64_t start_timer_in);
-  void SustainAdInteractionIfNeeded();
-  void SustainAdInteraction();
-  void StopSustainingAdInteraction();
-  bool IsSustainingAdInteraction() const;
-  bool IsStillViewingAd() const;
+  void SustainAdNotificationInteractionIfNeeded();
+  void SustainAdNotificationInteraction();
+  void StopSustainingAdNotificationInteraction();
+  bool IsSustainingAdNotificationInteraction() const;
+  bool IsStillViewingAdNotification() const;
   void ConfirmAdNotification(
       const AdNotificationInfo& info,
       const ConfirmationType& type);

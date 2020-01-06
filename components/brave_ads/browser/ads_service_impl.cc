@@ -218,18 +218,19 @@ bool EnsureBaseDirectoryExistsOnFileTaskRunner(
   return base::CreateDirectory(path);
 }
 
-std::vector<ads::AdInfo> GetAdsForCategoriesOnFileTaskRunner(
+std::vector<ads::CreativeAdNotificationInfo>
+GetCreativeAdNotificationsForCategoriesOnFileTaskRunner(
     const std::vector<std::string>& categories,
     BundleStateDatabase* backend) {
-  std::vector<ads::AdInfo> ads;
+  std::vector<ads::CreativeAdNotificationInfo> ads;
 
   if (!backend) {
     return ads;
   }
 
   for (const auto& category : categories) {
-    std::vector<ads::AdInfo> category_ads;
-    backend->GetAdsForCategory(category, &category_ads);
+    std::vector<ads::CreativeAdNotificationInfo> category_ads;
+    backend->GetCreativeAdNotificationsForCategory(category, &category_ads);
     ads.insert(ads.end(), category_ads.begin(), category_ads.end());
   }
 
@@ -1006,10 +1007,10 @@ bool AdsServiceImpl::CanShowBackgroundNotifications() const {
   return NotificationHelper::GetInstance()->CanShowBackgroundNotifications();
 }
 
-void AdsServiceImpl::OnGetAdsForCategories(
-    const ads::OnGetAdsCallback& callback,
+void AdsServiceImpl::OnGetCreativeAdNotificationsForCategories(
+    const ads::OnGetCreativeAdNotificationsCallback& callback,
     const std::vector<std::string>& categories,
-    const std::vector<ads::AdInfo>& ads) {
+    const std::vector<ads::CreativeAdNotificationInfo>& ads) {
   if (!connected()) {
     return;
   }
@@ -2067,14 +2068,14 @@ void AdsServiceImpl::SaveBundleState(
                      callback));
 }
 
-void AdsServiceImpl::GetAds(
+void AdsServiceImpl::GetCreativeAdNotifications(
     const std::vector<std::string>& categories,
-    ads::OnGetAdsCallback callback) {
+    ads::OnGetCreativeAdNotificationsCallback callback) {
   base::PostTaskAndReplyWithResult(file_task_runner_.get(), FROM_HERE,
-      base::BindOnce(&GetAdsForCategoriesOnFileTaskRunner, categories,
-          bundle_state_backend_.get()),
-      base::BindOnce(&AdsServiceImpl::OnGetAdsForCategories, AsWeakPtr(),
-          std::move(callback), categories));
+      base::BindOnce(&GetCreativeAdNotificationsForCategoriesOnFileTaskRunner,
+          categories, bundle_state_backend_.get()),
+      base::BindOnce(&AdsServiceImpl::OnGetCreativeAdNotificationsForCategories,
+          AsWeakPtr(), std::move(callback), categories));
 }
 
 void AdsServiceImpl::EventLog(

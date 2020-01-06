@@ -59,7 +59,7 @@ interface BatAdsClient {
   Load(string name) => (int32 result, string value);
   LoadSampleBundle() => (int32 result, string value);
   Reset(string name) => (int32 result);
-  GetAds(array<string> categories) => (int32 result, array<string> categories, array<string> ad_info);
+  GetCreativeAdNotifications(array<string> categories) => (int32 result, array<string> categories, array<string> ads_json);
   EventLog(string json);
 };
 

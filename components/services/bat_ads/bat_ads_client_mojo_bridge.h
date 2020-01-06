@@ -99,9 +99,9 @@ class BatAdsClientMojoBridge : public ads::AdsClient {
       std::unique_ptr<ads::BundleState> bundle_state,
       ads::OnSaveCallback callback) override;
 
-  void GetAds(
+  void GetCreativeAdNotifications(
       const std::vector<std::string>& categories,
-      ads::OnGetAdsCallback callback) override;
+      ads::OnGetCreativeAdNotificationsCallback callback) override;
 
   void EventLog(
       const std::string& json) const override;

@@ -382,11 +382,11 @@ BATClassAdsBridge(BOOL, isTesting, setTesting, _is_testing)
                         type:[NSString stringWithUTF8String:std::string(type).c_str()]];
 }
 
-- (void)getAds:(const std::vector<std::string> &)categories callback:(ads::OnGetAdsCallback)callback
+- (void)getCreativeAdNotifications:(const std::vector<std::string> &)categories callback:(ads::OnGetCreativeAdNotificationsCallback)callback
 {
   if (![self isAdsServiceRunning]) { return; }
 
-  std::vector<ads::AdInfo> found_ads;
+  std::vector<ads::CreativeAdNotificationInfo> found_ads;
   for (const auto & category : categories) {
     auto it = bundleState->categories.find(category);
     if (it == bundleState->categories.end()) {

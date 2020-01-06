@@ -8,7 +8,7 @@
 #include "bat/ads/internal/time.h"
 #include "bat/ads/internal/client.h"
 
-#include "bat/ads/ad_info.h"
+#include "bat/ads/creative_ad_notification_info.h"
 
 namespace ads {
 
@@ -20,7 +20,7 @@ PerHourFrequencyCap::PerHourFrequencyCap(
 PerHourFrequencyCap::~PerHourFrequencyCap() = default;
 
 bool PerHourFrequencyCap::ShouldExclude(
-  const AdInfo& ad) {
+    const CreativeAdNotificationInfo& ad) {
   if (!DoesAdRespectPerHourCap(ad)) {
     std::ostringstream string_stream;
     string_stream << "adUUID " << ad.uuid <<
@@ -36,7 +36,7 @@ const std::string PerHourFrequencyCap::GetLastMessage() const {
 }
 
 bool PerHourFrequencyCap::DoesAdRespectPerHourCap(
-    const AdInfo& ad) const {
+    const CreativeAdNotificationInfo& ad) const {
   auto ads_shown = frequency_capping_->GetAdsHistoryForUuid(ad.uuid);
   auto hour_window = base::Time::kSecondsPerHour;
 

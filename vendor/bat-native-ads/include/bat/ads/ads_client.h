@@ -15,7 +15,7 @@
 #include <memory>
 #include <functional>
 
-#include "bat/ads/ad_info.h"
+#include "bat/ads/creative_ad_notification_info.h"
 #include "bat/ads/issuers_info.h"
 #include "bat/ads/bundle_state.h"
 #include "bat/ads/client_info.h"
@@ -49,8 +49,9 @@ using OnLoadCallback = std::function<void(const Result, const std::string&)>;
 
 using OnResetCallback = std::function<void(const Result)>;
 
-using OnGetAdsCallback = std::function<void(const Result,
-    const std::vector<std::string>&, const std::vector<AdInfo>&)>;
+using OnGetCreativeAdNotificationsCallback = std::function<void(const Result,
+    const std::vector<std::string>&,
+        const std::vector<CreativeAdNotificationInfo>&)>;
 
 using OnLoadSampleBundleCallback = std::function<void(const Result,
     const std::string&)>;
@@ -232,15 +233,15 @@ class ADS_EXPORT AdsClient {
   virtual void Reset(
       const std::string& name, OnResetCallback callback) = 0;
 
-  // Should fetch all ads for the specified |category| where the current time is
-  // between the ad |start_timestamp| and |end_timestamp| from the previously
-  // persisted bundle state. The callback takes 3 arguments — |Result| should be
-  // set to |SUCCESS| if successful; otherwise, should be set to |FAILED|.
-  // |category| should contain the category. |ads| should contain an array of
-  // ads
-  virtual void GetAds(
+  // Should fetch all creative ad notifications for the specified |category|
+  // where the current time is between the ad |start_timestamp| and
+  // |end_timestamp| from the previously persisted bundle state. The callback
+  // takes 3 arguments — |Result| should be set to |SUCCESS| if successful;
+  // otherwise, should be set to |FAILED|. |category| should contain the
+  // category. |ads| should contain an array of ads
+  virtual void GetCreativeAdNotifications(
       const std::vector<std::string>& categories,
-      OnGetAdsCallback callback) = 0;
+      OnGetCreativeAdNotificationsCallback callback) = 0;
 
   // Should log an event
   virtual void EventLog(

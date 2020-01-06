@@ -11,7 +11,7 @@
 #include <vector>
 #include <map>
 
-#include "bat/ads/ad_info.h"
+#include "bat/ads/creative_ad_notification_info.h"
 
 namespace ads {
 
@@ -30,7 +30,7 @@ struct BundleState {
   uint64_t catalog_version;
   uint64_t catalog_ping;
   uint64_t catalog_last_updated_timestamp_in_seconds;
-  std::map<std::string, std::vector<AdInfo>> categories;
+  std::map<std::string, std::vector<CreativeAdNotificationInfo>> categories;
 };
 
 }  // namespace ads

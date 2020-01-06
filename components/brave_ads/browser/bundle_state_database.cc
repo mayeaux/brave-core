@@ -62,9 +62,9 @@ bool BundleStateDatabase::Init() {
   if (!meta_table_.Init(&db_, GetCurrentVersion(), kCompatibleVersionNumber))
     return false;
   if (!CreateCategoryTable() ||
-      !CreateAdInfoTable() ||
-      !CreateAdInfoCategoryTable() ||
-      !CreateAdInfoCategoryNameIndex())
+      !CreateCreativeAdNotificationInfoTable() ||
+      !CreateCreativeAdNotificationInfoCategoryTable() ||
+      !CreateCreativeAdNotificationInfoCategoryNameIndex())
     return false;
 
   // Version check.
@@ -114,14 +114,14 @@ bool BundleStateDatabase::TruncateCategoryTable() {
 }
 
 
-bool BundleStateDatabase::CreateAdInfoTable() {
+bool BundleStateDatabase::CreateCreativeAdNotificationInfoTable() {
   DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
 
   const char* name = "ad_info";
   if (GetDB().DoesTableExist(name))
     return true;
 
-  // Update InsertOrUpdateAdInfo() if you add anything here
+  // Update InsertOrUpdateCreativeAdNotificationInfo() if you add anything here
   std::string sql;
   sql.append("CREATE TABLE ");
   sql.append(name);
@@ -143,7 +143,7 @@ bool BundleStateDatabase::CreateAdInfoTable() {
   return GetDB().Execute(sql.c_str());
 }
 
-bool BundleStateDatabase::TruncateAdInfoTable() {
+bool BundleStateDatabase::TruncateCreativeAdNotificationInfoTable() {
   DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
 
   bool initialized = Init();
@@ -157,7 +157,7 @@ bool BundleStateDatabase::TruncateAdInfoTable() {
   return sql.Run();
 }
 
-bool BundleStateDatabase::CreateAdInfoCategoryTable() {
+bool BundleStateDatabase::CreateCreativeAdNotificationInfoCategoryTable() {
   DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
 
   const char* name = "ad_info_category";
@@ -183,7 +183,7 @@ bool BundleStateDatabase::CreateAdInfoCategoryTable() {
   return GetDB().Execute(sql.c_str());
 }
 
-bool BundleStateDatabase::TruncateAdInfoCategoryTable() {
+bool BundleStateDatabase::TruncateCreativeAdNotificationInfoCategoryTable() {
   DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
 
   bool initialized = Init();
@@ -197,7 +197,7 @@ bool BundleStateDatabase::TruncateAdInfoCategoryTable() {
   return sql.Run();
 }
 
-bool BundleStateDatabase::CreateAdInfoCategoryNameIndex() {
+bool BundleStateDatabase::CreateCreativeAdNotificationInfoCategoryNameIndex() {
   DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
 
   return GetDB().Execute(
@@ -219,16 +219,15 @@ bool BundleStateDatabase::SaveBundleState(
     return false;
 
   // we are completely replacing here so first truncate all the tables
-  if (!TruncateAdInfoCategoryTable() ||
-      !TruncateAdInfoTable() ||
+  if (!TruncateCreativeAdNotificationInfoCategoryTable() ||
+      !TruncateCreativeAdNotificationInfoTable() ||
       !TruncateCategoryTable()) {
     GetDB().RollbackTransaction();
     return false;
   }
 
   auto categories = bundle_state.categories;
-  for (std::map<std::string, std::vector<ads::AdInfo>>::iterator it =
-      categories.begin();  it != categories.end(); ++it) {
+  for (auto it = categories.begin(); it != categories.end(); ++it) {
     auto category = it->first;
     if (!InsertOrUpdateCategory(category)) {
       GetDB().RollbackTransaction();
@@ -236,11 +235,10 @@ bool BundleStateDatabase::SaveBundleState(
     }
 
     auto ads = it->second;
-    for (std::vector<ads::AdInfo>::iterator ad_it = ads.begin();
-        ad_it != ads.end(); ++ad_it) {
-      auto ad_info = *ad_it;
-      if (!InsertOrUpdateAdInfo(ad_info) ||
-          !InsertOrUpdateAdInfoCategory(ad_info, category)) {
+    for (auto ad_it = ads.begin(); ad_it != ads.end(); ++ad_it) {
+      auto info = *ad_it;
+      if (!InsertOrUpdateCreativeAdNotificationInfo(info) ||
+          !InsertOrUpdateCreativeAdNotificationInfoCategory(info, category)) {
         GetDB().RollbackTransaction();
         return false;
       }
@@ -275,7 +273,8 @@ bool BundleStateDatabase::InsertOrUpdateCategory(const std::string& category) {
   return ad_info_statement.Run();
 }
 
-bool BundleStateDatabase::InsertOrUpdateAdInfo(const ads::AdInfo& info) {
+bool BundleStateDatabase::InsertOrUpdateCreativeAdNotificationInfo(
+    const ads::CreativeAdNotificationInfo& info) {
   DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
 
   bool initialized = Init();
@@ -313,8 +312,8 @@ bool BundleStateDatabase::InsertOrUpdateAdInfo(const ads::AdInfo& info) {
   return true;
 }
 
-bool BundleStateDatabase::InsertOrUpdateAdInfoCategory(
-    const ads::AdInfo& ad_info,
+bool BundleStateDatabase::InsertOrUpdateCreativeAdNotificationInfoCategory(
+    const ads::CreativeAdNotificationInfo& info,
     const std::string& category) {
   DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
 
@@ -330,15 +329,15 @@ bool BundleStateDatabase::InsertOrUpdateAdInfoCategory(
           "(ad_info_uuid, category_name) "
           "VALUES (?, ?)"));
 
-  ad_info_statement.BindString(0, ad_info.uuid);
+  ad_info_statement.BindString(0, info.uuid);
   ad_info_statement.BindString(1, category);
 
   return ad_info_statement.Run();
 }
 
-bool BundleStateDatabase::GetAdsForCategory(
+bool BundleStateDatabase::GetCreativeAdNotificationsForCategory(
     const std::string& category,
-    std::vector<ads::AdInfo>* ads) {
+    std::vector<ads::CreativeAdNotificationInfo>* ads) {
   DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
 
   bool initialized = Init();
@@ -364,7 +363,7 @@ bool BundleStateDatabase::GetAdsForCategory(
   info_sql.BindString(0, category);
 
   while (info_sql.Step()) {
-    ads::AdInfo info;
+    ads::CreativeAdNotificationInfo info;
     info.creative_set_id = info_sql.ColumnString(0);
     info.advertiser = info_sql.ColumnString(1);
     info.category = category;

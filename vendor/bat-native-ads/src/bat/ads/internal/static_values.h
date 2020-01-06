@@ -36,7 +36,7 @@ const uint64_t kNextEasterEggStartsInSeconds = 30;
 
 const char kShoppingStateUrl[] = "https://amazon.com";
 
-const uint64_t kSustainAdInteractionAfterSeconds = 10;
+const uint64_t kSustainAdNotificationInteractionAfterSeconds = 10;
 const uint64_t kSustainPublisherAdInteractionAfterSeconds = 10;
 
 const uint64_t kDefaultCatalogPing = 2 * base::Time::kSecondsPerHour;

@@ -49,60 +49,66 @@ Result BundleState::FromJson(
     return result;
   }
 
-  std::map<std::string, std::vector<AdInfo>> new_categories = {};
+  std::map<std::string, std::vector<CreativeAdNotificationInfo>> new_categories;
 
   if (bundle.HasMember("categories")) {
     for (const auto& category : bundle["categories"].GetObject()) {
-      for (const auto& info : category.value.GetArray()) {
-        AdInfo ad_info;
+      for (const auto& creative_ad_notification : category.value.GetArray()) {
+        CreativeAdNotificationInfo info;
 
-        if (info.HasMember("creativeSetId")) {
-          ad_info.creative_set_id = info["creativeSetId"].GetString();
+        if (creative_ad_notification.HasMember("creativeSetId")) {
+          info.creative_set_id =
+              creative_ad_notification["creativeSetId"].GetString();
         }
 
-        if (info.HasMember("campaignId")) {
-          ad_info.campaign_id = info["campaignId"].GetString();
+        if (creative_ad_notification.HasMember("campaignId")) {
+          info.campaign_id = creative_ad_notification["campaignId"].GetString();
         }
 
-        if (info.HasMember("startTimestamp")) {
-          ad_info.start_timestamp = info["startTimestamp"].GetString();
+        if (creative_ad_notification.HasMember("startTimestamp")) {
+          info.start_timestamp =
+              creative_ad_notification["startTimestamp"].GetString();
         }
 
-        if (info.HasMember("endTimestamp")) {
-          ad_info.end_timestamp = info["endTimestamp"].GetString();
+        if (creative_ad_notification.HasMember("endTimestamp")) {
+          info.end_timestamp =
+              creative_ad_notification["endTimestamp"].GetString();
         }
 
-        if (info.HasMember("dailyCap")) {
-          ad_info.daily_cap = info["dailyCap"].GetUint();
+        if (creative_ad_notification.HasMember("dailyCap")) {
+          info.daily_cap = creative_ad_notification["dailyCap"].GetUint();
         }
 
-        if (info.HasMember("perDay")) {
-          ad_info.per_day = info["perDay"].GetUint();
+        if (creative_ad_notification.HasMember("perDay")) {
+          info.per_day = creative_ad_notification["perDay"].GetUint();
         }
 
-        if (info.HasMember("totalMax")) {
-          ad_info.total_max = info["totalMax"].GetUint();
+        if (creative_ad_notification.HasMember("totalMax")) {
+          info.total_max = creative_ad_notification["totalMax"].GetUint();
         }
 
-        std::vector<std::string> regions = {};
-        if (info.HasMember("regions")) {
-          for (const auto& region : info["regions"].GetArray()) {
+        std::vector<std::string> regions;
+        if (creative_ad_notification.HasMember("regions")) {
+          for (const auto& region :
+              creative_ad_notification["regions"].GetArray()) {
             regions.push_back(region.GetString());
           }
         }
-        ad_info.regions = regions;
+        info.regions = regions;
 
-        ad_info.advertiser = info["advertiser"].GetString();
-        ad_info.notification_text = info["notificationText"].GetString();
-        ad_info.notification_url =
-          helper::Uri::GetUri(info["notificationURL"].GetString());
-        ad_info.uuid = info["uuid"].GetString();
+        info.advertiser = creative_ad_notification["advertiser"].GetString();
+        info.notification_text =
+            creative_ad_notification["notificationText"].GetString();
+        info.notification_url = helper::Uri::GetUri(
+            creative_ad_notification["notificationURL"].GetString());
+        info.uuid = creative_ad_notification["uuid"].GetString();
 
         if (new_categories.find(category.name.GetString()) ==
             new_categories.end()) {
           new_categories.insert({category.name.GetString(), {}});
         }
-        new_categories.at(category.name.GetString()).push_back(ad_info);
+
+        new_categories.at(category.name.GetString()).push_back(info);
       }
     }
   }

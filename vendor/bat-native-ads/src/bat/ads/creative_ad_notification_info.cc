@@ -3,41 +3,44 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "bat/ads/ad_info.h"
+#include "bat/ads/creative_ad_notification_info.h"
 
 #include "bat/ads/internal/json_helper.h"
 
 namespace ads {
 
-AdInfo::AdInfo() :
-    daily_cap(0),
-    per_day(0),
-    total_max(0) {}
+CreativeAdNotificationInfo::CreativeAdNotificationInfo()
+    : daily_cap(0),
+      per_day(0),
+      total_max(0) {
+}
 
-AdInfo::AdInfo(const AdInfo& info) :
-    creative_set_id(info.creative_set_id),
-    campaign_id(info.campaign_id),
-    start_timestamp(info.start_timestamp),
-    end_timestamp(info.end_timestamp),
-    daily_cap(info.daily_cap),
-    per_day(info.per_day),
-    total_max(info.total_max),
-    regions(info.regions),
-    advertiser(info.advertiser),
-    category(info.category),
-    notification_text(info.notification_text),
-    notification_url(info.notification_url),
-    uuid(info.uuid) {}
+CreativeAdNotificationInfo::CreativeAdNotificationInfo(
+    const CreativeAdNotificationInfo& info)
+    : creative_set_id(info.creative_set_id),
+      campaign_id(info.campaign_id),
+      start_timestamp(info.start_timestamp),
+      end_timestamp(info.end_timestamp),
+      daily_cap(info.daily_cap),
+      per_day(info.per_day),
+      total_max(info.total_max),
+      regions(info.regions),
+      category(info.category),
+      advertiser(info.advertiser),
+      notification_text(info.notification_text),
+      notification_url(info.notification_url),
+      uuid(info.uuid) {
+}
 
-AdInfo::~AdInfo() = default;
+CreativeAdNotificationInfo::~CreativeAdNotificationInfo() = default;
 
-const std::string AdInfo::ToJson() const {
+const std::string CreativeAdNotificationInfo::ToJson() const {
   std::string json;
   SaveToJson(*this, &json);
   return json;
 }
 
-Result AdInfo::FromJson(
+Result CreativeAdNotificationInfo::FromJson(
     const std::string& json,
     std::string* error_description) {
   rapidjson::Document document;
@@ -110,7 +113,7 @@ Result AdInfo::FromJson(
   return SUCCESS;
 }
 
-void SaveToJson(JsonWriter* writer, const AdInfo& info) {
+void SaveToJson(JsonWriter* writer, const CreativeAdNotificationInfo& info) {
   writer->StartObject();
 
   writer->String("creative_set_id");

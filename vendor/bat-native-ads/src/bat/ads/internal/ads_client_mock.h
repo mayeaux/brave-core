@@ -125,9 +125,9 @@ class MockAdsClient : public AdsClient {
       const std::string& name,
       OnResetCallback callback));
 
-  MOCK_METHOD2(GetAds, void(
+  MOCK_METHOD2(GetCreativeAdNotifications, void(
       const std::vector<std::string>& categories,
-      OnGetAdsCallback callback));
+      OnGetCreativeAdNotificationsCallback callback));
 
   MOCK_CONST_METHOD1(EventLog, void(
       const std::string& json));

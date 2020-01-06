@@ -3,8 +3,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef BAT_ADS_AD_INFO_H_
-#define BAT_ADS_AD_INFO_H_
+#ifndef BAT_ADS_CREATIVE_AD_NOTIFICATION_INFO_H_
+#define BAT_ADS_CREATIVE_AD_NOTIFICATION_INFO_H_
 
 #include <string>
 #include <vector>
@@ -14,10 +14,10 @@
 
 namespace ads {
 
-struct ADS_EXPORT AdInfo {
-  AdInfo();
-  AdInfo(const AdInfo& info);
-  ~AdInfo();
+struct ADS_EXPORT CreativeAdNotificationInfo {
+  CreativeAdNotificationInfo();
+  CreativeAdNotificationInfo(const CreativeAdNotificationInfo& info);
+  ~CreativeAdNotificationInfo();
 
   const std::string ToJson() const;
   Result FromJson(
@@ -32,8 +32,8 @@ struct ADS_EXPORT AdInfo {
   unsigned int per_day;
   unsigned int total_max;
   std::vector<std::string> regions;
-  std::string advertiser;
   std::string category;
+  std::string advertiser;
   std::string notification_text;
   std::string notification_url;
   std::string uuid;
@@ -41,4 +41,4 @@ struct ADS_EXPORT AdInfo {
 
 }  // namespace ads
 
-#endif  // BAT_ADS_AD_INFO_H_
+#endif  // BAT_ADS_CREATIVE_AD_NOTIFICATION_INFO_H_

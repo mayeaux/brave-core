@@ -11,7 +11,7 @@
 #include <vector>
 #include <memory>
 
-#include "bat/ads/ad_info.h"
+#include "bat/ads/creative_ad_notification_info.h"
 #include "bat/ads/bundle_state.h"
 #include "base/compiler_specific.h"
 #include "base/files/file_path.h"
@@ -27,19 +27,22 @@ namespace brave_ads {
 
 class BundleStateDatabase {
  public:
-  explicit BundleStateDatabase(const base::FilePath& db_path);
+  explicit BundleStateDatabase(
+      const base::FilePath& db_path);
   ~BundleStateDatabase();
 
   // Call before Init() to set the error callback to be used for the
   // underlying database connection.
-  void set_error_callback(const sql::Database::ErrorCallback& error_callback) {
+  void set_error_callback(
+      const sql::Database::ErrorCallback& error_callback) {
     db_.set_error_callback(error_callback);
   }
 
-  bool SaveBundleState(const ads::BundleState& bundle_state);
-  bool GetAdsForCategory(
+  bool SaveBundleState(
+      const ads::BundleState& bundle_state);
+  bool GetCreativeAdNotificationsForCategory(
       const std::string& category,
-      std::vector<ads::AdInfo>* ads);
+      std::vector<ads::CreativeAdNotificationInfo>* ads);
 
   // Returns the current version of the publisher info database
   static int GetCurrentVersion();
@@ -48,7 +51,9 @@ class BundleStateDatabase {
   // unused space in the file. It can be VERY SLOW.
   void Vacuum();
 
-  std::string GetDiagnosticInfo(int extended_error, sql::Statement* statement);
+  std::string GetDiagnosticInfo(
+      int extended_error,
+      sql::Statement* statement);
 
  private:
   bool Init();
@@ -56,18 +61,20 @@ class BundleStateDatabase {
       base::MemoryPressureListener::MemoryPressureLevel memory_pressure_level);
 
   bool CreateCategoryTable();
-  bool CreateAdInfoTable();
-  bool CreateAdInfoCategoryTable();
-  bool CreateAdInfoCategoryNameIndex();
+  bool CreateCreativeAdNotificationInfoTable();
+  bool CreateCreativeAdNotificationInfoCategoryTable();
+  bool CreateCreativeAdNotificationInfoCategoryNameIndex();
 
   bool TruncateCategoryTable();
-  bool TruncateAdInfoTable();
-  bool TruncateAdInfoCategoryTable();
+  bool TruncateCreativeAdNotificationInfoTable();
+  bool TruncateCreativeAdNotificationInfoCategoryTable();
 
-  bool InsertOrUpdateCategory(const std::string& category);
-  bool InsertOrUpdateAdInfo(const ads::AdInfo& info);
-  bool InsertOrUpdateAdInfoCategory(
-      const ads::AdInfo& ad_info,
+  bool InsertOrUpdateCategory(
+      const std::string& category);
+  bool InsertOrUpdateCreativeAdNotificationInfo(
+      const ads::CreativeAdNotificationInfo& info);
+  bool InsertOrUpdateCreativeAdNotificationInfoCategory(
+      const ads::CreativeAdNotificationInfo& info,
       const std::string& category);
 
   sql::Database& GetDB();

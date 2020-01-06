@@ -389,31 +389,34 @@ void AdsClientMojoBridge::SaveBundleState(const std::string& bundle_state_json,
 }
 
 // static
-void AdsClientMojoBridge::OnGetAds(
-    CallbackHolder<GetAdsCallback>* holder,
+void AdsClientMojoBridge::OnGetCreativeAdNotifications(
+    CallbackHolder<GetCreativeAdNotificationsCallback>* holder,
     ads::Result result,
     const std::vector<std::string>& categories,
-    const std::vector<ads::AdInfo>& ad_info) {
+    const std::vector<ads::CreativeAdNotificationInfo>& ads) {
   if (holder->is_valid()) {
-    std::vector<std::string> ad_info_json;
-    for (const auto it : ad_info) {
-      ad_info_json.push_back(it.ToJson());
+    std::vector<std::string> json;
+
+    for (const auto& ad : ads) {
+      json.push_back(ad.ToJson());
     }
-    std::move(holder->get()).Run(ToMojomResult(result), categories,
-        ad_info_json);
+
+    std::move(holder->get()).Run(ToMojomResult(result), categories, json);
   }
+
   delete holder;
 }
 
-void AdsClientMojoBridge::GetAds(
+void AdsClientMojoBridge::GetCreativeAdNotifications(
     const std::vector<std::string>& categories,
-    GetAdsCallback callback) {
+    GetCreativeAdNotificationsCallback callback) {
   // this gets deleted in OnSaveBundleState
-  auto* holder = new CallbackHolder<GetAdsCallback>(
+  auto* holder = new CallbackHolder<GetCreativeAdNotificationsCallback>(
       AsWeakPtr(), std::move(callback));
 
-  ads_client_->GetAds(categories, std::bind(AdsClientMojoBridge::OnGetAds,
-      holder, _1, _2, _3));
+  ads_client_->GetCreativeAdNotifications(categories,
+      std::bind(AdsClientMojoBridge::OnGetCreativeAdNotifications,
+          holder, _1, _2, _3));
 }
 
 }  // namespace bat_ads

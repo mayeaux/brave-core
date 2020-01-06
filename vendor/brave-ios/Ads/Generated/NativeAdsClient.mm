@@ -127,8 +127,8 @@ void NativeAdsClient::SaveBundleState(std::unique_ptr<ads::BundleState> state, a
   [bridge_ saveBundleState:std::move(state) callback:callback];
 }
 
-void NativeAdsClient::GetAds(const std::vector<std::string> & categories, ads::OnGetAdsCallback callback) {
-  [bridge_ getAds:categories callback:callback];
+void NativeAdsClient::GetCreativeAdNotifications(const std::vector<std::string> & categories, ads::OnGetCreativeAdNotificationsCallback callback) {
+  [bridge_ getCreativeAdNotifications:categories callback:callback];
 }
 
 void NativeAdsClient::EventLog(const std::string & json) const {

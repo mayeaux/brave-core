@@ -220,10 +220,10 @@ class AdsServiceImpl : public AdsService,
       ads::URLRequestCallback callback,
       const std::unique_ptr<std::string> response_body);
 
-  void OnGetAdsForCategories(
-      const ads::OnGetAdsCallback& callback,
+  void OnGetCreativeAdNotificationsForCategories(
+      const ads::OnGetCreativeAdNotificationsCallback& callback,
       const std::vector<std::string>& categories,
-      const std::vector<ads::AdInfo>& ads);
+      const std::vector<ads::CreativeAdNotificationInfo>& ads);
 
   void OnGetAdsHistory(
       OnGetAdsHistoryCallback callback,
@@ -426,9 +426,9 @@ class AdsServiceImpl : public AdsService,
       std::unique_ptr<ads::BundleState> bundle_state,
       ads::OnSaveCallback callback) override;
 
-  void GetAds(
+  void GetCreativeAdNotifications(
       const std::vector<std::string>& categories,
-      ads::OnGetAdsCallback callback) override;
+      ads::OnGetCreativeAdNotificationsCallback callback) override;
 
   void EventLog(
       const std::string& json) const override;

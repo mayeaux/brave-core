@@ -99,7 +99,7 @@ std::unique_ptr<BundleState> Bundle::GenerateFromCatalog(
     const Catalog& catalog) {
   // TODO(Terry Mancey): Refactor function to use callbacks
 
-  std::map<std::string, std::vector<AdInfo>> categories;
+  std::map<std::string, std::vector<CreativeAdNotificationInfo>> categories;
 
   // Campaigns
   for (const auto& campaign : catalog.GetCampaigns()) {
@@ -122,19 +122,19 @@ std::unique_ptr<BundleState> Bundle::GenerateFromCatalog(
 
       // Creatives
       for (const auto& creative : creative_set.creatives) {
-        AdInfo ad_info;
-        ad_info.creative_set_id = creative_set.creative_set_id;
-        ad_info.campaign_id = campaign.campaign_id;
-        ad_info.start_timestamp = campaign.start_at;
-        ad_info.end_timestamp = campaign.end_at;
-        ad_info.daily_cap = campaign.daily_cap;
-        ad_info.per_day = creative_set.per_day;
-        ad_info.total_max = creative_set.total_max;
-        ad_info.regions = regions;
-        ad_info.advertiser = creative.payload.title;
-        ad_info.notification_text = creative.payload.body;
-        ad_info.notification_url = creative.payload.target_url;
-        ad_info.uuid = creative.creative_instance_id;
+        CreativeAdNotificationInfo info;
+        info.creative_set_id = creative_set.creative_set_id;
+        info.campaign_id = campaign.campaign_id;
+        info.start_timestamp = campaign.start_at;
+        info.end_timestamp = campaign.end_at;
+        info.daily_cap = campaign.daily_cap;
+        info.per_day = creative_set.per_day;
+        info.total_max = creative_set.total_max;
+        info.regions = regions;
+        info.advertiser = creative.payload.title;
+        info.notification_text = creative.payload.body;
+        info.notification_url = creative.payload.target_url;
+        info.uuid = creative.creative_instance_id;
 
         // OSes
         if (!DoesOsSupportCreativeSet(creative_set)) {
@@ -159,7 +159,7 @@ std::unique_ptr<BundleState> Bundle::GenerateFromCatalog(
           if (categories.find(segment_name) == categories.end()) {
             categories.insert({segment_name, {}});
           }
-          categories.at(segment_name).push_back(ad_info);
+          categories.at(segment_name).push_back(info);
           entries++;
 
           auto top_level_segment_name = segment_name_hierarchy.front();
@@ -167,7 +167,7 @@ std::unique_ptr<BundleState> Bundle::GenerateFromCatalog(
             if (categories.find(top_level_segment_name) == categories.end()) {
               categories.insert({top_level_segment_name, {}});
             }
-            categories.at(top_level_segment_name).push_back(ad_info);
+            categories.at(top_level_segment_name).push_back(info);
             entries++;
           }
         }
