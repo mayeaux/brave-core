@@ -25,14 +25,14 @@ struct ADS_EXPORT AdNotificationInfo {
       const std::string& json,
       std::string* error_description = nullptr);
 
-  std::string id;
+  std::string uuid;
+  std::string creative_instance_id;
   std::string creative_set_id;
   std::string category;
-  std::string advertiser;
-  std::string text;
-  std::string url;
-  std::string uuid;
-  ConfirmationType type;
+  std::string title;
+  std::string body;
+  std::string target_url;
+  ConfirmationType confirmation_type;
 };
 
 }  // namespace ads

@@ -26,12 +26,12 @@ struct ADS_EXPORT PublisherAdInfo {
       std::string* error_description = nullptr);
 
   std::string id;
+  std::string creative_instance_id;
   std::string creative_set_id;
   std::string category;
   std::string size;
   std::string creative_url;
   std::string target_url;
-  std::string uuid;
   ConfirmationType type;
 };
 

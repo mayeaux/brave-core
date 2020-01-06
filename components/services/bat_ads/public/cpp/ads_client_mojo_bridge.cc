@@ -18,6 +18,7 @@
 using std::placeholders::_1;
 using std::placeholders::_2;
 using std::placeholders::_3;
+using std::placeholders::_4;
 
 namespace bat_ads {
 
@@ -391,7 +392,7 @@ void AdsClientMojoBridge::SaveBundleState(const std::string& bundle_state_json,
 // static
 void AdsClientMojoBridge::OnGetCreativeAdNotifications(
     CallbackHolder<GetCreativeAdNotificationsCallback>* holder,
-    ads::Result result,
+    const ads::Result result,
     const std::vector<std::string>& categories,
     const std::vector<ads::CreativeAdNotificationInfo>& ads) {
   if (holder->is_valid()) {
@@ -417,6 +418,38 @@ void AdsClientMojoBridge::GetCreativeAdNotifications(
   ads_client_->GetCreativeAdNotifications(categories,
       std::bind(AdsClientMojoBridge::OnGetCreativeAdNotifications,
           holder, _1, _2, _3));
+}
+
+void AdsClientMojoBridge::OnGetCreativePublisherAds(
+    CallbackHolder<GetCreativePublisherAdsCallback>* holder,
+    const ads::Result result,
+    const std::string& url,
+    const std::vector<std::string>& categories,
+    const std::vector<ads::CreativePublisherAdInfo>& ads) {
+  if (holder->is_valid()) {
+    std::vector<std::string> json;
+
+    for (const auto& ad : ads) {
+      json.push_back(ad.ToJson());
+    }
+
+    std::move(holder->get()).Run(ToMojomResult(result), url, categories, json);
+  }
+
+  delete holder;
+}
+
+void AdsClientMojoBridge::GetCreativePublisherAds(
+    const std::string& url,
+    const std::vector<std::string>& categories,
+    GetCreativePublisherAdsCallback callback) {
+  // this gets deleted in OnSaveBundleState
+  auto* holder = new CallbackHolder<GetCreativePublisherAdsCallback>(
+      AsWeakPtr(), std::move(callback));
+
+  ads_client_->GetCreativePublisherAds(url, categories,
+      std::bind(AdsClientMojoBridge::OnGetCreativePublisherAds,
+          holder, _1, _2, _3, _4));
 }
 
 }  // namespace bat_ads

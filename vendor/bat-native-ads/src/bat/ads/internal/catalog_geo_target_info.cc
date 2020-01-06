@@ -7,14 +7,13 @@
 
 namespace ads {
 
-GeoTargetInfo::GeoTargetInfo() :
-    code(""),
-    name("") {}
+CatalogGeoTargetInfo::CatalogGeoTargetInfo() = default;
 
-GeoTargetInfo::GeoTargetInfo(const GeoTargetInfo& info) :
-    code(info.code),
-    name(info.name) {}
+CatalogGeoTargetInfo::CatalogGeoTargetInfo(
+    const CatalogGeoTargetInfo& info)
+    : code(info.code),
+      name(info.name) {}
 
-GeoTargetInfo::~GeoTargetInfo() {}
+CatalogGeoTargetInfo::~CatalogGeoTargetInfo() = default;
 
 }  // namespace ads

@@ -26,7 +26,7 @@ Reports::~Reports() = default;
 
 std::string Reports::GenerateAdNotificationEventReport(
     const AdNotificationInfo& info,
-    const AdEventType event_type) {
+    const AdNotificationEventType event_type) {
   rapidjson::StringBuffer buffer;
   rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 
@@ -64,109 +64,22 @@ std::string Reports::GenerateAdNotificationEventReport(
 
   writer.String("eventType");
   switch (event_type) {
-    case AdEventType::kViewed: {
+    case AdNotificationEventType::kViewed: {
       writer.String("generated");
       break;
     }
 
-    case AdEventType::kClicked: {
+    case AdNotificationEventType::kClicked: {
       writer.String("clicked");
       break;
     }
 
-    case AdEventType::kDismissed: {
+    case AdNotificationEventType::kDismissed: {
       writer.String("dismissed");
       break;
     }
 
-    case AdEventType::kTimedOut: {
-      writer.String("timed out");
-      break;
-    }
-  }
-
-  writer.String("Classifications");
-  writer.StartArray();
-  auto classifications =
-      helper::Classification::GetClassifications(info.category);
-  for (const auto& classification : classifications) {
-    writer.String(classification.c_str());
-  }
-  writer.EndArray();
-
-  writer.String("adCatalog");
-  if (ads_->IsCreativeSetFromSampleCatalog(info.creative_set_id)) {
-    writer.String("sample-catalog");
-  } else {
-    writer.String(info.creative_set_id.c_str());
-  }
-
-  writer.String("targetUrl");
-  writer.String(info.url.c_str());
-
-  writer.EndObject();
-
-  writer.EndObject();
-
-  return buffer.GetString();
-}
-
-std::string Reports::GeneratePublisherAdEventReport(
-    const PublisherAdInfo& info,
-    const AdEventType event_type) {
-  rapidjson::StringBuffer buffer;
-  rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-
-  if (is_first_run_) {
-    is_first_run_ = false;
-
-    writer.StartObject();
-
-    writer.String("data");
-    writer.StartObject();
-
-    writer.String("type");
-    writer.String("restart");
-
-    writer.String("stamp");
-    auto time_stamp = Time::Timestamp();
-    writer.String(time_stamp.c_str());
-
-    writer.EndObject();
-
-    writer.EndObject();
-  }
-
-  writer.StartObject();
-
-  writer.String("data");
-  writer.StartObject();
-
-  writer.String("type");
-  writer.String("notify");
-
-  writer.String("stamp");
-  auto time_stamp = Time::Timestamp();
-  writer.String(time_stamp.c_str());
-
-  writer.String("eventType");
-  switch (event_type) {
-    case AdEventType::kViewed: {
-      writer.String("generated");
-      break;
-    }
-
-    case AdEventType::kClicked: {
-      writer.String("clicked");
-      break;
-    }
-
-    case AdEventType::kDismissed: {
-      writer.String("dismissed");
-      break;
-    }
-
-    case AdEventType::kTimedOut: {
+    case AdNotificationEventType::kTimedOut: {
       writer.String("timed out");
       break;
     }
@@ -198,8 +111,85 @@ std::string Reports::GeneratePublisherAdEventReport(
   return buffer.GetString();
 }
 
+std::string Reports::GeneratePublisherAdEventReport(
+    const PublisherAdInfo& info,
+    const PublisherAdEventType event_type) {
+  rapidjson::StringBuffer buffer;
+  rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+
+  if (is_first_run_) {
+    is_first_run_ = false;
+
+    writer.StartObject();
+
+    writer.String("data");
+    writer.StartObject();
+
+    writer.String("type");
+    writer.String("restart");
+
+    writer.String("stamp");
+    auto time_stamp = Time::Timestamp();
+    writer.String(time_stamp.c_str());
+
+    writer.EndObject();
+
+    writer.EndObject();
+  }
+
+  writer.StartObject();
+
+  writer.String("data");
+  writer.StartObject();
+
+  writer.String("type");
+  writer.String("notify");
+
+  writer.String("stamp");
+  auto time_stamp = Time::Timestamp();
+  writer.String(time_stamp.c_str());
+
+  writer.String("eventType");
+  switch (event_type) {
+    case PublisherAdEventType::kViewed: {
+      writer.String("generated");
+      break;
+    }
+
+    case PublisherAdEventType::kClicked: {
+      writer.String("clicked");
+      break;
+    }
+  }
+
+  writer.String("Classifications");
+  writer.StartArray();
+  auto classifications =
+      helper::Classification::GetClassifications(info.category);
+  for (const auto& classification : classifications) {
+    writer.String(classification.c_str());
+  }
+  writer.EndArray();
+
+  writer.String("adCatalog");
+  if (ads_->IsCreativeSetFromSampleCatalog(info.creative_set_id)) {
+    writer.String("sample-catalog");
+  } else {
+    writer.String(info.creative_set_id.c_str());
+  }
+
+  writer.String("targetUrl");
+  writer.String(info.target_url.c_str());
+
+  writer.EndObject();
+
+  writer.EndObject();
+
+  return buffer.GetString();
+}
+
 std::string Reports::GenerateConfirmationEventReport(
-    const std::string& uuid,
+    const std::string& creative_instance_id,
     const ConfirmationType& type) const {
   rapidjson::StringBuffer buffer;
   rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
@@ -216,10 +206,10 @@ std::string Reports::GenerateConfirmationEventReport(
   auto time_stamp = Time::Timestamp();
   writer.String(time_stamp.c_str());
 
-  writer.String("notificationId");
-  writer.String(uuid.c_str());
+  writer.String("creativeInstanceId");
+  writer.String(creative_instance_id.c_str());
 
-  writer.String("notificationType");
+  writer.String("confirmationType");
   auto confirmation_type = std::string(type);
   writer.String(confirmation_type.c_str());
 

@@ -3,8 +3,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef BAT_ADS_CREATIVE_AD_NOTIFICATION_INFO_H_
-#define BAT_ADS_CREATIVE_AD_NOTIFICATION_INFO_H_
+#ifndef BAT_ADS_CREATIVE_PUBLISHER_AD_INFO_H_
+#define BAT_ADS_CREATIVE_PUBLISHER_AD_INFO_H_
 
 #include <map>
 #include <vector>
@@ -15,26 +15,27 @@
 
 namespace ads {
 
-struct ADS_EXPORT CreativeAdNotificationInfo : CreativeAdInfo {
-  CreativeAdNotificationInfo();
-  CreativeAdNotificationInfo(
-      const CreativeAdNotificationInfo& info);
-  ~CreativeAdNotificationInfo();
+struct ADS_EXPORT CreativePublisherAdInfo : CreativeAdInfo {
+  CreativePublisherAdInfo();
+  CreativePublisherAdInfo(
+      const CreativePublisherAdInfo& info);
+  ~CreativePublisherAdInfo();
 
   const std::string ToJson() const;
   Result FromJson(
       const std::string& json,
       std::string* error_description = nullptr);
 
-  std::string title;
-  std::string body;
+  std::string size;
+  std::string creative_url;
   std::string target_url;
+  std::vector<std::string> sites;
 };
 
-using CreativeAdNotifications = std::vector<CreativeAdNotificationInfo>;
-using CreativeAdNotificationCategories =
-    std::map<std::string, CreativeAdNotifications>;
+using CreativePublisherAds = std::vector<CreativePublisherAdInfo>;
+using CreativePublisherAdCategories =
+    std::map<std::string, CreativePublisherAds>;
 
 }  // namespace ads
 
-#endif  // BAT_ADS_CREATIVE_AD_NOTIFICATION_INFO_H_
+#endif  // BAT_ADS_CREATIVE_PUBLISHER_AD_INFO_H_

@@ -54,7 +54,7 @@ class Client {
   void UpdateAdUUID();
   void UpdateAdsUUIDSeen(const std::string& uuid, uint64_t value);
   const std::map<std::string, uint64_t> GetAdsUUIDSeen();
-  void ResetAdsUUIDSeen(const std::vector<CreativeAdNotificationInfo>& ads);
+  void ResetAdsUUIDSeen(const CreativeAdNotifications& ads);
   void SetNextCheckServeAdNotificationTimestampInSeconds(
       const uint64_t timestamp_in_seconds);
   uint64_t GetNextCheckServeAdNotificationTimestampInSeconds();

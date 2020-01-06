@@ -8,16 +8,16 @@
 
 #include <stdint.h>
 #include <string>
-#include <vector>
-#include <map>
 
 #include "bat/ads/creative_ad_notification_info.h"
+#include "bat/ads/creative_publisher_ad_info.h"
 
 namespace ads {
 
 struct BundleState {
   BundleState();
-  explicit BundleState(const BundleState& state);
+  BundleState(
+      const BundleState& state);
   ~BundleState();
 
   const std::string ToJson() const;
@@ -30,7 +30,8 @@ struct BundleState {
   uint64_t catalog_version;
   uint64_t catalog_ping;
   uint64_t catalog_last_updated_timestamp_in_seconds;
-  std::map<std::string, std::vector<CreativeAdNotificationInfo>> categories;
+  CreativeAdNotificationCategories ad_notification_categories;
+  CreativePublisherAdCategories publisher_ad_categories;
 };
 
 }  // namespace ads

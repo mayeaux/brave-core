@@ -77,11 +77,10 @@ class BatAdsImpl :
       GetAdNotificationForIdCallback callback) override;
   void OnAdNotificationEvent(
       const std::string& id,
-      const ads::AdEventType event_type) override;
-
+      const ads::AdNotificationEventType event_type) override;
   void OnPublisherAdEvent(
       const std::string& json,
-      const ads::AdEventType event_type) override;
+      const ads::PublisherAdEventType event_type) override;
 
   void RemoveAllHistory(
       RemoveAllHistoryCallback callback) override;

@@ -137,13 +137,13 @@ void BatAdsImpl::GetAdNotificationForId(
 
 void BatAdsImpl::OnAdNotificationEvent(
     const std::string& id,
-    const ads::AdEventType event_type) {
+    const ads::AdNotificationEventType event_type) {
   ads_->OnAdNotificationEvent(id, event_type);
 }
 
 void BatAdsImpl::OnPublisherAdEvent(
     const std::string& json,
-    const ads::AdEventType event_type) {
+    const ads::PublisherAdEventType event_type) {
   ads::PublisherAdInfo info;
   if (info.FromJson(json) != ads::Result::SUCCESS) {
     NOTREACHED();

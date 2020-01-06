@@ -13,18 +13,20 @@
 namespace ads {
 
 AdNotificationInfo::AdNotificationInfo()
-    : type(ConfirmationType::kUnknown) {
+    : confirmation_type(ConfirmationType::kUnknown) {
 }
 
-AdNotificationInfo::AdNotificationInfo(const AdNotificationInfo& info) :
-    id(info.id),
-    creative_set_id(info.creative_set_id),
-    category(info.category),
-    advertiser(info.advertiser),
-    text(info.text),
-    url(info.url),
-    uuid(info.uuid),
-    type(info.type) {}
+AdNotificationInfo::AdNotificationInfo(
+    const AdNotificationInfo& info)
+    : uuid(info.uuid),
+      creative_instance_id(info.creative_instance_id),
+      creative_set_id(info.creative_set_id),
+      category(info.category),
+      title(info.title),
+      body(info.body),
+      target_url(info.target_url),
+      confirmation_type(info.confirmation_type) {
+}
 
 AdNotificationInfo::~AdNotificationInfo() = default;
 
@@ -49,7 +51,7 @@ Result AdNotificationInfo::FromJson(
   }
 
   if (document.HasMember("id")) {
-    id = document["id"].GetString();
+    uuid = document["id"].GetString();
   }
 
   if (document.HasMember("creative_set_id")) {
@@ -61,34 +63,36 @@ Result AdNotificationInfo::FromJson(
   }
 
   if (document.HasMember("advertiser")) {
-    advertiser = document["advertiser"].GetString();
+    title = document["advertiser"].GetString();
   }
 
   if (document.HasMember("text")) {
-    text = document["text"].GetString();
+    body = document["text"].GetString();
   }
 
   if (document.HasMember("url")) {
-    url = document["url"].GetString();
+    target_url = document["url"].GetString();
   }
 
   if (document.HasMember("uuid")) {
-    uuid = document["uuid"].GetString();
+    creative_instance_id = document["uuid"].GetString();
   }
 
   if (document.HasMember("confirmation_type")) {
-    std::string confirmation_type = document["confirmation_type"].GetString();
-    type = ConfirmationType(confirmation_type);
+    confirmation_type =
+        ConfirmationType(document["confirmation_type"].GetString());
   }
 
   return SUCCESS;
 }
 
-void SaveToJson(JsonWriter* writer, const AdNotificationInfo& info) {
+void SaveToJson(
+    JsonWriter* writer,
+    const AdNotificationInfo& info) {
   writer->StartObject();
 
   writer->String("id");
-  writer->String(info.id.c_str());
+  writer->String(info.uuid.c_str());
 
   writer->String("creative_set_id");
   writer->String(info.creative_set_id.c_str());
@@ -97,20 +101,20 @@ void SaveToJson(JsonWriter* writer, const AdNotificationInfo& info) {
   writer->String(info.category.c_str());
 
   writer->String("advertiser");
-  writer->String(info.advertiser.c_str());
+  writer->String(info.title.c_str());
 
   writer->String("text");
-  writer->String(info.text.c_str());
+  writer->String(info.body.c_str());
 
   writer->String("url");
-  writer->String(info.url.c_str());
+  writer->String(info.target_url.c_str());
 
   writer->String("uuid");
-  writer->String(info.uuid.c_str());
+  writer->String(info.creative_instance_id.c_str());
 
   writer->String("confirmation_type");
-  auto type = std::string(info.type);
-  writer->String(type.c_str());
+  auto confirmation_type = std::string(info.confirmation_type);
+  writer->String(confirmation_type.c_str());
 
   writer->EndObject();
 }

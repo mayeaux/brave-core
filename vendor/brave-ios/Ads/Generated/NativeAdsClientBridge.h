@@ -15,6 +15,7 @@
 - (void)confirmAction:(const std::string &)uuid creativeSetId:(const std::string &)creative_set_id confirmationType:(const ads::ConfirmationType &)type;
 - (void)eventLog:(const std::string &)json;
 - (void)getCreativeAdNotifications:(const std::vector<std::string> &)categories callback:(ads::OnGetCreativeAdNotificationsCallback)callback;
+- (void)getCreativePublisherAds:(const std::string & url, const std::vector<std::string> &)categories callback:(ads::OnGetCreativePublisherAdsCallback)callback;
 - (const std::string)getLocale;
 - (uint64_t)getAdsPerDay;
 - (uint64_t)getAdsPerHour;

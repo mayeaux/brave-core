@@ -1154,52 +1154,61 @@ void LedgerImpl::ConfirmAdNotification(
 
   auto notification_info =
       std::make_unique<confirmations::AdNotificationInfo>();
-  notification_info->id = notification_info_ads.id;
+  notification_info->uuid = notification_info_ads.uuid;
+  notification_info->creative_instance_id =
+      notification_info_ads.creative_instance_id;
   notification_info->creative_set_id = notification_info_ads.creative_set_id;
   notification_info->category = notification_info_ads.category;
-  notification_info->advertiser = notification_info_ads.advertiser;
-  notification_info->text = notification_info_ads.text;
-  notification_info->url = notification_info_ads.url;
-  notification_info->uuid = notification_info_ads.uuid;
+  notification_info->title = notification_info_ads.title;
+  notification_info->body = notification_info_ads.body;
+  notification_info->target_url = notification_info_ads.target_url;
 
-  switch (notification_info_ads.type.value()) {
+  switch (notification_info_ads.confirmation_type.value()) {
     case ads::ConfirmationType::kUnknown: {
-      notification_info->type = confirmations::ConfirmationType::kUnknown;
+      notification_info->confirmation_type =
+          confirmations::ConfirmationType::kUnknown;
       break;
     }
 
     case ads::ConfirmationType::kClicked: {
-      notification_info->type = confirmations::ConfirmationType::kClicked;
+      notification_info->confirmation_type =
+          confirmations::ConfirmationType::kClicked;
       break;
     }
 
     case ads::ConfirmationType::kDismissed: {
-      notification_info->type = confirmations::ConfirmationType::kDismissed;
+      notification_info->confirmation_type =
+          confirmations::ConfirmationType::kDismissed;
       break;
     }
 
     case ads::ConfirmationType::kViewed: {
-      notification_info->type = confirmations::ConfirmationType::kViewed;
+      notification_info->confirmation_type =
+          confirmations::ConfirmationType::kViewed;
       break;
     }
 
     case ads::ConfirmationType::kLanded: {
-      notification_info->type = confirmations::ConfirmationType::kLanded;
+      notification_info->confirmation_type =
+          confirmations::ConfirmationType::kLanded;
       break;
     }
 
     case ads::ConfirmationType::kFlagged: {
-      notification_info->type = confirmations::ConfirmationType::kFlagged;
+      notification_info->confirmation_type =
+          confirmations::ConfirmationType::kFlagged;
       break;
     }
 
     case ads::ConfirmationType::kUpvoted: {
-      notification_info->type = confirmations::ConfirmationType::kUpvoted;
+      notification_info->confirmation_type =
+          confirmations::ConfirmationType::kUpvoted;
       break;
     }
 
     case ads::ConfirmationType::kDownvoted: {
-      notification_info->type = confirmations::ConfirmationType::kDownvoted;
+      notification_info->confirmation_type =
+          confirmations::ConfirmationType::kDownvoted;
       break;
     }
   }
@@ -1216,51 +1225,51 @@ void LedgerImpl::ConfirmPublisherAd(
 
   confirmations::PublisherAdInfo info;
   info.id = publisher_ad_info.id;
+  info.creative_instance_id = publisher_ad_info.creative_instance_id;
   info.creative_set_id = publisher_ad_info.creative_set_id;
   info.category = publisher_ad_info.category;
   info.size = publisher_ad_info.size;
   info.creative_url = publisher_ad_info.creative_url;
   info.target_url = publisher_ad_info.target_url;
-  info.uuid = publisher_ad_info.uuid;
 
   switch (publisher_ad_info.type.value()) {
     case ads::ConfirmationType::kUnknown: {
-      info.type = confirmations::ConfirmationType::kUnknown;
+      info.confirmation_type = confirmations::ConfirmationType::kUnknown;
       break;
     }
 
     case ads::ConfirmationType::kClicked: {
-      info.type = confirmations::ConfirmationType::kClicked;
+      info.confirmation_type = confirmations::ConfirmationType::kClicked;
       break;
     }
 
     case ads::ConfirmationType::kDismissed: {
-      info.type = confirmations::ConfirmationType::kDismissed;
+      info.confirmation_type = confirmations::ConfirmationType::kDismissed;
       break;
     }
 
     case ads::ConfirmationType::kViewed: {
-      info.type = confirmations::ConfirmationType::kViewed;
+      info.confirmation_type = confirmations::ConfirmationType::kViewed;
       break;
     }
 
     case ads::ConfirmationType::kLanded: {
-      info.type = confirmations::ConfirmationType::kLanded;
+      info.confirmation_type = confirmations::ConfirmationType::kLanded;
       break;
     }
 
     case ads::ConfirmationType::kFlagged: {
-      info.type = confirmations::ConfirmationType::kFlagged;
+      info.confirmation_type = confirmations::ConfirmationType::kFlagged;
       break;
     }
 
     case ads::ConfirmationType::kUpvoted: {
-      info.type = confirmations::ConfirmationType::kUpvoted;
+      info.confirmation_type = confirmations::ConfirmationType::kUpvoted;
       break;
     }
 
     case ads::ConfirmationType::kDownvoted: {
-      info.type = confirmations::ConfirmationType::kDownvoted;
+      info.confirmation_type = confirmations::ConfirmationType::kDownvoted;
       break;
     }
   }

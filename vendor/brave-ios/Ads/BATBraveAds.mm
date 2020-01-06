@@ -341,11 +341,18 @@ BATClassAdsBridge(BOOL, isTesting, setTesting, _is_testing)
   ads->OnTabClosed((int32_t)tabId);
 }
 
-- (void)reportAdNotificationEvent:(NSString *)notificationId eventType:(BATAdsAdEventType)eventType
+- (void)reportAdNotificationEvent:(NSString *)notificationId eventType:(BATAdsAdNotificationEventType)eventType
 {
   if (![self isAdsServiceRunning]) { return; }
   ads->OnAdNotificationEvent(notificationId.UTF8String,
-                           static_cast<ads::AdEventType>(eventType));
+                             static_cast<ads::AdNotificationEventType>(eventType));
+}
+
+- (void)reportPublisherAdEvent:(NSString *)notificationId eventType:(BATAdsPublisherAdEventType)eventType
+{
+  if (![self isAdsServiceRunning]) { return; }
+  ads->OnPublisherAdEvent(notificationId.UTF8String,
+                          static_cast<ads::PublisherAdEventType>(eventType));
 }
 
 - (void)toggleThumbsUpForAd:(NSString *)identifier creativeSetID:(NSString *)creativeSetID
@@ -355,7 +362,6 @@ BATClassAdsBridge(BOOL, isTesting, setTesting, _is_testing)
                        creativeSetID.UTF8String,
                        ads::AdContent::LikeAction::LIKE_ACTION_THUMBS_UP);
 }
-
 
 - (void)toggleThumbsDownForAd:(NSString *)identifier creativeSetID:(NSString *)creativeSetID
 {
@@ -397,6 +403,11 @@ BATClassAdsBridge(BOOL, isTesting, setTesting, _is_testing)
   }
 
   callback(ads::Result::SUCCESS, categories, found_ads);
+}
+
+- (void)getCreativePublisherAds:(const std::string &)url categories:(const std::vector<std::string> &)categories callback:(ads::OnGetCreativePublisherAdsCallback)callback
+{
+  // TODO(brave): To be implemented if/when iOS can support publisher ads
 }
 
 - (void)setCatalogIssuers:(std::unique_ptr<ads::IssuersInfo>)info

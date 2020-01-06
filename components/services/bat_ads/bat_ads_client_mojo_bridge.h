@@ -103,6 +103,11 @@ class BatAdsClientMojoBridge : public ads::AdsClient {
       const std::vector<std::string>& categories,
       ads::OnGetCreativeAdNotificationsCallback callback) override;
 
+  void GetCreativePublisherAds(
+      const std::string& url,
+      const std::vector<std::string>& categories,
+      ads::OnGetCreativePublisherAdsCallback callback) override;
+
   void EventLog(
       const std::string& json) const override;
 

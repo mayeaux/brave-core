@@ -13,23 +13,23 @@ namespace ads {
 
 std::unique_ptr<AdEvent<AdNotificationInfo>> AdEventFactory::Build(
     AdsImpl* ads,
-    const AdEventType event_type) {
+    const AdNotificationEventType event_type) {
   DCHECK(ads);
 
   switch (event_type) {
-    case AdEventType::kViewed: {
+    case AdNotificationEventType::kViewed: {
       return std::make_unique<AdNotificationEventViewed>(ads);
     }
 
-    case AdEventType::kClicked: {
+    case AdNotificationEventType::kClicked: {
       return std::make_unique<AdNotificationEventClicked>(ads);
     }
 
-    case AdEventType::kDismissed: {
+    case AdNotificationEventType::kDismissed: {
       return std::make_unique<AdNotificationEventDismissed>(ads);
     }
 
-    case AdEventType::kTimedOut: {
+    case AdNotificationEventType::kTimedOut: {
       return std::make_unique<AdNotificationEventTimedOut>(ads);
     }
   }

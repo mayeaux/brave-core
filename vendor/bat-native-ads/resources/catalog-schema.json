@@ -243,11 +243,6 @@
                       "payload": {
                         "type": "object",
                         "additionalProperties": false,
-                        "required": [
-                          "targetUrl",
-                          "body",
-                          "title"
-                        ],
                         "properties": {
                           "targetUrl": {
                             "type": "string"
@@ -257,6 +252,31 @@
                           },
                           "title": {
                             "type": "string"
+                          },
+                          "size": {
+                            "type": "string"
+                          },
+                          "creativeUrl": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "sites": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "code",
+                            "name"
+                          ],
+                          "properties": {
+                            "code": {
+                              "type": "string"
+                            },
+                            "name": {
+                              "type": "string"
+                            }
                           }
                         }
                       }

@@ -19,12 +19,12 @@ PublisherAdInfo::PublisherAdInfo()
 PublisherAdInfo::PublisherAdInfo(
     const PublisherAdInfo& info)
     : id(info.id),
+      creative_instance_id(info.creative_instance_id),
       creative_set_id(info.creative_set_id),
       category(info.category),
       size(info.size),
       creative_url(info.creative_url),
       target_url(info.target_url),
-      uuid(info.uuid),
       type(info.type) {
 }
 
@@ -75,7 +75,7 @@ Result PublisherAdInfo::FromJson(
   }
 
   if (document.HasMember("uuid")) {
-    uuid = document["uuid"].GetString();
+    creative_instance_id = document["uuid"].GetString();
   }
 
   if (document.HasMember("confirmation_type")) {
@@ -108,7 +108,7 @@ void SaveToJson(JsonWriter* writer, const PublisherAdInfo& info) {
   writer->String(info.target_url.c_str());
 
   writer->String("uuid");
-  writer->String(info.uuid.c_str());
+  writer->String(info.creative_instance_id.c_str());
 
   writer->String("confirmation_type");
   auto type = std::string(info.type);

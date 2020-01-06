@@ -409,7 +409,7 @@ bool AdsImpl::IsMediaPlaying() const {
 
 void AdsImpl::OnAdNotificationEvent(
     const std::string& id,
-    const AdEventType event_type) {
+    const AdNotificationEventType event_type) {
   AdNotificationInfo info;
   if (!notifications_->Get(id, &info)) {
     NOTREACHED();
@@ -417,22 +417,22 @@ void AdsImpl::OnAdNotificationEvent(
   }
 
   switch (event_type) {
-    case AdEventType::kViewed: {
+    case AdNotificationEventType::kViewed: {
       last_shown_ad_notification_info_ = info;
       break;
     }
 
-    case AdEventType::kClicked: {
+    case AdNotificationEventType::kClicked: {
       notifications_->Remove(id, true);
       break;
     }
 
-    case AdEventType::kDismissed: {
+    case AdNotificationEventType::kDismissed: {
       notifications_->Remove(id, false);
       break;
     }
 
-    case AdEventType::kTimedOut: {
+    case AdNotificationEventType::kTimedOut: {
       notifications_->Remove(id, false);
       break;
     }
@@ -449,24 +449,14 @@ void AdsImpl::OnAdNotificationEvent(
 
 void AdsImpl::OnPublisherAdEvent(
     const PublisherAdInfo& info,
-    const AdEventType event_type) {
+    const PublisherAdEventType event_type) {
   switch (event_type) {
-    case AdEventType::kViewed: {
+    case PublisherAdEventType::kViewed: {
       last_shown_publisher_ad_info_ = info;
       break;
     }
 
-    case AdEventType::kClicked: {
-      break;
-    }
-
-    case AdEventType::kDismissed: {
-      // Do nothing as unused by publisher ads
-      break;
-    }
-
-    case AdEventType::kTimedOut: {
-      // Do nothing as unused by publisher ads
+    case PublisherAdEventType::kClicked: {
       break;
     }
   }
@@ -699,10 +689,10 @@ void AdsImpl::OnPageLoaded(
     return;
   }
 
-  if (DomainsMatch(url, last_shown_ad_notification_info_.url)) {
+  if (DomainsMatch(url, last_shown_ad_notification_info_.target_url)) {
     BLOG(INFO) << "Site visited " << url
         << ", domain matches the last shown ad notification for "
-            << last_shown_ad_notification_info_.url;
+            << last_shown_ad_notification_info_.target_url;
 
     const std::string domain = GetDomain(url);
     if (last_sustained_ad_notification_domain_ != domain) {
@@ -718,10 +708,10 @@ void AdsImpl::OnPageLoaded(
     return;
   }
 
-  if (!last_shown_ad_notification_info_.url.empty()) {
+  if (!last_shown_ad_notification_info_.target_url.empty()) {
     BLOG(INFO) << "Site visited " << url
       << ", domain does not match the last shown ad notification for "
-          << last_shown_ad_notification_info_.url;
+          << last_shown_ad_notification_info_.target_url;
   }
 
   if (DomainsMatch(url, last_shown_publisher_ad_info_.target_url)) {
@@ -983,13 +973,14 @@ void AdsImpl::OnLoadSampleBundle(
   // the below code should be abstracted into GetAdForSampleCategory once the
   // necessary changes have been made in Brave Core by Brian Johnson
 
-  auto categories = state.categories.begin();
-  auto categories_count = state.categories.size();
+  auto categories = state.ad_notification_categories.begin();
+  auto categories_count = state.ad_notification_categories.size();
   if (categories_count == 0) {
     // TODO(Terry Mancey): Implement Log (#44)
     // 'Notification not made', { reason: 'no categories' }
 
-    BLOG(INFO) << "Notification not made: No sample bundle categories";
+    BLOG(INFO) << "Notification not made: No sample bundle ad notification "
+        "categories";
 
     return;
   }
@@ -1112,7 +1103,7 @@ void AdsImpl::ServeAdNotificationFromCategories(
 void AdsImpl::OnServeAdNotificationFromCategories(
     const Result result,
     const std::vector<std::string>& categories,
-    const std::vector<CreativeAdNotificationInfo>& ads) {
+    const CreativeAdNotifications& ads) {
   auto eligible_ads = GetEligibleAds(ads);
   if (!eligible_ads.empty()) {
     BLOG(INFO) << "Found " << eligible_ads.size() << " eligible ads";
@@ -1178,7 +1169,7 @@ void AdsImpl::ServeUntargetedAdNotification() {
 void AdsImpl::OnServeUntargetedAdNotification(
     const Result result,
     const std::vector<std::string>& categories,
-    const std::vector<CreativeAdNotificationInfo>& ads) {
+    const CreativeAdNotifications& ads) {
   auto eligible_ads = GetEligibleAds(ads);
   if (eligible_ads.empty()) {
     FailedToServeAdNotification("No eligible ads found");
@@ -1190,7 +1181,7 @@ void AdsImpl::OnServeUntargetedAdNotification(
 }
 
 void AdsImpl::ServeAdNotification(
-    const std::vector<CreativeAdNotificationInfo>& ads) {
+    const CreativeAdNotifications& ads) {
   auto rand = base::RandInt(0, ads.size() - 1);
   auto ad = ads.at(rand);
   ShowAdNotification(ad);
@@ -1238,9 +1229,9 @@ std::vector<std::unique_ptr<ExclusionRule>>
   return exclusion_rules;
 }
 
-std::vector<CreativeAdNotificationInfo> AdsImpl::GetEligibleAds(
-    const std::vector<CreativeAdNotificationInfo>& ads) {
-  std::vector<CreativeAdNotificationInfo> eligible_ads = {};
+CreativeAdNotifications AdsImpl::GetEligibleAds(
+    const CreativeAdNotifications& ads) {
+  CreativeAdNotifications eligible_ads;
 
   auto unseen_ads = GetUnseenAdsAndRoundRobinIfNeeded(ads);
 
@@ -1280,8 +1271,8 @@ std::vector<CreativeAdNotificationInfo> AdsImpl::GetEligibleAds(
   return eligible_ads;
 }
 
-std::vector<CreativeAdNotificationInfo> AdsImpl::GetUnseenAdsAndRoundRobinIfNeeded(
-    const std::vector<CreativeAdNotificationInfo>& ads) const {
+CreativeAdNotifications AdsImpl::GetUnseenAdsAndRoundRobinIfNeeded(
+    const CreativeAdNotifications& ads) const {
   if (ads.empty()) {
     return ads;
   }
@@ -1298,14 +1289,14 @@ std::vector<CreativeAdNotificationInfo> AdsImpl::GetUnseenAdsAndRoundRobinIfNeed
   return unseen_ads;
 }
 
-std::vector<CreativeAdNotificationInfo> AdsImpl::GetUnseenAds(
-    const std::vector<CreativeAdNotificationInfo>& ads) const {
+CreativeAdNotifications AdsImpl::GetUnseenAds(
+    const CreativeAdNotifications& ads) const {
   auto unseen_ads = ads;
   const auto seen_ads = client_->GetAdsUUIDSeen();
 
   const auto it = std::remove_if(unseen_ads.begin(), unseen_ads.end(),
-      [&](CreativeAdNotificationInfo& ad) {
-    return seen_ads.find(ad.uuid) != seen_ads.end();
+      [&](CreativeAdInfo& ad) {
+    return seen_ads.find(ad.creative_instance_id) != seen_ads.end();
   });
 
   unseen_ads.erase(it, unseen_ads.end());
@@ -1315,20 +1306,20 @@ std::vector<CreativeAdNotificationInfo> AdsImpl::GetUnseenAds(
 
 bool AdsImpl::IsAdNotificationValid(
     const CreativeAdNotificationInfo& info) {
-  if (info.advertiser.empty() ||
-      info.notification_text.empty() ||
-      info.notification_url.empty()) {
+  if (info.title.empty() ||
+      info.body.empty() ||
+      info.target_url.empty()) {
     // TODO(Terry Mancey): Implement Log (#44)
     // 'Notification not made', { reason: 'incomplete ad information',
     // category, winnerOverTime, arbitraryKey, notificationUrl,
     // notificationText, advertiser
 
     BLOG(INFO) << "Ad notification not made: Incomplete ad information"
-        << std::endl << "  advertiser: " << info.advertiser
-        << std::endl << "  notificationText: " << info.notification_text
-        << std::endl << "  notificationUrl: " << info.notification_url
+        << std::endl << "  creativeInstanceId: " << info.creative_instance_id
         << std::endl << "  creativeSetId: " << info.creative_set_id
-        << std::endl << "  uuid: " << info.uuid;
+        << std::endl << "  title: " << info.title
+        << std::endl << "  body: " << info.body
+        << std::endl << "  targetUrl: " << info.target_url;
 
     return false;
   }
@@ -1349,31 +1340,32 @@ bool AdsImpl::ShowAdNotification(
   client_->AppendTimestampToCampaignHistoryForUuid(ad.campaign_id,
       now_in_seconds);
 
-  client_->UpdateAdsUUIDSeen(ad.uuid, 1);
+  client_->UpdateAdsUUIDSeen(ad.creative_instance_id, 1);
 
-  auto notification_info = std::make_unique<AdNotificationInfo>();
-  notification_info->id = base::GenerateGUID();
-  notification_info->advertiser = ad.advertiser;
-  notification_info->category = ad.category;
-  notification_info->text = ad.notification_text;
-  notification_info->url = helper::Uri::GetUri(ad.notification_url);
-  notification_info->creative_set_id = ad.creative_set_id;
-  notification_info->uuid = ad.uuid;
+  auto info = std::make_unique<AdNotificationInfo>();
+  info->uuid = base::GenerateGUID();
+  info->creative_instance_id = ad.creative_instance_id;
+  info->creative_set_id = ad.creative_set_id;
+  info->category = ad.category;
+  info->title = ad.title;
+  info->body = ad.body;
+  info->target_url = helper::Uri::GetUri(ad.target_url);
 
   // TODO(Terry Mancey): Implement Log (#44)
   // 'Notification shown', {category, winnerOverTime, arbitraryKey,
   // notificationUrl, notificationText, advertiser, uuid, hierarchy}
 
   BLOG(INFO) << "Ad notification shown:"
-      << std::endl << "  id: " << notification_info->id
-      << std::endl << "  campaign_id: " << ad.campaign_id
-      << std::endl << "  advertiser: " << notification_info->advertiser
-      << std::endl << "  category: " << notification_info->category
-      << std::endl << "  text: " << notification_info->text
-      << std::endl << "  url: " << notification_info->url
-      << std::endl << "  uuid: " << notification_info->uuid;
+      << std::endl << "  uuid: " << info->uuid
+      << std::endl << "  creativeInstanceId: " << info->creative_instance_id
+      << std::endl << "  creativeSetId: " << info->creative_set_id
+      << std::endl << "  campaignId: " << ad.campaign_id
+      << std::endl << "  category: " << info->category
+      << std::endl << "  title: " << info->title
+      << std::endl << "  body: " << info->body
+      << std::endl << "  targetUrl: " << info->target_url;
 
-  notifications_->PushBack(*notification_info);
+  notifications_->PushBack(*info);
 
 #if defined(OS_ANDROID)
   if (notifications_->Count() > kMaximumAdNotifications) {
@@ -1619,7 +1611,7 @@ void AdsImpl::SustainAdNotificationInteractionIfNeeded() {
   if (!IsStillViewingAdNotification()) {
     BLOG(INFO) << "Failed to sustain ad notification interaction, domain for "
         "the focused tab does not match the last shown ad notification for "
-            << last_shown_ad_notification_info_.url;
+            << last_shown_ad_notification_info_.target_url;
     return;
   }
 
@@ -1649,7 +1641,8 @@ bool AdsImpl::IsSustainingAdNotificationInteraction() const {
 }
 
 bool AdsImpl::IsStillViewingAdNotification() const {
-  return DomainsMatch(active_tab_url_, last_shown_ad_notification_info_.url);
+  return DomainsMatch(active_tab_url_,
+      last_shown_ad_notification_info_.target_url);
 }
 
 void AdsImpl::ConfirmAdNotification(
@@ -1662,12 +1655,11 @@ void AdsImpl::ConfirmAdNotification(
   }
 
   auto notification_info = std::make_unique<AdNotificationInfo>(info);
-
-  notification_info->type = type;
+  notification_info->confirmation_type = type;
 
   const Reports reports(this);
   const std::string report =
-      reports.GenerateConfirmationEventReport(info.uuid, type);
+      reports.GenerateConfirmationEventReport(info.creative_instance_id, type);
   get_ads_client()->EventLog(report);
 
   get_ads_client()->ConfirmAdNotification(std::move(notification_info));
@@ -1741,7 +1733,7 @@ void AdsImpl::ConfirmPublisherAd(
 
   const Reports reports(this);
   const std::string report =
-      reports.GenerateConfirmationEventReport(info.uuid, type);
+      reports.GenerateConfirmationEventReport(info.creative_instance_id, type);
   get_ads_client()->EventLog(report);
 
   get_ads_client()->ConfirmPublisherAd(publisher_ad_info);
@@ -1792,12 +1784,12 @@ void AdsImpl::AppendAdNotificationToAdsHistory(
   auto ad_history = std::make_unique<AdHistory>();
   ad_history->timestamp_in_seconds = Time::NowInSeconds();
   ad_history->uuid = base::GenerateGUID();
-  ad_history->ad_content.uuid = info.uuid;
+  ad_history->ad_content.uuid = info.creative_instance_id;
   ad_history->ad_content.creative_set_id = info.creative_set_id;
-  ad_history->ad_content.brand = info.advertiser;
-  ad_history->ad_content.brand_info = info.text;
-  ad_history->ad_content.brand_display_url = GetDisplayUrl(info.url);
-  ad_history->ad_content.brand_url = info.url;
+  ad_history->ad_content.brand = info.title;
+  ad_history->ad_content.brand_info = info.body;
+  ad_history->ad_content.brand_display_url = GetDisplayUrl(info.target_url);
+  ad_history->ad_content.brand_url = info.target_url;
   ad_history->ad_content.ad_action = confirmation_type;
   ad_history->category_content.category = info.category;
 

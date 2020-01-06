@@ -16,6 +16,7 @@
 #include <functional>
 
 #include "bat/ads/creative_ad_notification_info.h"
+#include "bat/ads/creative_publisher_ad_info.h"
 #include "bat/ads/issuers_info.h"
 #include "bat/ads/bundle_state.h"
 #include "bat/ads/client_info.h"
@@ -50,8 +51,11 @@ using OnLoadCallback = std::function<void(const Result, const std::string&)>;
 using OnResetCallback = std::function<void(const Result)>;
 
 using OnGetCreativeAdNotificationsCallback = std::function<void(const Result,
-    const std::vector<std::string>&,
-        const std::vector<CreativeAdNotificationInfo>&)>;
+    const std::vector<std::string>&, const CreativeAdNotifications&)>;
+
+using OnGetCreativePublisherAdsCallback = std::function<void(const Result,
+    const std::string& url, const std::vector<std::string>&,
+        const CreativePublisherAds&)>;
 
 using OnLoadSampleBundleCallback = std::function<void(const Result,
     const std::string&)>;
@@ -242,6 +246,17 @@ class ADS_EXPORT AdsClient {
   virtual void GetCreativeAdNotifications(
       const std::vector<std::string>& categories,
       OnGetCreativeAdNotificationsCallback callback) = 0;
+
+  // Should fetch all creative publisher ads for the specified |url| and
+  // |category| where the current time is between the ad |start_timestamp| and
+  // |end_timestamp| from the previously persisted bundle state. The callback
+  // takes 3 arguments — |Result| should be set to |SUCCESS| if successful;
+  // otherwise, should be set to |FAILED|. |category| should contain the
+  // category. |ads| should contain an array of ads
+  virtual void GetCreativePublisherAds(
+      const std::string& url,
+      const std::vector<std::string>& categories,
+      OnGetCreativePublisherAdsCallback callback) = 0;
 
   // Should log an event
   virtual void EventLog(

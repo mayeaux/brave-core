@@ -7,16 +7,18 @@
 
 namespace ads {
 
-DayPartInfo::DayPartInfo() :
-    dow(""),
+CatalogDayPartInfo::CatalogDayPartInfo() :
     startMinute(0),
-    endMinute(0) {}
+    endMinute(0) {
+}
 
-DayPartInfo::DayPartInfo(const DayPartInfo& info) :
-    dow(info.dow),
-    startMinute(info.startMinute),
-    endMinute(info.endMinute) {}
+CatalogDayPartInfo::CatalogDayPartInfo(
+    const CatalogDayPartInfo& info)
+    : dow(info.dow),
+      startMinute(info.startMinute),
+      endMinute(info.endMinute) {
+}
 
-DayPartInfo::~DayPartInfo() {}
+CatalogDayPartInfo::~CatalogDayPartInfo() = default;
 
 }  // namespace ads

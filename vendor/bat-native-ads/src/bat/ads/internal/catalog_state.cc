@@ -44,23 +44,26 @@ Result CatalogState::FromJson(
   std::string new_catalog_id = "";
   uint64_t new_version = 0;
   uint64_t new_ping = kDefaultCatalogPing * base::Time::kMillisecondsPerSecond;
-  std::vector<CampaignInfo> new_campaigns = {};
-  IssuersInfo new_issuers = IssuersInfo();
+  std::vector<CatalogCampaignInfo> new_campaigns;
+  IssuersInfo new_issuers;
 
   new_catalog_id = catalog["catalogId"].GetString();
 
   new_version = catalog["version"].GetUint64();
   if (new_version != kCatalogVersion) {
-    // TODO(Terry Mancey): Implement Log (#44)
-    // 'patch invalid', { reason: 'unsupported version', version: version }
-    return SUCCESS;
+    if (error_description != nullptr) {
+      *error_description = "Catalog invalid: Invalid " + code
+          + " creative for creativeInstanceId: " + creative_instance_id;
+    }
+
+    return FAILED;
   }
 
   new_ping = catalog["ping"].GetUint64();
 
   // Campaigns
   for (const auto& campaign : catalog["campaigns"].GetArray()) {
-    CampaignInfo campaign_info;
+    CatalogCampaignInfo campaign_info;
 
     campaign_info.campaign_id = campaign["campaignId"].GetString();
     campaign_info.advertiser_id = campaign["advertiserId"].GetString();
@@ -71,7 +74,7 @@ Result CatalogState::FromJson(
 
     // Geo targets
     for (const auto& geo_target : campaign["geoTargets"].GetArray()) {
-      GeoTargetInfo geo_target_info;
+      CatalogGeoTargetInfo geo_target_info;
 
       geo_target_info.code = geo_target["code"].GetString();
       geo_target_info.name = geo_target["name"].GetString();
@@ -81,7 +84,7 @@ Result CatalogState::FromJson(
 
     // Day parts
     for (const auto& day_part : campaign["dayParts"].GetArray()) {
-      DayPartInfo day_part_info;
+      CatalogDayPartInfo day_part_info;
 
       day_part_info.dow = day_part["dow"].GetString();
       day_part_info.startMinute = day_part["startMinute"].GetUint();
@@ -92,7 +95,7 @@ Result CatalogState::FromJson(
 
     // Creative sets
     for (const auto& creative_set : campaign["creativeSets"].GetArray()) {
-      CreativeSetInfo creative_set_info;
+      CatalogCreativeSetInfo creative_set_info;
 
       creative_set_info.creative_set_id =
           creative_set["creativeSetId"].GetString();
@@ -113,7 +116,7 @@ Result CatalogState::FromJson(
       }
 
       for (const auto& segment : segments) {
-        SegmentInfo segment_info;
+        CatalogSegmentInfo segment_info;
 
         segment_info.code = segment["code"].GetString();
         segment_info.name = segment["name"].GetString();
@@ -125,7 +128,7 @@ Result CatalogState::FromJson(
       auto oses = creative_set["oses"].GetArray();
 
       for (const auto& os : oses) {
-        OsInfo os_info;
+        CatalogOsInfo os_info;
 
         os_info.code = os["code"].GetString();
         os_info.name = os["name"].GetString();
@@ -135,40 +138,68 @@ Result CatalogState::FromJson(
 
       // Creatives
       for (const auto& creative : creative_set["creatives"].GetArray()) {
-        CreativeInfo creative_info;
-
-        creative_info.creative_instance_id =
+        std::string creative_instance_id =
             creative["creativeInstanceId"].GetString();
 
         // Type
         auto type = creative["type"].GetObject();
 
-        creative_info.type.code = type["code"].GetString();
+        std::string code = type["code"].GetString();
+        if (code == "notification_all_v1") {
+          CatalogCreativeAdNotificationInfo creative_info;
 
-        std::string name = type["name"].GetString();
-        if (name != "notification") {
+          creative_info.creative_instance_id = creative_instance_id;
+
+          // Type
+          creative_info.type.code = code;
+          creative_info.type.name = type["name"].GetString();
+          creative_info.type.platform = type["platform"].GetString();
+          creative_info.type.version = type["version"].GetUint64();
+
+          // Payload
+          auto payload = creative["payload"].GetObject();
+          creative_info.payload.body = payload["body"].GetString();
+          creative_info.payload.title = payload["title"].GetString();
+          creative_info.payload.target_url = payload["targetUrl"].GetString();
+
+          creative_set_info.ad_notification_creatives.push_back(creative_info);
+        } else if (code == "in_page_v1") {
+          CatalogCreativePublisherAdInfo creative_info;
+
+          creative_info.creative_instance_id = creative_instance_id;
+
+          // Type
+          creative_info.type.code = code;
+          creative_info.type.name = type["name"].GetString();
+          creative_info.type.platform = type["platform"].GetString();
+          creative_info.type.version = type["version"].GetUint64();
+
+          // Payload
+          auto payload = creative["payload"].GetObject();
+          creative_info.payload.size = payload["size"].GetString();
+          creative_info.payload.creative_url =
+              payload["creativeUrl"].GetString();
+          creative_info.payload.target_url = payload["targetUrl"].GetString();
+
+          // Sites
+          for (const auto& site : creative["sites"].GetArray()) {
+            CatalogPublisherAdSiteInfo site_info;
+
+            site_info.code = site["code"].GetString();
+            site_info.name = site["name"].GetString();
+
+            creative_info.sites.push_back(site_info);
+          }
+
+          creative_set_info.publisher_ad_creatives.push_back(creative_info);
+        } else {
           if (error_description != nullptr) {
-            *error_description = "Catalog invalid: Invalid creative type: "
-                + name + " for creativeInstanceId: " +
-                creative_info.creative_instance_id;
+            *error_description = "Catalog invalid: Invalid " + code
+                +" creative for creativeInstanceId: " + creative_instance_id;
           }
 
           return FAILED;
         }
-        creative_info.type.name = name;
-
-        creative_info.type.platform = type["platform"].GetString();
-
-        creative_info.type.version = type["version"].GetUint64();
-
-        // Payload
-        auto payload = creative["payload"].GetObject();
-
-        creative_info.payload.body = payload["body"].GetString();
-        creative_info.payload.title = payload["title"].GetString();
-        creative_info.payload.target_url = payload["targetUrl"].GetString();
-
-        creative_set_info.creatives.push_back(creative_info);
       }
 
       campaign_info.creative_sets.push_back(creative_set_info);

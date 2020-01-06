@@ -7,21 +7,10 @@
 
 namespace confirmations {
 
-PublisherAdInfo::PublisherAdInfo()
-    : type(ConfirmationType::kUnknown) {
-}
+PublisherAdInfo::PublisherAdInfo() = default;
 
 PublisherAdInfo::PublisherAdInfo(
-    const PublisherAdInfo& info)
-    : id(info.id),
-      creative_set_id(info.creative_set_id),
-      category(info.category),
-      size(info.size),
-      creative_url(info.creative_url),
-      target_url(info.target_url),
-      uuid(info.uuid),
-      type(info.type) {
-}
+    const PublisherAdInfo& info) = default;
 
 PublisherAdInfo::~PublisherAdInfo() = default;
 

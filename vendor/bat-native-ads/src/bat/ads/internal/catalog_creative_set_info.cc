@@ -7,30 +7,29 @@
 
 namespace ads {
 
-CreativeSetInfo::CreativeSetInfo() :
-    creative_set_id(""),
-    per_day(0),
-    total_max(0),
-    segments({}),
-    oses({}),
-    creatives({}) {}
+CatalogCreativeSetInfo::CatalogCreativeSetInfo()
+    : per_day(0),
+      total_max(0) {
+}
 
-CreativeSetInfo::CreativeSetInfo(const std::string& creative_set_id) :
-    creative_set_id(creative_set_id),
-    per_day(0),
-    total_max(0),
-    segments({}),
-    oses({}),
-    creatives({}) {}
+CatalogCreativeSetInfo::CatalogCreativeSetInfo(
+    const std::string& creative_set_id)
+    : creative_set_id(creative_set_id),
+      per_day(0),
+      total_max(0) {
+}
 
-CreativeSetInfo::CreativeSetInfo(const CreativeSetInfo& info) :
-    creative_set_id(info.creative_set_id),
-    per_day(info.per_day),
-    total_max(info.total_max),
-    segments(info.segments),
-    oses(info.oses),
-    creatives(info.creatives) {}
+CatalogCreativeSetInfo::CatalogCreativeSetInfo(
+    const CatalogCreativeSetInfo& info)
+    : creative_set_id(info.creative_set_id),
+      per_day(info.per_day),
+      total_max(info.total_max),
+      segments(info.segments),
+      oses(info.oses),
+      ad_notification_creatives(info.ad_notification_creatives),
+      publisher_ad_creatives(info.publisher_ad_creatives) {
+}
 
-CreativeSetInfo::~CreativeSetInfo() {}
+CatalogCreativeSetInfo::~CatalogCreativeSetInfo() = default;
 
 }  // namespace ads

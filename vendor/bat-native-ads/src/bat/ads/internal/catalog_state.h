@@ -13,7 +13,7 @@
 
 #include "bat/ads/issuers_info.h"
 
-#include "bat/ads/internal/campaign_info.h"
+#include "bat/ads/internal/catalog_campaign_info.h"
 #include "bat/ads/internal/json_helper.h"
 
 namespace ads {
@@ -31,7 +31,7 @@ struct CatalogState {
   std::string catalog_id;
   uint64_t version;
   uint64_t ping;
-  std::vector<CampaignInfo> campaigns;
+  std::vector<CatalogCampaignInfo> campaigns;
   IssuersInfo issuers;
 };
 

@@ -26,8 +26,8 @@ void AdNotificationEventTimedOut::Trigger(
   }
 
   Reports reports(ads_);
-  const std::string report =
-      reports.GenerateAdNotificationEventReport(info, AdEventType::kTimedOut);
+  const std::string report = reports.GenerateAdNotificationEventReport(info,
+      AdNotificationEventType::kTimedOut);
   ads_->get_ads_client()->EventLog(report);
 }
 

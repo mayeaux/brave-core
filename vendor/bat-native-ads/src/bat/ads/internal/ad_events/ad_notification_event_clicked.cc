@@ -27,8 +27,8 @@ void AdNotificationEventClicked::Trigger(
   }
 
   Reports reports(ads_);
-  const std::string report =
-      reports.GenerateAdNotificationEventReport(info, AdEventType::kClicked);
+  const std::string report = reports.GenerateAdNotificationEventReport(info,
+      AdNotificationEventType::kClicked);
   ads_->get_ads_client()->EventLog(report);
 
   ads_->ConfirmAdNotification(info, ConfirmationType::kClicked);

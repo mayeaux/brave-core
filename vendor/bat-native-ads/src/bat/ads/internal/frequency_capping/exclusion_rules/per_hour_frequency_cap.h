@@ -22,7 +22,7 @@ class PerHourFrequencyCap : public ExclusionRule {
   ~PerHourFrequencyCap() override;
 
   bool ShouldExclude(
-    const CreativeAdNotificationInfo& ad) override;
+    const CreativeAdInfo& ad) override;
 
   const std::string GetLastMessage() const override;
 
@@ -32,7 +32,7 @@ class PerHourFrequencyCap : public ExclusionRule {
   std::string last_message_;
 
   bool DoesAdRespectPerHourCap(
-      const CreativeAdNotificationInfo& ad) const;
+      const CreativeAdInfo& ad) const;
 };
 }  // namespace ads
 

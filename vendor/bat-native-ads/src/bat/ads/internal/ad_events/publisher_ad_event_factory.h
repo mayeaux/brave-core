@@ -20,7 +20,7 @@ class PublisherAdEventFactory {
  public:
   static std::unique_ptr<AdEvent<PublisherAdInfo>> Build(
       AdsImpl* ads,
-      const AdEventType event_type);
+      const PublisherAdEventType event_type);
 };
 
 }  // namespace ads

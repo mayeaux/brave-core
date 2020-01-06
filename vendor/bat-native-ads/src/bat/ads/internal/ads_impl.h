@@ -16,6 +16,7 @@
 #include "bat/ads/ads.h"
 #include "bat/ads/ads_history.h"
 #include "bat/ads/creative_ad_notification_info.h"
+#include "bat/ads/creative_publisher_ad_info.h"
 #include "bat/ads/mojom.h"
 #include "bat/ads/ad_notification_info.h"
 #include "bat/ads/publisher_ad_info.h"
@@ -90,11 +91,11 @@ class AdsImpl : public Ads {
       ads::AdNotificationInfo* notification) override;
   void OnAdNotificationEvent(
       const std::string& id,
-      const AdEventType event_type) override;
+      const AdNotificationEventType event_type) override;
 
   void OnPublisherAdEvent(
       const PublisherAdInfo& info,
-      const AdEventType event_type) override;
+      const PublisherAdEventType event_type) override;
 
   bool ShouldNotDisturb() const;
 
@@ -191,26 +192,26 @@ class AdsImpl : public Ads {
   void OnServeAdNotificationFromCategories(
       const Result result,
       const std::vector<std::string>& categories,
-      const std::vector<CreativeAdNotificationInfo>& ads);
+      const CreativeAdNotifications& ads);
   bool ServeAdNotificationFromParentCategories(
       const std::vector<std::string>& categories);
   void ServeUntargetedAdNotification();
   void OnServeUntargetedAdNotification(
       const Result result,
       const std::vector<std::string>& categories,
-      const std::vector<CreativeAdNotificationInfo>& ads);
+      const CreativeAdNotifications& ads);
   void ServeAdNotification(
-      const std::vector<CreativeAdNotificationInfo>& ads);
+      const CreativeAdNotifications& ads);
   void SuccessfullyServedAdNotification();
   void FailedToServeAdNotification(
       const std::string& reason);
 
-  std::vector<CreativeAdNotificationInfo> GetEligibleAds(
-      const std::vector<CreativeAdNotificationInfo>& ads);
-  std::vector<CreativeAdNotificationInfo> GetUnseenAdsAndRoundRobinIfNeeded(
-      const std::vector<CreativeAdNotificationInfo>& ads) const;
-  std::vector<CreativeAdNotificationInfo> GetUnseenAds(
-      const std::vector<CreativeAdNotificationInfo>& ads) const;
+  CreativeAdNotifications GetEligibleAds(
+      const CreativeAdNotifications& ads);
+  CreativeAdNotifications GetUnseenAdsAndRoundRobinIfNeeded(
+      const CreativeAdNotifications& ads) const;
+  CreativeAdNotifications GetUnseenAds(
+      const CreativeAdNotifications& ads) const;
 
   bool IsAdNotificationValid(
       const CreativeAdNotificationInfo& info);

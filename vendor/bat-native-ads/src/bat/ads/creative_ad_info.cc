@@ -3,18 +3,15 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "bat/ads/internal/catalog_segment_info.h"
+#include "bat/ads/creative_ad_info.h"
 
 namespace ads {
 
-SegmentInfo::SegmentInfo() :
-    code(""),
-    name("") {}
+CreativeAdInfo::CreativeAdInfo() = default;
 
-SegmentInfo::SegmentInfo(const SegmentInfo& info) :
-    code(info.code),
-    name(info.name) {}
+CreativeAdInfo::CreativeAdInfo(
+    const CreativeAdInfo& info) = default;
 
-SegmentInfo::~SegmentInfo() {}
+CreativeAdInfo::~CreativeAdInfo() = default;
 
 }  // namespace ads

@@ -1037,31 +1037,33 @@ void ConfirmationsImpl::AppendTransactionToHistory(
 void ConfirmationsImpl::ConfirmAdNotification(
     std::unique_ptr<AdNotificationInfo> info) {
   BLOG(INFO) << "Confirm ad:"
-      << std::endl << "  id: " << info->id
-      << std::endl << "  creative_set_id: " << info->creative_set_id
-      << std::endl << "  category: " << info->category
-      << std::endl << "  advertiser: " << info->advertiser
-      << std::endl << "  text: " << info->text
-      << std::endl << "  url: " << info->url
       << std::endl << "  uuid: " << info->uuid
-      << std::endl << "  type: " << std::string(info->type);
+      << std::endl << "  creativeInstanceId: " << info->creative_instance_id
+      << std::endl << "  creativeSetId: " << info->creative_set_id
+      << std::endl << "  category: " << info->category
+      << std::endl << "  title: " << info->title
+      << std::endl << "  body: " << info->body
+      << std::endl << "  targetUrl: " << info->target_url
+      << std::endl << "  confirmationType: "
+          << std::string(info->confirmation_type);
 
-  redeem_token_->Redeem(info->uuid, info->type);
+  redeem_token_->Redeem(info->creative_instance_id, info->confirmation_type);
 }
 
 void ConfirmationsImpl::ConfirmPublisherAd(
     const PublisherAdInfo& info) {
   BLOG(INFO) << "Confirm publisher ad:"
       << std::endl << "  id: " << info.id
+      << std::endl << "  creativeInstanceId: " << info.creative_instance_id
       << std::endl << "  creative_set_id: " << info.creative_set_id
       << std::endl << "  category: " << info.category
       << std::endl << "  size: " << info.size
-      << std::endl << "  creative_url: " << info.creative_url
-      << std::endl << "  target_url: " << info.target_url
-      << std::endl << "  uuid: " << info.uuid
-      << std::endl << "  type: " << std::string(info.type);
+      << std::endl << "  creativeUrl: " << info.creative_url
+      << std::endl << "  targetUrl: " << info.target_url
+      << std::endl << "  confirmationType: "
+          << std::string(info.confirmation_type);
 
-  redeem_token_->Redeem(info.uuid, info.type);
+  redeem_token_->Redeem(info.creative_instance_id, info.confirmation_type);
 }
 
 void ConfirmationsImpl::ConfirmAction(

@@ -5,12 +5,19 @@
 #import <Foundation/Foundation.h>
 #import <UserNotifications/UserNotifications.h>
 
-typedef NS_ENUM(NSInteger, BATAdsAdEventType) {
-  BATAdsAdEventTypeViewed,     // = ads::AdEventType::VIEWED
-  BATAdsAdEventTypeClicked,    // = ads::AdEventType::CLICKED
-  BATAdsAdEventTypeDismissed,  // = ads::AdEventType::DISMISSED
-  BATAdsAdEventTypeTimedOut    // = ads::AdEventType::TIMEOUT
-} NS_SWIFT_NAME(AdEventType);
+typedef NS_ENUM(NSInteger, BATAdsAdNotificationEventType) {
+  BATAdsAdNotificationEventTypeViewed,     // = ads::AdNotificationEventType::VIEWED
+  BATAdsAdNotificationEventTypeClicked,    // = ads::AdNotificationEventType::CLICKED
+  BATAdsAdNotificationEventTypeDismissed,  // = ads::AdNotificationEventType::DISMISSED
+  BATAdsAdNotificationEventTypeTimedOut    // = ads::AdNotificationEventType::TIMEOUT
+} NS_SWIFT_NAME(AdNotificationEventType);
+
+typedef NS_ENUM(NSInteger, BATAdsPublisherAdEventType) {
+  BATAdsPublisherAdEventTypeViewed,        // = ads::PublisherAdEventType::VIEWED
+  BATAdsPublisherAdEventTypeClicked,       // = ads::PublisherAdEventType::CLICKED
+  BATAdsPublisherAdEventTypeDismissed,     // = ads::PublisherAdEventType::DISMISSED
+  BATAdsPublisherAdEventTypeTimedOut       // = ads::PublisherAdEventType::TIMEOUT
+} NS_SWIFT_NAME(PublisherAdEventType);
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -132,7 +139,11 @@ NS_SWIFT_NAME(BraveAds)
 
 /// Report that an ad notification event type was triggered for a given id
 - (void)reportAdNotificationEvent:(NSString *)notificationId
-                      eventType:(BATAdsAdEventType)eventType;
+                      eventType:(BATAdsAdNotificationEventType)eventType;
+
+/// Report that an publisher ad event type was triggered for a given id
+- (void)reportPublisherAdEvent:(NSString *)notificationId
+                      eventType:(BATAdsPublisherAdEventType)eventType;
 
 /// Toggle that the user liked the given ad and more like it should be shown
 - (void)toggleThumbsUpForAd:(NSString *)identifier

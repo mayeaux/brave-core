@@ -30,14 +30,14 @@ class Reports {
 
   std::string GenerateAdNotificationEventReport(
       const AdNotificationInfo& info,
-      const AdEventType type);
+      const AdNotificationEventType type);
 
   std::string GeneratePublisherAdEventReport(
       const PublisherAdInfo& info,
-      const AdEventType type);
+      const PublisherAdEventType type);
 
   std::string GenerateConfirmationEventReport(
-      const std::string& uuid,
+      const std::string& creative_instance_id,
       const ConfirmationType& type) const;
 
   std::string GenerateLoadEventReport(

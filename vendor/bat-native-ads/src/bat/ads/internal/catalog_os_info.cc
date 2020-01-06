@@ -7,14 +7,14 @@
 
 namespace ads {
 
-OsInfo::OsInfo() :
-    code(""),
-    name("") {}
+CatalogOsInfo::CatalogOsInfo() = default;
 
-OsInfo::OsInfo(const OsInfo& info) :
-    code(info.code),
-    name(info.name) {}
+CatalogOsInfo::CatalogOsInfo(
+    const CatalogOsInfo& info)
+    : code(info.code),
+      name(info.name) {
+}
 
-OsInfo::~OsInfo() {}
+CatalogOsInfo::~CatalogOsInfo() = default;
 
 }  // namespace ads

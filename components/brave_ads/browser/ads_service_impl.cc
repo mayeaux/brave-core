@@ -219,7 +219,7 @@ bool EnsureBaseDirectoryExistsOnFileTaskRunner(
 }
 
 std::vector<ads::CreativeAdNotificationInfo>
-GetCreativeAdNotificationsForCategoriesOnFileTaskRunner(
+GetCreativeAdNotificationsOnFileTaskRunner(
     const std::vector<std::string>& categories,
     BundleStateDatabase* backend) {
   std::vector<ads::CreativeAdNotificationInfo> ads;
@@ -230,7 +230,27 @@ GetCreativeAdNotificationsForCategoriesOnFileTaskRunner(
 
   for (const auto& category : categories) {
     std::vector<ads::CreativeAdNotificationInfo> category_ads;
-    backend->GetCreativeAdNotificationsForCategory(category, &category_ads);
+    backend->GetCreativeAdNotifications(category, &category_ads);
+    ads.insert(ads.end(), category_ads.begin(), category_ads.end());
+  }
+
+  return ads;
+}
+
+std::vector<ads::CreativePublisherAdInfo>
+GetCreativePublisherAdsOnFileTaskRunner(
+    const std::string& url,
+    const std::vector<std::string>& categories,
+    BundleStateDatabase* backend) {
+  std::vector<ads::CreativePublisherAdInfo> ads;
+
+  if (!backend) {
+    return ads;
+  }
+
+  for (const auto& category : categories) {
+    std::vector<ads::CreativePublisherAdInfo> category_ads;
+    backend->GetCreativePublisherAds(url, category, &category_ads);
     ads.insert(ads.end(), category_ads.begin(), category_ads.end());
   }
 
@@ -445,14 +465,15 @@ void AdsServiceImpl::OnPublisherAdEvent(
     return;
   }
 
-  const ads::AdEventType normalized_event_type = (ads::AdEventType)event_type;
+  const ads::PublisherAdEventType normalized_event_type =
+      (ads::PublisherAdEventType)event_type;
   switch (normalized_event_type) {
-    case ads::AdEventType::kViewed: {
+    case ads::PublisherAdEventType::kViewed: {
       bat_ads_->OnPublisherAdEvent(json, normalized_event_type);
       break;
     }
 
-    case ads::AdEventType::kClicked: {
+    case ads::PublisherAdEventType::kClicked: {
       ads::PublisherAdInfo info;
       if (info.FromJson(json) != ads::Result::SUCCESS) {
         NOTREACHED();
@@ -463,18 +484,6 @@ void AdsServiceImpl::OnPublisherAdEvent(
 
       bat_ads_->OnPublisherAdEvent(json, normalized_event_type);
 
-      break;
-    }
-
-    case ads::AdEventType::kDismissed: {
-      // Intentionally do nothing as unused for publisher ads
-      NOTREACHED();
-      break;
-    }
-
-    case ads::AdEventType::kTimedOut: {
-      // Intentionally do nothing as unused for publisher ads
-      NOTREACHED();
       break;
     }
   }
@@ -837,7 +846,7 @@ void AdsServiceImpl::OnShow(
     return;
   }
 
-  bat_ads_->OnAdNotificationEvent(id, ads::AdEventType::kViewed);
+  bat_ads_->OnAdNotificationEvent(id, ads::AdNotificationEventType::kViewed);
 
   // If we've surpassed the maximum number of visible notifications,
   // then close the oldest one
@@ -855,8 +864,9 @@ void AdsServiceImpl::OnClose(
     const bool by_user,
     base::OnceClosure completed_closure) {
   if (connected()) {
-    const ads::AdEventType event_type =
-        by_user ? ads::AdEventType::kDismissed : ads::AdEventType::kTimedOut;
+    const ads::AdNotificationEventType event_type =
+        by_user ? ads::AdNotificationEventType::kDismissed :
+            ads::AdNotificationEventType::kTimedOut;
 
     bat_ads_->OnAdNotificationEvent(id, event_type);
   }
@@ -899,9 +909,10 @@ void AdsServiceImpl::OnViewAd(
   ads::AdNotificationInfo notification;
   notification.FromJson(json);
 
-  bat_ads_->OnAdNotificationEvent(notification.id, ads::AdEventType::kClicked);
+  bat_ads_->OnAdNotificationEvent(notification.uuid,
+      ads::AdNotificationEventType::kClicked);
 
-  OpenNewTabWithUrl(notification.url);
+  OpenNewTabWithUrl(notification.target_url);
 }
 
 void AdsServiceImpl::RetryViewingAdWithId(
@@ -1007,7 +1018,7 @@ bool AdsServiceImpl::CanShowBackgroundNotifications() const {
   return NotificationHelper::GetInstance()->CanShowBackgroundNotifications();
 }
 
-void AdsServiceImpl::OnGetCreativeAdNotificationsForCategories(
+void AdsServiceImpl::OnGetCreativeAdNotifications(
     const ads::OnGetCreativeAdNotificationsCallback& callback,
     const std::vector<std::string>& categories,
     const std::vector<ads::CreativeAdNotificationInfo>& ads) {
@@ -1020,6 +1031,19 @@ void AdsServiceImpl::OnGetCreativeAdNotificationsForCategories(
   callback(result, categories, ads);
 }
 
+void AdsServiceImpl::OnGetCreativePublisherAds(
+    const ads::OnGetCreativePublisherAdsCallback& callback,
+    const std::string& url,
+    const std::vector<std::string>& categories,
+    const std::vector<ads::CreativePublisherAdInfo>& ads) {
+  if (!connected()) {
+    return;
+  }
+
+  auto result = ads.empty() ? ads::Result::FAILED : ads::Result::SUCCESS;
+
+  callback(result, url, categories, ads);
+}
 void AdsServiceImpl::OnGetAdsHistory(
     OnGetAdsHistoryCallback callback,
     const std::string& json) {
@@ -1907,7 +1931,7 @@ void AdsServiceImpl::ShowNotification(
   timers_[timer_id]->Start(FROM_HERE,
       base::TimeDelta::FromSeconds(120),
       base::BindOnce(&AdsServiceImpl::NotificationTimedOut, AsWeakPtr(),
-          timer_id, info->id));
+          timer_id, info->uuid));
 #endif
 }
 
@@ -2072,10 +2096,21 @@ void AdsServiceImpl::GetCreativeAdNotifications(
     const std::vector<std::string>& categories,
     ads::OnGetCreativeAdNotificationsCallback callback) {
   base::PostTaskAndReplyWithResult(file_task_runner_.get(), FROM_HERE,
-      base::BindOnce(&GetCreativeAdNotificationsForCategoriesOnFileTaskRunner,
+      base::BindOnce(&GetCreativeAdNotificationsOnFileTaskRunner,
           categories, bundle_state_backend_.get()),
-      base::BindOnce(&AdsServiceImpl::OnGetCreativeAdNotificationsForCategories,
+      base::BindOnce(&AdsServiceImpl::OnGetCreativeAdNotifications,
           AsWeakPtr(), std::move(callback), categories));
+}
+
+void AdsServiceImpl::GetCreativePublisherAds(
+    const std::string& url,
+    const std::vector<std::string>& categories,
+    ads::OnGetCreativePublisherAdsCallback callback) {
+  base::PostTaskAndReplyWithResult(file_task_runner_.get(), FROM_HERE,
+      base::BindOnce(&GetCreativePublisherAdsOnFileTaskRunner,
+          url, categories, bundle_state_backend_.get()),
+      base::BindOnce(&AdsServiceImpl::OnGetCreativePublisherAds,
+          AsWeakPtr(), std::move(callback), url, categories));
 }
 
 void AdsServiceImpl::EventLog(

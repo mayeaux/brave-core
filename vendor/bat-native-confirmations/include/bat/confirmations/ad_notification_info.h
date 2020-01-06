@@ -8,8 +8,8 @@
 
 #include <string>
 
-#include "bat/confirmations/export.h"
 #include "bat/confirmations/confirmation_type.h"
+#include "bat/confirmations/export.h"
 
 namespace confirmations {
 
@@ -19,14 +19,14 @@ struct CONFIRMATIONS_EXPORT AdNotificationInfo {
       const AdNotificationInfo& info);
   ~AdNotificationInfo();
 
-  std::string id;
+  std::string uuid;
+  std::string creative_instance_id;
   std::string creative_set_id;
   std::string category;
-  std::string advertiser;
-  std::string text;
-  std::string url;
-  std::string uuid;
-  ConfirmationType type;
+  std::string title;
+  std::string body;
+  std::string target_url;
+  ConfirmationType confirmation_type = ConfirmationType::kUnknown;
 };
 
 }  // namespace confirmations

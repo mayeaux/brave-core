@@ -60,6 +60,7 @@ interface BatAdsClient {
   LoadSampleBundle() => (int32 result, string value);
   Reset(string name) => (int32 result);
   GetCreativeAdNotifications(array<string> categories) => (int32 result, array<string> categories, array<string> ads_json);
+  GetCreativePublisherAds(string url, array<string> categories) => (int32 result, string url, array<string> categories, array<string> ads_json);
   EventLog(string json);
 };
 
@@ -80,8 +81,8 @@ interface BatAds {
   OnTabUpdated(int32 tab_id, string url, bool is_active, bool is_incognito);
   OnTabClosed(int32 tab_id);
   GetAdNotificationForId(string id) => (string notification_info);
-  OnAdNotificationEvent(string id, ads.mojom.AdEventType event_type);
-  OnPublisherAdEvent(string json, ads.mojom.AdEventType event_type);
+  OnAdNotificationEvent(string id, ads.mojom.AdNotificationEventType event_type);
+  OnPublisherAdEvent(string json, ads.mojom.PublisherAdEventType event_type);
   RemoveAllHistory() => (int32 result);
   GetAdsHistory(uint64 from_timestamp, uint64 to_timestamp) => (string history);
   ToggleAdThumbUp(string id, string creative_set_id, int32 action) => (string id, int32 action);

@@ -3,25 +3,25 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "bat/ads/creative_ad_notification_info.h"
+#include "bat/ads/creative_publisher_ad_info.h"
 #include "bat/ads/internal/json_helper.h"
 
 namespace ads {
 
-CreativeAdNotificationInfo::CreativeAdNotificationInfo() = default;
+CreativePublisherAdInfo::CreativePublisherAdInfo() = default;
 
-CreativeAdNotificationInfo::CreativeAdNotificationInfo(
-    const CreativeAdNotificationInfo& info) = default;
+CreativePublisherAdInfo::CreativePublisherAdInfo(
+    const CreativePublisherAdInfo& info) = default;
 
-CreativeAdNotificationInfo::~CreativeAdNotificationInfo() = default;
+CreativePublisherAdInfo::~CreativePublisherAdInfo() = default;
 
-const std::string CreativeAdNotificationInfo::ToJson() const {
+const std::string CreativePublisherAdInfo::ToJson() const {
   std::string json;
   SaveToJson(*this, &json);
   return json;
 }
 
-Result CreativeAdNotificationInfo::FromJson(
+Result CreativePublisherAdInfo::FromJson(
     const std::string& json,
     std::string* error_description) {
   rapidjson::Document document;
@@ -70,17 +70,17 @@ Result CreativeAdNotificationInfo::FromJson(
   std::vector<std::string> new_geo_targets;
   if (document.HasMember("geo_targets")) {
     for (const auto& geo_target : document["geo_targets"].GetArray()) {
-      geo_targets.push_back(geo_target.GetString());
+      new_geo_targets.push_back(geo_target.GetString());
     }
   }
   geo_targets = new_geo_targets;
 
-  if (document.HasMember("title")) {
-    title = document["title"].GetString();
+  if (document.HasMember("size")) {
+    size = document["size"].GetString();
   }
 
-  if (document.HasMember("body")) {
-    body = document["body"].GetString();
+  if (document.HasMember("creative_url")) {
+    creative_url = document["creative_url"].GetString();
   }
 
   if (document.HasMember("target_url")) {
@@ -91,12 +91,20 @@ Result CreativeAdNotificationInfo::FromJson(
     creative_instance_id = document["creative_instance_id"].GetString();
   }
 
+  std::vector<std::string> new_sites;
+  if (document.HasMember("sites")) {
+    for (const auto& site : document["sites"].GetArray()) {
+      new_sites.push_back(site.GetString());
+    }
+  }
+  sites = new_sites;
+
   return SUCCESS;
 }
 
 void SaveToJson(
     JsonWriter* writer,
-    const CreativeAdNotificationInfo& info) {
+    const CreativePublisherAdInfo& info) {
   writer->StartObject();
 
   writer->String("creative_set_id");
@@ -130,17 +138,24 @@ void SaveToJson(
   }
   writer->EndArray();
 
-  writer->String("title");
-  writer->String(info.title.c_str());
+  writer->String("size");
+  writer->String(info.size.c_str());
 
-  writer->String("body");
-  writer->String(info.body.c_str());
+  writer->String("creative_url");
+  writer->String(info.creative_url.c_str());
 
   writer->String("target_url");
   writer->String(info.target_url.c_str());
 
   writer->String("creative_instance_id");
   writer->String(info.creative_instance_id.c_str());
+
+  writer->String("sites");
+  writer->StartArray();
+  for (const auto& site : info.sites) {
+    writer->String(site.c_str());
+  }
+  writer->EndArray();
 
   writer->EndObject();
 }

@@ -451,13 +451,46 @@ void BatAdsClientMojoBridge::GetCreativeAdNotifications(
     const std::vector<std::string>& categories,
     ads::OnGetCreativeAdNotificationsCallback callback) {
   if (!connected()) {
-    callback(ads::Result::FAILED, categories,
-        std::vector<ads::CreativeAdNotificationInfo>());
+    callback(ads::Result::FAILED, categories, {});
     return;
   }
 
   bat_ads_client_->GetCreativeAdNotifications(categories,
       base::BindOnce(&OnGetCreativeAdNotifications, std::move(callback)));
+}
+
+void OnGetCreativePublisherAds(
+    const ads::OnGetCreativePublisherAdsCallback& callback,
+    const int32_t result,
+    const std::string& url,
+    const std::vector<std::string>& categories,
+    const std::vector<std::string>& ads_json) {
+  std::vector<ads::CreativePublisherAdInfo> ads;
+
+  for (const auto& ad_json : ads_json) {
+    ads::CreativePublisherAdInfo ad;
+    if (ad.FromJson(ad_json) != ads::Result::SUCCESS) {
+      callback(ads::Result::FAILED, url, categories, {});
+      return;
+    }
+
+    ads.push_back(ad);
+  }
+
+  callback(ToAdsResult(result), url, categories, ads);
+}
+
+void BatAdsClientMojoBridge::GetCreativePublisherAds(
+    const std::string& url,
+    const std::vector<std::string>& categories,
+    ads::OnGetCreativePublisherAdsCallback callback) {
+  if (!connected()) {
+    callback(ads::Result::FAILED, url, categories, {});
+    return;
+  }
+
+  bat_ads_client_->GetCreativePublisherAds(url, categories,
+      base::BindOnce(&OnGetCreativePublisherAds, std::move(callback)));
 }
 
 void BatAdsClientMojoBridge::EventLog(

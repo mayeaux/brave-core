@@ -29,8 +29,8 @@ void PublisherAdEventClicked::Trigger(
   }
 
   Reports reports(ads_);
-  const std::string report =
-      reports.GeneratePublisherAdEventReport(info, AdEventType::kClicked);
+  const std::string report = reports.GeneratePublisherAdEventReport(info,
+      PublisherAdEventType::kClicked);
   ads_->get_ads_client()->EventLog(report);
 
   ads_->ConfirmPublisherAd(info, ConfirmationType::kClicked);

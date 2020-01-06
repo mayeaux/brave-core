@@ -20,7 +20,7 @@ class AdEventFactory {
  public:
   static std::unique_ptr<AdEvent<AdNotificationInfo>> Build(
       AdsImpl* ads,
-      const AdEventType event_type);
+      const AdNotificationEventType event_type);
 };
 
 }  // namespace ads

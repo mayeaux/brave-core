@@ -12,26 +12,16 @@ namespace ads {
 
 std::unique_ptr<AdEvent<PublisherAdInfo>> PublisherAdEventFactory::Build(
     AdsImpl* ads,
-    const AdEventType event_type) {
+    const PublisherAdEventType event_type) {
   DCHECK(ads);
 
   switch (event_type) {
-    case AdEventType::kViewed: {
+    case PublisherAdEventType::kViewed: {
       return std::make_unique<PublisherAdEventViewed>(ads);
     }
 
-    case AdEventType::kClicked: {
+    case PublisherAdEventType::kClicked: {
       return std::make_unique<PublisherAdEventClicked>(ads);
-    }
-
-    case AdEventType::kDismissed: {
-      NOTREACHED();
-      return nullptr;
-    }
-
-    case AdEventType::kTimedOut: {
-      NOTREACHED();
-      return nullptr;
     }
   }
 }

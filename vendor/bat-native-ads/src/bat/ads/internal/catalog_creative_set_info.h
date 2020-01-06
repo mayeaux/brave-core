@@ -11,22 +11,26 @@
 
 #include "bat/ads/internal/catalog_segment_info.h"
 #include "bat/ads/internal/catalog_os_info.h"
-#include "bat/ads/internal/catalog_creative_info.h"
+#include "bat/ads/internal/catalog_creative_ad_notification_info.h"
+#include "bat/ads/internal/catalog_creative_publisher_ad_info.h"
 
 namespace ads {
 
-struct CreativeSetInfo {
-  CreativeSetInfo();
-  explicit CreativeSetInfo(const std::string& creative_set_id);
-  CreativeSetInfo(const CreativeSetInfo& info);
-  ~CreativeSetInfo();
+struct CatalogCreativeSetInfo {
+  CatalogCreativeSetInfo();
+  CatalogCreativeSetInfo(
+      const std::string& creative_set_id);
+  CatalogCreativeSetInfo(
+      const CatalogCreativeSetInfo& info);
+  ~CatalogCreativeSetInfo();
 
   std::string creative_set_id;
   unsigned int per_day;
   unsigned int total_max;
-  std::vector<SegmentInfo> segments;
-  std::vector<OsInfo> oses;
-  std::vector<CreativeInfo> creatives;
+  std::vector<CatalogSegmentInfo> segments;
+  std::vector<CatalogOsInfo> oses;
+  std::vector<CatalogCreativeAdNotificationInfo> ad_notification_creatives;
+  std::vector<CatalogCreativePublisherAdInfo> publisher_ad_creatives;
 };
 
 }  // namespace ads

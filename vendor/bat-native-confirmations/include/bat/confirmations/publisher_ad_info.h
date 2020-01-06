@@ -20,13 +20,13 @@ struct CONFIRMATIONS_EXPORT PublisherAdInfo {
   ~PublisherAdInfo();
 
   std::string id;
+  std::string creative_instance_id;
   std::string creative_set_id;
   std::string category;
   std::string size;
   std::string creative_url;
   std::string target_url;
-  std::string uuid;
-  ConfirmationType type;
+  ConfirmationType confirmation_type = ConfirmationType::kUnknown;
 };
 
 }  // namespace confirmations

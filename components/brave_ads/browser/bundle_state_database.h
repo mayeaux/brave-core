@@ -12,6 +12,7 @@
 #include <memory>
 
 #include "bat/ads/creative_ad_notification_info.h"
+#include "bat/ads/creative_publisher_ad_info.h"
 #include "bat/ads/bundle_state.h"
 #include "base/compiler_specific.h"
 #include "base/files/file_path.h"
@@ -40,9 +41,14 @@ class BundleStateDatabase {
 
   bool SaveBundleState(
       const ads::BundleState& bundle_state);
-  bool GetCreativeAdNotificationsForCategory(
+
+  bool GetCreativeAdNotifications(
       const std::string& category,
       std::vector<ads::CreativeAdNotificationInfo>* ads);
+  bool GetCreativePublisherAds(
+      const std::string& url,
+      const std::string& category,
+      std::vector<ads::CreativePublisherAdInfo>* ads);
 
   // Returns the current version of the publisher info database
   static int GetCurrentVersion();
@@ -61,20 +67,31 @@ class BundleStateDatabase {
       base::MemoryPressureListener::MemoryPressureLevel memory_pressure_level);
 
   bool CreateCategoryTable();
-  bool CreateCreativeAdNotificationInfoTable();
-  bool CreateCreativeAdNotificationInfoCategoryTable();
-  bool CreateCreativeAdNotificationInfoCategoryNameIndex();
-
   bool TruncateCategoryTable();
-  bool TruncateCreativeAdNotificationInfoTable();
-  bool TruncateCreativeAdNotificationInfoCategoryTable();
-
   bool InsertOrUpdateCategory(
       const std::string& category);
+
+  bool CreateCreativeAdNotificationInfoTable();
+  bool TruncateCreativeAdNotificationInfoTable();
   bool InsertOrUpdateCreativeAdNotificationInfo(
       const ads::CreativeAdNotificationInfo& info);
+  bool CreateCreativeAdNotificationInfoCategoryTable();
+  bool TruncateCreativeAdNotificationInfoCategoryTable();
+  bool CreateCreativeAdNotificationInfoCategoryNameIndex();
   bool InsertOrUpdateCreativeAdNotificationInfoCategory(
       const ads::CreativeAdNotificationInfo& info,
+      const std::string& category);
+
+  bool CreateCreativePublisherAdInfoTable();
+  bool TruncateCreativePublisherAdInfoTable();
+  bool InsertOrUpdateCreativePublisherAdInfo(
+      const ads::CreativePublisherAdInfo& info);
+
+  bool CreateCreativePublisherAdInfoCategoryTable();
+  bool TruncateCreativePublisherAdInfoCategoryTable();
+  bool CreateCreativePublisherAdInfoCategoryNameIndex();
+  bool InsertOrUpdateCreativePublisherAdInfoCategory(
+      const ads::CreativePublisherAdInfo& info,
       const std::string& category);
 
   sql::Database& GetDB();

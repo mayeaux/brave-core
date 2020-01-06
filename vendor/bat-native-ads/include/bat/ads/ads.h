@@ -194,12 +194,12 @@ class ADS_EXPORT Ads {
   // notification; or a notification times out
   virtual void OnAdNotificationEvent(
       const std::string& id,
-      const AdEventType event_type) = 0;
+      const AdNotificationEventType event_type) = 0;
 
   // Should be called when a user implicitly views or clicks a publisher ad
   virtual void OnPublisherAdEvent(
       const PublisherAdInfo& info,
-      const AdEventType event_type) = 0;
+      const PublisherAdEventType event_type) = 0;
 
   // Should be called to remove all cached history. The callback takes one
   // argument — |Result| should be set to |SUCCESS| if successful; otherwise,

@@ -7,21 +7,10 @@
 
 namespace confirmations {
 
-AdNotificationInfo::AdNotificationInfo() :
-    type(ConfirmationType::kUnknown) {
-}
+AdNotificationInfo::AdNotificationInfo() = default;
 
 AdNotificationInfo::AdNotificationInfo(
-    const AdNotificationInfo& info)
-    : id(info.id),
-      creative_set_id(info.creative_set_id),
-      category(info.category),
-      advertiser(info.advertiser),
-      text(info.text),
-      url(info.url),
-      uuid(info.uuid),
-      type(info.type) {
-}
+    const AdNotificationInfo& info) = default;
 
 AdNotificationInfo::~AdNotificationInfo() = default;
 
