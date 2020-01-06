@@ -396,21 +396,24 @@ base::FilePath BraveReferralsService::GetPromoCodeFileName() const {
 
 void BraveReferralsService::ReadPromoCode() {
   base::FilePath promo_code_file = GetPromoCodeFileName();
+  LOG(INFO) << "SAM: BraveReferralsService::ReadPromoCode: " << promo_code_file;
   if (!base::PathExists(promo_code_file)) {
     promo_code_ = kDefaultPromoCode;
+    LOG(INFO) << "SAM: BraveReferralsService::ReadPromoCode: default:" << promo_code_;
     return;
   }
   if (!base::ReadFileToString(promo_code_file, &promo_code_)) {
-    LOG(ERROR) << "Failed to read referral promo code from "
+    LOG(ERROR) << "SAM: Failed to read referral promo code from "
                << promo_code_file.value().c_str();
     return;
   }
   base::TrimWhitespaceASCII(promo_code_, base::TRIM_ALL, &promo_code_);
   if (promo_code_.empty()) {
-    LOG(ERROR) << "Promo code file " << promo_code_file.value().c_str()
+    LOG(ERROR) << "SAM: Promo code file " << promo_code_file.value().c_str()
                << " is empty";
     return;
   }
+  LOG(INFO) << "SAM: BraveReferralsService::ReadPromoCode: promo_code:" << promo_code_;
 }
 
 void BraveReferralsService::DeletePromoCodeFile() const {
