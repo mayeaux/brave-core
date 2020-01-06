@@ -7,7 +7,7 @@
 
 #include "brave/common/pref_names.h"
 #include "brave/components/brave_shields/browser/brave_shields_web_contents_observer.h"
-#include "brave/components/brave_savings/browser/buildflags/buildflags.h"
+#include "brave/components/brave_perf_predictor/browser/buildflags/buildflags.h"
 #include "brave/components/brave_sync/brave_sync_prefs.h"
 #include "brave/components/brave_webtorrent/browser/buildflags/buildflags.h"
 #include "chrome/browser/net/prediction_options.h"
@@ -40,7 +40,7 @@
 #endif
 
 #if BUILDFLAG(ENABLE_BRAVE_PERF_PREDICTOR)
-#include "brave/components/brave_savings/browser/perf_predictor_web_contents_observer.h"
+#include "brave/components/brave_perf_predictor/browser/perf_predictor_web_contents_observer.h"
 #endif
 
 using extensions::FeatureSwitch;

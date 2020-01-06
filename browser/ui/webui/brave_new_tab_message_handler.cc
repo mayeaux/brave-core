@@ -13,7 +13,7 @@
 #include "brave/browser/search_engines/search_engine_provider_util.h"
 #include "brave/browser/ui/webui/brave_new_tab_ui.h"
 #include "brave/common/pref_names.h"
-#include "brave/components/brave_savings/browser/buildflags/buildflags.h"
+#include "brave/components/brave_perf_predictor/browser/buildflags/buildflags.h"
 #include "chrome/browser/profiles/profile.h"
 #include "content/public/browser/web_ui_data_source.h"
 #include "components/prefs/pref_change_registrar.h"
