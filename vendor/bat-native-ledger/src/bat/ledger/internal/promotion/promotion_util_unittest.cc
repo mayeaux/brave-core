@@ -133,7 +133,7 @@ TEST_F(PromotionUtilTest, ConvertPromotionTypeToReportTypeForUGP) {
       ConvertPromotionTypeToReportType(ledger::PromotionType::UGP);
 
   // Assert
-  EXPECT_EQ(report_type, ledger::ReportType::GRANT);
+  EXPECT_EQ(report_type, ledger::ReportType::GRANT_UGP);
 }
 
 TEST_F(PromotionUtilTest, ConvertPromotionTypeToReportTypeForADS) {
@@ -142,7 +142,7 @@ TEST_F(PromotionUtilTest, ConvertPromotionTypeToReportTypeForADS) {
       ConvertPromotionTypeToReportType(ledger::PromotionType::ADS);
 
   // Assert
-  EXPECT_EQ(report_type, ledger::ReportType::ADS);
+  EXPECT_EQ(report_type, ledger::ReportType::GRANT_AD);
 }
 
 // bool ParseFetchResponse(
