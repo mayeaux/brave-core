@@ -398,7 +398,7 @@ TEST_F(PromotionUtilTest, ParseSignedTokensResponseWithValidContent) {
 TEST_F(PromotionUtilTest, VerifyPublicKeyWithNullptr) {
   // Arrange
   auto promotion = ledger::Promotion::New();
-  auto credentials = ledger::PromotionCreds::New();
+  promotion->credentials = ledger::PromotionCreds::New();
 
   // Act
   bool result = braveledger_promotion::VerifyPublicKey(nullptr);
@@ -410,7 +410,7 @@ TEST_F(PromotionUtilTest, VerifyPublicKeyWithNullptr) {
 TEST_F(PromotionUtilTest, VerifyPublicKeyWithoutCredentials) {
   // Arrange
   auto promotion = ledger::Promotion::New();
-  auto credentials = ledger::PromotionCreds::New();
+  promotion->credentials = ledger::PromotionCreds::New();
 
   // Act
   bool result = braveledger_promotion::VerifyPublicKey(promotion->Clone());
@@ -422,8 +422,7 @@ TEST_F(PromotionUtilTest, VerifyPublicKeyWithoutCredentials) {
 TEST_F(PromotionUtilTest, VerifyPublicKeyWithInvalidKeys) {
   // Arrange
   auto promotion = ledger::Promotion::New();
-  auto credentials = ledger::PromotionCreds::New();
-  promotion->credentials = std::move(credentials);
+  promotion->credentials = ledger::PromotionCreds::New();
   promotion->public_keys = "fdsfsdds";
 
   // Act
@@ -436,7 +435,7 @@ TEST_F(PromotionUtilTest, VerifyPublicKeyWithInvalidKeys) {
 TEST_F(PromotionUtilTest, VerifyPublicKeyWithMismatchedKeys) {
   // Arrange
   auto promotion = ledger::Promotion::New();
-  auto credentials = ledger::PromotionCreds::New();
+  promotion->credentials = ledger::PromotionCreds::New();
   promotion->public_keys = "[\"orBZ6dkSFLwBtQgI+5qXFb0dzDSm4uf+Km6AhytgUT8=\"]";
   promotion->credentials->public_key = "dfsdfsdf";
 
@@ -450,7 +449,7 @@ TEST_F(PromotionUtilTest, VerifyPublicKeyWithMismatchedKeys) {
 TEST_F(PromotionUtilTest, VerifyPublicKeyWithMatchingKeys) {
   // Arrange
   auto promotion = ledger::Promotion::New();
-  auto credentials = ledger::PromotionCreds::New();
+  promotion->credentials = ledger::PromotionCreds::New();
   promotion->public_keys = "[\"orBZ6dkSFLwBtQgI+5qXFb0dzDSm4uf+Km6AhytgUT8=\"]";
   promotion->credentials->public_key =
       "orBZ6dkSFLwBtQgI+5qXFb0dzDSm4uf+Km6AhytgUT8=";

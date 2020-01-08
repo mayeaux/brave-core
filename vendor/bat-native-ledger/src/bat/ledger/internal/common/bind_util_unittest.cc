@@ -112,20 +112,24 @@ TEST_F(BindUtilTest, ExpectedStringFromPromotionToString) {
   promotion->approximate_value = 100.0;
   promotion->status = ledger::PromotionStatus::OVER;
   promotion->expires_at = static_cast<uint64_t>(2);
+  promotion->claimed_at = static_cast<uint64_t>(3);
+  promotion->legacy_claimed = false;
   promotion->credentials = std::move(promotion_creds);
 
-  const std::string expected_promotion_as_string = "{\"approximate_value\":\"100.000000\",\"credentials\":{\"batch_proof\":\"MNO\",\"blinded_creds\":\"DEF\",\"claim_id\":\"PQR\",\"public_key\":\"JKL\",\"signed_creds\":\"GHI\",\"tokens\":\"ABC\"},\"expires_at\":\"2\",\"id\":\"1234\",\"legacy_claimed\":false,\"public_keys\":\"5678\",\"status\":5,\"suggestions\":1,\"type\":1,\"version\":1}";  // NOLINT 
+  const std::string expected_promotion_as_string = "{\"approximate_value\":\"100.000000\",\"claimed_at\":\"3\",\"credentials\":{\"batch_proof\":\"MNO\",\"blinded_creds\":\"DEF\",\"claim_id\":\"PQR\",\"public_key\":\"JKL\",\"signed_creds\":\"GHI\",\"tokens\":\"ABC\"},\"expires_at\":\"2\",\"id\":\"1234\",\"legacy_claimed\":false,\"public_keys\":\"5678\",\"status\":5,\"suggestions\":1,\"type\":1,\"version\":1}";  // NOLINT 
 
   std::string promotion_as_string =
       FromPromotionToString(std::move(promotion));
 
+  // Nb. if this test fails due to changes to Promotion or PromotionCreds,
+  //     you must also maintain ExpectedPromotionFromStringToPromotion.
   EXPECT_EQ(expected_promotion_as_string,
       promotion_as_string);
 }
 
 // ledger::PromotionPtr FromStringToPromotion(const std::string& data);
 TEST_F(BindUtilTest, ExpectedPromotionFromStringToPromotion) {
-  const std::string promotion_as_string = "{\"approximate_value\":\"100.000000\",\"credentials\":{\"batch_proof\":\"MNO\",\"blinded_creds\":\"DEF\",\"claim_id\":\"PQR\",\"public_key\":\"JKL\",\"signed_creds\":\"GHI\",\"tokens\":\"ABC\"},\"expires_at\":\"2\",\"id\":\"1234\",\"legacy_claimed\":false,\"public_keys\":\"5678\",\"status\":5,\"suggestions\":1,\"type\":1,\"version\":1}";  // NOLINT 
+  const std::string promotion_as_string = "{\"approximate_value\":\"100.000000\",\"claimed_at\":\"3\",\"credentials\":{\"batch_proof\":\"MNO\",\"blinded_creds\":\"DEF\",\"claim_id\":\"PQR\",\"public_key\":\"JKL\",\"signed_creds\":\"GHI\",\"tokens\":\"ABC\"},\"expires_at\":\"2\",\"id\":\"1234\",\"legacy_claimed\":false,\"public_keys\":\"5678\",\"status\":5,\"suggestions\":1,\"type\":1,\"version\":1}";  // NOLINT 
 
   ledger::PromotionPtr promotion = FromStringToPromotion(promotion_as_string);
 
@@ -137,6 +141,8 @@ TEST_F(BindUtilTest, ExpectedPromotionFromStringToPromotion) {
   EXPECT_EQ(promotion->approximate_value, 100.0);
   EXPECT_EQ(promotion->status, ledger::PromotionStatus::OVER);
   EXPECT_EQ(promotion->expires_at, static_cast<uint64_t>(2));
+  EXPECT_EQ(promotion->claimed_at, static_cast<uint64_t>(3));
+  EXPECT_EQ(promotion->legacy_claimed, false);
   EXPECT_EQ(promotion->credentials->tokens, "ABC");
   EXPECT_EQ(promotion->credentials->blinded_creds, "DEF");
   EXPECT_EQ(promotion->credentials->signed_creds, "GHI");
