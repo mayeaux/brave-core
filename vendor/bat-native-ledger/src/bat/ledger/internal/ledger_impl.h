@@ -336,7 +336,7 @@ class LedgerImpl : public ledger::Ledger,
 
   void SetPreFlight(const std::string& pre_flight);
 
-  const ledger::WalletInfoProperties& GetWalletInfo() const;
+  virtual const ledger::WalletInfoProperties& GetWalletInfo() const;
 
   void SetWalletInfo(const ledger::WalletInfoProperties& info);
 
