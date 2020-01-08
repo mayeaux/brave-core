@@ -127,7 +127,7 @@ TEST_F(PromotionTest, TestFetch) {
 
   // Act
   promotion_->Fetch(fetch_promotion_callback);
-} 
+}
 
 // void Claim(
 //     const std::string& payload,
@@ -157,28 +157,27 @@ TEST_F(PromotionTest, TestRefreshWithRetryWithTimerId) {
   // Act
   promotion_->Refresh(true);
 }
-/*
+
 TEST_F(PromotionTest, TestRefreshWithoutRetryOrTimerId) {
   // Arrange
   EXPECT_CALL(*mock_ledger_impl_, SetTimer(_, _)).Times(1);
 
-  // TODO: last_check_timer_id == 0
+  promotion_->SetLastCheckTimerIdForTesting(0);
 
   // Act
   promotion_->Refresh(false);
 }
 
-TEST_F(PromotionTest, TestRefreshWithoutRetryOrTimerId) {
+TEST_F(PromotionTest, TestRefreshWithRetryWithoutTimerId) {
   // Arrange
   EXPECT_CALL(*mock_ledger_impl_, SetTimer(_, _)).Times(1);
 // calls ledger_->SetTimer with start_timer_in as a random value (how to test?)
 
-  // TODO: last_check_timer_id == 0
+  promotion_->SetLastCheckTimerIdForTesting(0);
 
   // Act
   promotion_->Refresh(true);
 }
-*/
 
 // void OnTimer(const uint32_t timer_id);
 // Nb. Cannot test without mocking Promotion - discussed with tmancey and no value as code may be changing
@@ -215,7 +214,7 @@ TEST_F(PromotionTest, TestClaimTokensWithNullPromotion) {
 TEST_F(PromotionTest, TestClaimTokensWithPromotion) {
   // Arrange
   EXPECT_CALL(*mock_ledger_impl_, LoadURL(_, _, _, _, _, _));
- 
+
   bool callback_called = false;
 
   ledger::PromotionPtr promotion = ledger::Promotion::New();
@@ -245,12 +244,3 @@ TEST_F(PromotionTest, TestClaimTokensWithPromotion) {
 }
 
 }  // namespace braveledger_promotion
-/*
-TEST_F(PromotionTest, TestOnTimerWithLastCheckTimerID) {
-  // Arrange
-
-  // Act
-
-  // Assert
-}
-*/
