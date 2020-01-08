@@ -4,9 +4,11 @@
 
 import { combineReducers } from 'redux'
 
-// Utils
+// Reducers
 import newTabReducer from './new_tab_reducer'
+import topSitesReducer from './top_sites_reducer'
 
 export default combineReducers<NewTab.ApplicationState>({
-  newTabData: newTabReducer
+  newTabData: newTabReducer,
+  topSitesData: topSitesReducer
 })

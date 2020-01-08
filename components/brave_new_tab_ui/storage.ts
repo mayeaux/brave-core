@@ -7,7 +7,15 @@ import { debounce } from '../common/debounce'
 
 const keyName = 'new-tab-data'
 
+export const defaultTopSitesState: NewTab.TopSitesState = {
+  gridSites: [],
+  topSites: [],
+  ignoredTopSites: [],
+  shouldShowSiteRemovalNotification: false
+}
+
 const defaultState: NewTab.State = {
+  ...defaultTopSitesState,
   initialDataLoaded: false,
   textDirection: window.loadTimeData.getString('textdirection'),
   showBackgroundImage: false,
@@ -15,10 +23,6 @@ const defaultState: NewTab.State = {
   showClock: false,
   showTopSites: false,
   showRewards: false,
-  topSites: [],
-  ignoredTopSites: [],
-  pinnedTopSites: [],
-  gridSites: [],
   showEmptyPage: false,
   isIncognito: chrome.extension.inIncognitoContext,
   useAlternativePrivateSearchEngine: false,
@@ -63,7 +67,7 @@ const getPersistentData = (state: NewTab.State): NewTab.PersistentState => {
   const peristantState: NewTab.PersistentState = {
     topSites: state.topSites,
     ignoredTopSites: state.ignoredTopSites,
-    pinnedTopSites: state.pinnedTopSites,
+    shouldShowSiteRemovalNotification: state.shouldShowSiteRemovalNotification,
     gridSites: state.gridSites,
     showEmptyPage: state.showEmptyPage,
     bookmarks: state.bookmarks,

@@ -5,7 +5,7 @@
 import styled from 'brave-ui/theme'
 import createWidget from '../widget'
 
-interface ListProps {
+export interface ListProps {
   blockNumber: number
 }
 
@@ -77,7 +77,7 @@ interface TileProps {
 }
 
 export const Tile = styled<TileProps, 'div'>('div')`
-  background-color: ${p => p.isDragging ? 'rgba(255, 255, 255, 0.5)' : 'rgba(255, 255, 255, 0.8)'};
+  background: rgba(255, 255, 255, 0.8);
   position: relative;
   user-select: none;
   margin: 6px;
@@ -89,6 +89,8 @@ export const Tile = styled<TileProps, 'div'>('div')`
   width: 80px;
   height: 80px;
   font-size: 38px;
+  z-index: 3;
+  cursor: grab;
 
   &:hover {
     ${TileActionsContainer} {

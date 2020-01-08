@@ -22,27 +22,39 @@ interface Props {
 }
 
 export default class Notification extends React.Component<Props, {}> {
-  onUndoIgnoredTopSite = () => {
-    this.props.actions.undoSiteIgnored()
+  onUndoRemoveTopSite = () => {
+    this.props.actions.undoRemoveTopSite()
+    this.props.actions.showSiteRemovalNotification(false)
   }
 
-  onUndoAllSiteIgnored = () => {
-    this.props.actions.undoAllSiteIgnored()
+  onUndoRemoveAllTopSites = () => {
+    this.props.actions.undoRemoveAllTopSites()
+    this.props.actions.showSiteRemovalNotification(false)
   }
 
   onHideSiteRemovalNotification = () => {
-    this.props.actions.onHideSiteRemovalNotification()
+    this.props.actions.showSiteRemovalNotification(false)
   }
 
   render () {
     return (
        <SiteRemovalNotification>
-         <SiteRemovalText>{getLocale('thumbRemoved')}</SiteRemovalText>
-         <SiteRemovalAction onClick={this.onUndoIgnoredTopSite}>{getLocale('undoRemoved')}</SiteRemovalAction>
-         <SiteRemovalAction onClick={this.onUndoAllSiteIgnored}>{getLocale('restoreAll')}</SiteRemovalAction>
-         <SiteRemovalAction onClick={this.onHideSiteRemovalNotification} iconOnly={true} title={getLocale('close')}>
-          <CloseStrokeIcon />
-        </SiteRemovalAction>
+          <SiteRemovalText>{getLocale('thumbRemoved')}</SiteRemovalText>
+          <SiteRemovalAction
+            onClick={this.onUndoRemoveTopSite}
+          >
+            {getLocale('undoRemoved')}
+          </SiteRemovalAction>
+         <SiteRemovalAction onClick={this.onUndoRemoveAllTopSites}>
+            {getLocale('restoreAll')}
+          </SiteRemovalAction>
+          <SiteRemovalAction
+            onClick={this.onHideSiteRemovalNotification}
+            iconOnly={true}
+            title={getLocale('close')}
+          >
+            <CloseStrokeIcon />
+          </SiteRemovalAction>
        </SiteRemovalNotification>
     )
   }

@@ -1,6 +1,7 @@
 declare namespace NewTab {
   export interface ApplicationState {
     newTabData: State | undefined
+    topSitesData: TopSitesState | undefined
   }
 
   export interface Image {
@@ -11,16 +12,13 @@ declare namespace NewTab {
   }
 
   export interface Site {
-    index: number
+    id: string
     url: string
     title: string
     favicon: string
     letter: string
-    thumb: string
-    themeColor: string
-    computedThemeColor: string
-    pinned: boolean
-    bookmarked?: Bookmark
+    pinnedIndex: undefined | number
+    bookmarkTreeNode: chrome.bookmarks.BookmarkTreeNode | undefined
   }
 
   export interface Stats {
@@ -39,15 +37,25 @@ declare namespace NewTab {
     url: string
   }
 
-  export interface PersistentState {
-    topSites: Site[]
+  export interface TopSitesState {
+    topSites: chrome.topSites.MostVisitedURL[]
     ignoredTopSites: Site[]
-    pinnedTopSites: Site[]
     gridSites: Site[]
+    shouldShowSiteRemovalNotification: boolean
+  }
+
+  export interface PageState {
     showEmptyPage: boolean
+    // TODO: this shouldn't be stored as a list but
+    // rather a property of each element on gridSites
     bookmarks: Record<string, Bookmark>
+  }
+
+  export interface RewardsState {
     rewardsState: RewardsWidgetState
   }
+
+  export type PersistentState = TopSitesState & PageState & RewardsState
 
   export interface EphemeralState {
     initialDataLoaded: boolean

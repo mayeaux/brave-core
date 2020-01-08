@@ -3,13 +3,10 @@
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import * as React from 'react'
-import { DragDropContext } from 'react-dnd'
-import HTML5Backend from 'react-dnd-html5-backend'
 import {
   Page,
   Header,
   ClockWidget as Clock,
-  ListWidget as List,
   Footer,
   App,
   PosterBackground,
@@ -17,14 +14,23 @@ import {
   RewardsWidget as Rewards
 } from '../../components/default'
 
+// Helpers
+import arrayMove from 'array-move'
+import { isTopSitePinned } from '../../helpers/newTabUtils'
+import { gridSitesSize } from '../../constants/new_tab_interface'
+
+// Types
+import { SortEnd } from 'react-sortable-hoc'
+
 // Components
 import Stats from './stats'
-import Block from './block'
+import TopSitesGrid from './topSitesGrid'
 import FooterInfo from './footerInfo'
 import SiteRemovalNotification from './notification'
 
 interface Props {
   newTabData: NewTab.State
+  topSitesData: NewTab.TopSitesState
   actions: any
   saveShowBackgroundImage: (value: boolean) => void
   saveShowClock: (value: boolean) => void
@@ -48,7 +54,7 @@ class NewTabPage extends React.Component<Props, State> {
 
   componentDidMount () {
     // if a notification is open at component mounting time, close it
-    this.props.actions.onHideSiteRemovalNotification()
+    this.props.actions.showSiteRemovalNotification(false)
     this.trackCachedImage()
   }
 
@@ -80,34 +86,17 @@ class NewTabPage extends React.Component<Props, State> {
     }
   }
 
-  onDraggedSite = (fromUrl: string, toUrl: string, dragRight: boolean) => {
-    this.props.actions.siteDragged(fromUrl, toUrl, dragRight)
-  }
-
-  onDragEnd = (url: string, didDrop: boolean) => {
-    this.props.actions.siteDragEnd(url, didDrop)
-  }
-
-  onToggleBookmark (site: NewTab.Site) {
-    if (site.bookmarked === undefined) {
-      this.props.actions.bookmarkAdded(site.url)
-    } else {
-      this.props.actions.bookmarkRemoved(site.url)
+  onSortEnd = ({ oldIndex, newIndex }: SortEnd) => {
+    const { newTabData } = this.props
+    // do not update topsites order if the drag
+    // destination is a pinned tile
+    const gridSite = newTabData.gridSites[newIndex]
+    if (!gridSite || isTopSitePinned(gridSite)) {
+      return
     }
+    const items = arrayMove(newTabData.gridSites, oldIndex, newIndex)
+    this.props.actions.topSitesDataUpdated(items)
   }
-
-  onTogglePinnedTopSite (site: NewTab.Site) {
-    if (!site.pinned) {
-      this.props.actions.sitePinned(site.url)
-    } else {
-      this.props.actions.siteUnpinned(site.url)
-    }
-  }
-
-  onIgnoredTopSite (site: NewTab.Site) {
-    this.props.actions.siteIgnored(site.url)
-  }
-
   toggleShowBackgroundImage = () => {
     this.props.saveShowBackgroundImage(
       !this.props.newTabData.showBackgroundImage
@@ -163,7 +152,7 @@ class NewTabPage extends React.Component<Props, State> {
   }
 
   render () {
-    const { newTabData, actions } = this.props
+    const { newTabData, topSitesData, actions } = this.props
     const { showSettingsMenu } = this.state
     const { rewardsState } = newTabData
 
@@ -212,37 +201,32 @@ class NewTabPage extends React.Component<Props, State> {
               onDismissNotification={this.dismissNotification}
               menuPosition={'left'}
             />
-            {this.props.newTabData.gridSites.length ? <List
-              blockNumber={this.props.newTabData.gridSites.length}
-              textDirection={newTabData.textDirection}
-              showWidget={newTabData.showTopSites}
-              menuPosition={'right'}
-              hideWidget={this.toggleShowTopSites}
-            >
-              {
-                this.props.newTabData.gridSites.map((site: NewTab.Site) =>
-                  <Block
-                    key={site.url}
-                    id={site.url}
-                    title={site.title}
-                    href={site.url}
-                    favicon={site.favicon}
-                    style={{ backgroundColor: site.themeColor || site.computedThemeColor }}
-                    onToggleBookmark={this.onToggleBookmark.bind(this, site)}
-                    onPinnedTopSite={this.onTogglePinnedTopSite.bind(this, site)}
-                    onIgnoredTopSite={this.onIgnoredTopSite.bind(this, site)}
-                    onDraggedSite={this.onDraggedSite}
-                    onDragEnd={this.onDragEnd}
-                    isPinned={site.pinned}
-                    isBookmarked={site.bookmarked !== undefined}
-                  />
-                )
-              }
-            </List> : null}
             {
-              this.props.newTabData.showSiteRemovalNotification
-              ? <SiteRemovalNotification actions={actions} />
-              : null
+              topSitesData.gridSites.length
+                ? (
+                  <TopSitesGrid
+                    actions={actions}
+                    gridSites={topSitesData.gridSites}
+                    // react-sortable-hoc props
+                    onSortEnd={this.onSortEnd}
+                    axis='xy'
+                    lockToContainerEdges={true}
+                    lockOffset={'15%'}
+                    // child widget element props
+                    textDirection={newTabData.textDirection}
+                    showWidget={newTabData.showTopSites}
+                    menuPosition={'right'}
+                    hideWidget={this.toggleShowTopSites}
+                    // styled-component element props
+                    blockNumber={gridSitesSize}
+                  />
+                ) : null
+            }
+            {
+              topSitesData.shouldShowSiteRemovalNotification
+              ? (
+                <SiteRemovalNotification actions={actions} />
+              ) : null
             }
           </Header>
           <Footer>
@@ -271,4 +255,4 @@ class NewTabPage extends React.Component<Props, State> {
   }
 }
 
-export default DragDropContext(HTML5Backend)(NewTabPage)
+export default NewTabPage

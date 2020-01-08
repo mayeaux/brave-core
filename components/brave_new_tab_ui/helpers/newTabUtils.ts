@@ -13,7 +13,7 @@ export const isHttpOrHttps = (url?: string) => {
  * Obtains a letter / char that represents the current site
  * @param site - The site requested from the top site's list
  */
-export const getCharForSite = (site: NewTab.Site) => {
+export const getCharForSite = (site: Partial<NewTab.Site>): string => {
   let name
   if (!site.title) {
     try {
@@ -24,4 +24,22 @@ export const getCharForSite = (site: NewTab.Site) => {
   }
   name = site.title || name || '?'
   return name.charAt(0).toUpperCase()
+}
+
+export const generateTopSiteId = (currentIndex: number): string => {
+  return `topsite-${currentIndex}-${Date.now()}`
+}
+
+export const generateTopSiteFavicon = (url: string): string => {
+  return `chrome://favicon/size/64@1x/${url}`
+}
+
+export const isTopSitePinned = (site: NewTab.Site): boolean => {
+  return site.pinnedIndex !== undefined
+}
+
+export const isTopSiteBookmarked = (
+  bookmarkTreeNode: chrome.bookmarks.BookmarkTreeNode | undefined
+): boolean => {
+  return bookmarkTreeNode !== undefined
 }
