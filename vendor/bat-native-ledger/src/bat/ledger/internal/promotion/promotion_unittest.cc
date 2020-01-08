@@ -180,7 +180,8 @@ TEST_F(PromotionTest, TestRefreshWithRetryWithoutTimerId) {
 }
 
 // void OnTimer(const uint32_t timer_id);
-// Nb. Cannot test without mocking Promotion - discussed with tmancey and no value as code may be changing
+// Nb. Cannot test without mocking Promotion
+//   discussed with tmancey and no value as code may be changing
 //   need to confirm with nejc
 // SUCCESS: timer_id == last_check_timer_id_;
 // - expect call Fetch

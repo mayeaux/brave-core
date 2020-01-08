@@ -4,6 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include <memory>
+#include <utility>
 
 #include "bat/ledger/internal/promotion/promotion_util.h"
 #include "bat/ledger/ledger.h"
